@@ -47,7 +47,8 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "invoice.payment_succeeded") {
-    const invoice = event.data.object as Stripe.Invoice;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const invoice = event.data.object as any;
     // Renew credits for consecutive months
     if (invoice.subscription) {
       const subscriptionId = invoice.subscription as string;
