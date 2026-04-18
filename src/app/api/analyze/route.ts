@@ -4,8 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 const PROMPT_INSTRUCTION = `You are an expert Meta Ads Strategist and Policy Compliance Reviewer.
 Analyze the provided ad creative (image/text). 
 Evaluate it strictly against Meta's current advertising policies (e.g., Personal Attributes, Sensational Content, Misleading Claims) and general digital marketing best practices for conversions.
@@ -75,6 +73,7 @@ export async function POST(req: Request) {
     }
 
     // Call OpenAI
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
