@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary-50: #fff0ed;
+  --color-primary-100: #ffdeda;
+  --color-primary-200: #ffc2bb;
+  --color-primary-300: #ff988c;
+  --color-primary-400: #ff6453;
+  --color-primary-500: #ff3e29;
+  --color-primary-600: #ed220c;
+  --color-primary-700: #c61605;
+  --color-primary-800: #a41608;
+  --color-primary-900: #88190d;
+  --color-primary-950: #4a0802;
+
+  /* Expose as generic primary */
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-600);
+  
+  --color-background: #ffffff;
+  --color-foreground: #0f172a; /* slate-900 */
+  --color-muted: #64748b; /* slate-500 */
+  --color-border: #e2e8f0; /* slate-200 */
+  --color-surface: #f8fafc; /* slate-50 */
+
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+body {
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Plug Animation classes */
+@keyframes plugSlide {
+  0% { transform: translateX(-150px); opacity: 0; }
+  15% { transform: translateX(-150px); opacity: 1; }
+  30% { transform: translateX(0); opacity: 1; }
+  75% { transform: translateX(0); opacity: 1; }
+  90% { transform: translateX(0); opacity: 0; }
+  100% { transform: translateX(-150px); opacity: 0; }
+}
+
+@keyframes flashGlow {
+  0%, 30% { 
+    color: currentColor; 
+    filter: drop-shadow(0 0 0 transparent); 
+  }
+  32% { 
+    color: var(--color-primary); 
+    filter: drop-shadow(0 0 10px var(--color-primary)); 
+  }
+  35% { 
+    color: currentColor; 
+    filter: drop-shadow(0 0 0 transparent); 
+  }
+  38% { 
+    color: var(--color-primary); 
+    filter: drop-shadow(0 0 15px var(--color-primary)); 
+  }
+  74% { 
+    color: var(--color-primary); 
+    filter: drop-shadow(0 0 8px var(--color-primary)); 
+  }
+  76%, 100% { 
+    color: currentColor; 
+    filter: drop-shadow(0 0 0 transparent); 
+  }
+}
+
+@keyframes powerPulse {
+  0%, 38% { opacity: 0; transform: scale(0.95); }
+  45% { opacity: 1; transform: scale(1.05); }
+  60% { opacity: 0.8; transform: scale(1); }
+  72% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 0; }
+}
+
+.animate-plugSlide {
+  animation: plugSlide 8s cubic-bezier(0.3, 0.8, 0.2, 1) infinite;
+}
+
+.animate-glow {
+  animation: flashGlow 8s ease-out infinite;
+}
+
+.animate-powerPulse {
+  animation: powerPulse 8s ease-out infinite;
+  transform-origin: 460px 200px;
+}
+/* Electric Button Keyframes */
+@keyframes electricDash {
+  0% { stroke-dashoffset: 200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes electricDashRev {
+  0% { stroke-dashoffset: -200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes flashTwitch {
+  0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+  5%, 15%, 85% { opacity: 0.8; filter: drop-shadow(0 0 2px currentColor); }
+  25%, 75% { opacity: 0.4; filter: none; }
+  95% { opacity: 0.1; }
+}
+
+@keyframes electricText {
+  0%, 100% { filter: drop-shadow(0 0 0px transparent); }
+  50% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.8)); }
+  75% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+}
+
+.animate-electricDash {
+  animation: electricDash 1.5s linear infinite;
+}
+.animate-electricDashRev {
+  animation: electricDashRev 2s linear infinite;
+}
+.animate-flashTwitch {
+  animation: flashTwitch 3s ease-out infinite;
+}
+.animate-electricText {
+  animation: electricText 0.3s ease-in-out infinite;
+}
