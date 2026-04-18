@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const PROMPT_INSTRUCTION = `You are an expert Meta Ads Strategist and Policy Compliance Reviewer.
-Analyze the provided ad creative (image/video/text). 
+Analyze the provided ad creative (image/text). 
 Evaluate it strictly against Meta's current advertising policies (e.g., Personal Attributes, Sensational Content, Misleading Claims) and general digital marketing best practices for conversions.
 
 You MUST respond strictly with a valid JSON document matching the following format:
@@ -51,38 +51,42 @@ export async function POST(req: Request) {
     }
 
     // Prepare contents
-    let contents: any[] = [];
-    if (fileUrl) {
-      // In production, we might need to download the file into buffer and encode as base64
-      // or use Gemini File API if using standard storage. 
-      // For simple MVP image/video via S3 url, we can fetch it, then convert to base64
-      const response = await fetch(fileUrl);
-      const arrayBuffer = await response.arrayBuffer();
-      const base64Data = Buffer.from(arrayBuffer).toString('base64');
-      
-      contents.push({
-        inlineData: {
-            data: base64Data,
-            mimeType: fileMimeType
-        }
-      });
-    }
-
+    const contentArray: any[] = [{ type: "text", text: PROMPT_INSTRUCTION }];
+    
     if (text) {
-      contents.push({ text });
+      contentArray.push({ type: "text", text: `Ad Copy: \n${text}` });
     }
-    contents.push({ text: PROMPT_INSTRUCTION });
 
-    // Call Gemini
-    const result = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents,
-        config: {
-            responseMimeType: "application/json",
-        }
+    if (fileUrl) {
+      if (type === "image") {
+        contentArray.push({
+          type: "image_url",
+          image_url: {
+            url: fileUrl,
+            detail: "high"
+          }
+        });
+      } else if (type === "video") {
+        contentArray.push({
+          type: "text",
+          text: `[System Notice: The user uploaded a video. Video URL: ${fileUrl}. Current OpenAI models cannot directly watch MP4 URLs via Chat Completions, but please infer as much as you can from the surrounding text or file name if possible: ${fileName}]`
+        });
+      }
+    }
+
+    // Call OpenAI
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user",
+          content: contentArray,
+        },
+      ],
+      response_format: { type: "json_object" }
     });
 
-    const aiText = result.text;
+    const aiText = response.choices[0].message.content;
     if (!aiText) throw new Error("No response from AI");
 
     const jsonResult = JSON.parse(aiText);
