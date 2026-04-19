@@ -31,7 +31,7 @@ export default function Dashboard() {
 
   if (!session?.user) return null;
 
-  const isLocked = session.user.plan === "none" || session.user.credits <= 0;
+  const isLocked = (session.user.plan || "none") === "none" || (session.user.credits || 0) <= 0;
 
   return (
     <div className="animate-in fade-in duration-500 relative">

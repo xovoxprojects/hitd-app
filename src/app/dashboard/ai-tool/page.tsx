@@ -1,6 +1,6 @@
 // src/app/dashboard/ai-tool/page.tsx
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { currentUser } from '@/lib/mockData';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -11,7 +11,7 @@ export default function AIToolPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const isLocked = !session?.user || session.user.plan === 'none' || session.user.credits <= 0;
+  const isLocked = !session?.user || (session.user.plan || 'none') === 'none' || (session.user.credits || 0) <= 0;
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
