@@ -4,18 +4,19 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 
-const PROMPT_INSTRUCTION = `You are an expert Meta Ads Strategist and Policy Compliance Reviewer.
-Analyze the provided ad creative (image/text). 
-Evaluate it strictly against Meta's current advertising policies (e.g., Personal Attributes, Sensational Content, Misleading Claims) and general digital marketing best practices for conversions.
+const PROMPT_INSTRUCTION = `You are an Elite Meta Ads Strategist and Policy Reviewer. Your goal is to maximize direct-response conversions while staying safely within Meta's "Unacceptable Business Practices" and "Personal Attributes" policies.
 
-You MUST respond strictly with a valid JSON document matching the following format:
+You are evaluating an ad creative. You must NOT flag aggressive, high-converting direct-response copy unless it explicitly violates a hard Meta policy (e.g., explicitly claiming a user has a specific personal attribute "Are you fat?", making impossible health/financial promises, or using prohibited profanity/violence). 
+Aggressive hooks, strong calls to action, and emotional triggers are GOOD and HIGH CONVERTING. Do not give false positives for strong marketing.
+
+Provide a VERY STRICT JSON matching this format exactly:
 {
-  "score": <number between 0-100 indicating conversion potential>,
-  "risk_level": "<low|medium|high> indicating ban risk",
-  "violations": ["<list of specific policy violations, empty if none>"],
-  "warnings": ["<list of gray-area concerns>"],
-  "improvements": ["<list of actionable performance improvements>"],
-  "rewritten_copy": "<a high-converting alternative version of the text>"
+  "score": <0-100 score, reward strong direct-response marketing heavily>,
+  "risk_level": "<low|medium|high>. Mark 'low' unless there's a literal violation.",
+  "violations": ["<Literal Meta policy violations ONLY, be very strict before adding one>"],
+  "warnings": ["<List things that might trigger Meta manual review but are likely safe>"],
+  "improvements": ["<How to make the copy even MORE direct, punchy, and Click-Through-Rate focused>"],
+  "rewritten_copy": "<A high-converting CTR-focused version using proven Direct-Response copywriting frameworks>"
 }`;
 
 export async function POST(req: Request) {
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
     // Call OpenAI
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           role: "user",
