@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Settings, LogOut, Zap, ChevronRight } from "lucide-react";
+import { LayoutDashboard, CreditCard, Settings, LogOut, Zap, ChevronRight, History, BarChart3 } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -41,6 +41,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {pathname !== '/dashboard/billing' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
           <Link 
+            href="/dashboard/history" 
+            className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/history' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
+          >
+            <div className="flex items-center gap-3 font-semibold">
+              <History className="w-5 h-5" /> History
+            </div>
+            {pathname !== '/dashboard/history' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+          </Link>
+          <Link 
+            href="/dashboard/analytics" 
+            className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/analytics' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
+          >
+            <div className="flex items-center gap-3 font-semibold">
+              <BarChart3 className="w-5 h-5" /> Analytics
+            </div>
+            {pathname !== '/dashboard/analytics' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+          </Link>
+          <Link 
             href="/dashboard/settings" 
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/settings' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
@@ -59,10 +77,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="text-xs text-slate-500 mb-1 font-bold uppercase tracking-wider">Available Credits</div>
             <div className="flex items-end justify-between relative z-10">
               <span className="text-3xl font-black text-slate-900 tracking-tight">{session?.user?.credits || 0}</span>
-              <Link href="/pricing" className="text-xs text-blue-600 hover:text-blue-800 font-bold transition-colors">Get more &rarr;</Link>
+              <Link href="/#pricing" className="text-xs text-blue-600 hover:text-blue-800 font-bold transition-colors">Get more &rarr;</Link>
             </div>
             {session?.user?.plan === "none" && (
-              <Link href="/pricing" className="mt-4 w-full block text-center py-2.5 bg-black text-white text-sm font-semibold rounded-xl hover:bg-slate-800 transition-all shadow-md hover:shadow-lg">
+              <Link href="/#pricing" className="mt-4 w-full block text-center py-2.5 bg-black text-white text-sm font-semibold rounded-xl hover:bg-slate-800 transition-all shadow-md hover:shadow-lg">
                 Upgrade Plan
               </Link>
             )}
