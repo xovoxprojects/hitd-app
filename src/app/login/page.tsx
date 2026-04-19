@@ -8,12 +8,16 @@ import Link from "next/link";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    await signIn("email", { email, callbackUrl: "/dashboard" });
+    const res = await signIn("email", { email, callbackUrl: "/dashboard", redirect: false });
     setIsLoading(false);
+    if (res?.ok && !res?.error) {
+      setEmailSent(true);
+    }
   };
 
   const handleGoogle = () => {
@@ -28,7 +32,7 @@ export default function LoginPage() {
       
       <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-3xl border border-neutral-200 shadow-sm">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tighter text-black">Welcome back</h2>
+          <h2 className="text-3xl font-bold tracking-tighter text-black">Welcome to hitd.ai</h2>
           <p className="mt-2 text-sm text-neutral-500">Log in or create a new account.</p>
         </div>
         
@@ -44,12 +48,18 @@ export default function LoginPage() {
             />
           </div>
           
+          {emailSent && (
+            <div className="p-3 bg-emerald-50 text-emerald-600 text-sm rounded-xl border border-emerald-100 text-center font-medium">
+              Check your email for a login link!
+            </div>
+          )}
+          
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || emailSent}
             className="w-full py-3 rounded-xl bg-black text-white font-semibold hover:bg-neutral-800 transition-colors disabled:opacity-50 shadow-sm"
           >
-            {isLoading ? "Checking..." : "Continue with Email"}
+            {isLoading ? "Sending link..." : emailSent ? "Link sent" : "Continue with Email"}
           </button>
         </form>
         
