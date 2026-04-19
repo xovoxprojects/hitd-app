@@ -17,8 +17,8 @@ const resources = {
       nav_get_started: "Get Started",
       hero_badge: "v2.0 Compliance Engine",
       hero_h1_1: "AI Ad Analyzer for",
-      hero_h1_2: "Meta Ads & Conversions",
-      hero_sub: "Analyze your ad creatives, detect Meta policy violations, and improve your conversion rate with AI in seconds.",
+      hero_h1_2: "Meta & Instagram Ads",
+      hero_sub: "No more rejections. No more guesswork. Analyze your creatives, fix policy issues, and scale winning ads faster.",
       btn_start: "Start Analyzing",
       hero_sub2: "No trial. No guesswork. Just better ads.",
       score_perf: "Performance Score",
@@ -200,7 +200,7 @@ i18n.use(initReactI18next).init({
 });
 
 const LandingPricing = () => {
-  const plans = [
+  const plans: { name: string; subtitle: string; price: string; originalPrice: string; discount: string; features: string[]; cta: string; dark: boolean; featured: boolean; fairUse?: boolean }[] = [
     {
       name: "Growth",
       subtitle: "Perfect for casual advertisers looking to verify ad copy.",
@@ -248,6 +248,7 @@ const LandingPricing = () => {
       cta: "Start with Elite",
       dark: false,
       featured: false,
+      fairUse: true,
     },
   ];
 
@@ -297,7 +298,7 @@ const LandingPricing = () => {
               ))}
             </ul>
             <Link
-              href="/pricing"
+              href="/dashboard"
               className={`w-full block text-center py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 ${
                 plan.dark
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:opacity-90 shadow-[0_0_20px_rgba(79,70,229,0.35)]"
@@ -306,6 +307,9 @@ const LandingPricing = () => {
             >
               {plan.cta}
             </Link>
+            {plan.fairUse && (
+              <p className="text-[10px] text-slate-400 text-center mt-3 font-medium">*Subject to fair use policy</p>
+            )}
           </div>
         </div>
       ))}
@@ -451,13 +455,13 @@ function HeroMockup({ t }: { t: (key: string) => string }) {
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">Suggested Improvements</p>
               <ul className="space-y-1.5">
                 {[
-                  { color: "#3b82f6", text: "Strengthen opening hook — first 3 seconds are critical" },
+                  { color: "#3b82f6", text: "Strengthen opening hook. First 3 seconds are critical" },
                   { color: "#f97316", text: "Increase CTA button contrast ratio" },
                   { color: "#94a3b8", text: "Add social proof element near CTA" },
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                    {item.text}
+                  <li key={i} className="flex items-start gap-2 text-[11px] text-slate-600 font-medium leading-snug">
+                    <div className="w-2 h-2 rounded-full shrink-0 mt-0.5" style={{ backgroundColor: item.color }} />
+                    <span>{item.text}</span>
                   </li>
                 ))}
               </ul>
@@ -549,8 +553,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="text-[2.25rem] md:text-[2.75rem] lg:text-6xl font-[800] tracking-tight text-slate-900 mb-6 leading-[1.1]"
         >
-          {t('hero_h1_1')}<br />
-          <span className="text-[#3b82f6]">{t('hero_h1_2')}</span>
+          {t('hero_h1_1')} <span className="text-[#3b82f6]">{t('hero_h1_2')}</span>
         </motion.h1>
 
         <motion.p 
