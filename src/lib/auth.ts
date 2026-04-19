@@ -7,6 +7,7 @@ import { prisma } from "./prisma";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET || "hitd-default-secret-production-safe",
+  debug: process.env.NODE_ENV !== "production",
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID ? [
       GoogleProvider({
@@ -51,5 +52,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/login",
+    error: "/auth/error",
   }
 };
