@@ -252,8 +252,31 @@ i18n.use(initReactI18next).init({
 
 const LandingPricing = () => {
   const { t } = useTranslation();
+  const { data: session } = useSession();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-  const plans: { nameKey: string; subKey: string; price: string; originalPrice: string; discount: string; featureKeys: string[]; ctaKey: string; dark: boolean; featured: boolean; fairUse?: boolean }[] = [
+  const handleCheckout = async (planId: string) => {
+    if (!session?.user) {
+      window.location.href = "/login?callbackUrl=/#pricing";
+      return;
+    }
+    setLoadingPlan(planId);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planName: planId }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
+  const plans: { nameKey: string; subKey: string; price: string; originalPrice: string; discount: string; featureKeys: string[]; ctaKey: string; planId: string; dark: boolean; featured: boolean; fairUse?: boolean }[] = [
     {
       nameKey: "plan_growth_name",
       subKey: "plan_growth_sub",
@@ -262,6 +285,7 @@ const LandingPricing = () => {
       discount: "-67%",
       featureKeys: ["plan_growth_f1", "plan_growth_f2", "plan_growth_f3", "plan_growth_f4"],
       ctaKey: "plan_growth_cta",
+      planId: "growth",
       dark: false,
       featured: false,
     },
@@ -273,6 +297,7 @@ const LandingPricing = () => {
       discount: "-62%",
       featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
       ctaKey: "plan_pro_cta",
+      planId: "pro",
       dark: true,
       featured: true,
     },
@@ -284,6 +309,7 @@ const LandingPricing = () => {
       discount: "-50%",
       featureKeys: ["plan_elite_f1", "plan_elite_f2", "plan_elite_f3", "plan_elite_f4"],
       ctaKey: "plan_elite_cta",
+      planId: "elite",
       dark: false,
       featured: false,
       fairUse: true,
@@ -335,16 +361,17 @@ const LandingPricing = () => {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/dashboard"
-              className={`w-full block text-center py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 ${
+            <button
+              onClick={() => handleCheckout(plan.planId)}
+              disabled={loadingPlan !== null}
+              className={`w-full block text-center py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 disabled:opacity-60 ${
                 plan.dark
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:opacity-90 shadow-[0_0_20px_rgba(79,70,229,0.35)]"
                   : "bg-slate-100 text-slate-900 hover:bg-slate-200"
               }`}
             >
-              {t(plan.ctaKey)}
-            </Link>
+              {loadingPlan === plan.planId ? "..." : t(plan.ctaKey)}
+            </button>
             {plan.fairUse && (
               <p className="text-[10px] text-slate-400 text-center mt-3 font-medium">{t('plan_fair_use')}</p>
             )}
