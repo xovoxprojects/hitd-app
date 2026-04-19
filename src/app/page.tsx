@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
+import { useSession } from "next-auth/react";
 
 // i18n Configuration
 const resources = {
@@ -273,6 +274,7 @@ const LandingPricing = () => {
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const { t, i18n } = useTranslation();
+  const { data: session } = useSession();
 
   const toggleLang = () => {
     i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en');
@@ -304,10 +306,19 @@ export default function Home() {
             <Globe className="w-4 h-4" /> {i18n.language}
           </button>
           <Link href="/pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors hidden md:block">{t('nav_pricing')}</Link>
-          <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">{t('nav_login')}</Link>
-          <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
-            {t('nav_get_started')}
-          </Link>
+          
+          {session ? (
+            <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">{t('nav_login')}</Link>
+              <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
+                {t('nav_get_started')}
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
