@@ -519,7 +519,7 @@ export default function Home() {
           <button onClick={toggleLang} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer w-full md:w-auto text-left py-2 md:py-0">
             <Globe className="w-4 h-4" /> {i18n.language}
           </button>
-          <Link href="/pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 md:py-0 w-full md:w-auto block">{t('nav_pricing')}</Link>
+          <Link href="/#pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 md:py-0 w-full md:w-auto block">{t('nav_pricing')}</Link>
           
           {isLoggedIn ? (
             <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm w-full md:w-auto text-center mt-2 md:mt-0">
@@ -746,7 +746,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
+      <section id="pricing" className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('price_badge')}</h4>
