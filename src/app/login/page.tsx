@@ -1,9 +1,20 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+
+function AuthError() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  if (!error) return null;
+  return (
+    <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 text-center font-medium mb-4">
+      Authentication Error: {error}
+    </div>
+  );
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -35,6 +46,10 @@ export default function LoginPage() {
           <h2 className="text-3xl font-bold tracking-tighter text-black">Welcome to hitd.ai</h2>
           <p className="mt-2 text-sm text-neutral-500">Log in or create a new account.</p>
         </div>
+
+        <Suspense fallback={null}>
+          <AuthError />
+        </Suspense>
         
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
