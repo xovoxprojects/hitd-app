@@ -200,73 +200,115 @@ i18n.use(initReactI18next).init({
 });
 
 const LandingPricing = () => {
+  const plans = [
+    {
+      name: "Growth",
+      subtitle: "Perfect for casual advertisers looking to verify ad copy.",
+      price: "$19.99",
+      originalPrice: "$49.99",
+      discount: "-60%",
+      features: [
+        "20 credits per month",
+        "Full support (Image, Text)",
+        "Video & Screenshot analysis",
+        "AI copy rewrite",
+      ],
+      cta: "Start with Growth",
+      dark: false,
+      featured: false,
+    },
+    {
+      name: "Pro",
+      subtitle: "The full suite for serious media buyers and agencies.",
+      price: "$49.99",
+      originalPrice: "$129.99",
+      discount: "-62%",
+      features: [
+        "50 credits per month",
+        "Priority processing",
+        "Advanced analysis depth",
+        "Detailed Actionable Insights",
+      ],
+      cta: "Start with Pro",
+      dark: true,
+      featured: true,
+    },
+    {
+      name: "Elite",
+      subtitle: "Volume analysis for scaling multiple ad accounts.",
+      price: "$499",
+      originalPrice: "$999",
+      discount: "-50%",
+      features: [
+        "Unlimited usage*",
+        "Weekly calls with Ads Expert",
+        "Manual review by Meta Expert",
+        "Skool Community Access",
+      ],
+      cta: "Start with Elite",
+      dark: false,
+      featured: false,
+    },
+  ];
+
   return (
-    <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-12">
-      <div className="bg-white border border-slate-200 rounded-3xl p-10 flex flex-col hover:-translate-y-2 transition-transform duration-300 shadow-sm">
-        <h3 className="text-xl font-bold mb-1 text-slate-900">Starter</h3>
-        <p className="text-slate-500 text-sm mb-6 font-medium">Free testing</p>
-        <ul className="space-y-4 mb-10 flex-grow border-t border-slate-100 pt-6">
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> 5 analyses
-          </li>
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> Basic feedback
-          </li>
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> Policy check
-          </li>
-        </ul>
-        <Link href="/pricing" className="w-full block text-center py-3 rounded-xl border border-slate-200 text-slate-900 font-bold transition-colors shadow-sm">
-          Get Started
-        </Link>
-      </div>
-
-      <div className="relative bg-white border-2 border-blue-600 rounded-3xl p-10 flex flex-col shadow-xl z-10 scale-[1.02]">
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
-          Recommended
+    <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-end pt-8">
+      {plans.map((plan) => (
+        <div
+          key={plan.name}
+          className={`relative rounded-3xl flex flex-col transition-all duration-300 ${
+            plan.dark
+              ? "bg-[#0f172a] text-white shadow-2xl shadow-blue-900/30 md:-translate-y-6 ring-2 ring-blue-500/30"
+              : "bg-white border border-slate-200 text-slate-900 shadow-md hover:-translate-y-1"
+          }`}
+        >
+          {plan.featured && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg whitespace-nowrap">
+              ★ Most Popular
+            </div>
+          )}
+          <div className="p-8 md:p-10 flex flex-col flex-1">
+            <div className="mb-5">
+              <h3 className={`text-xl font-bold mb-1 ${plan.dark ? "text-white" : "text-slate-900"}`}>{plan.name}</h3>
+              <p className={`text-sm font-medium leading-snug ${plan.dark ? "text-slate-400" : "text-slate-500"}`}>{plan.subtitle}</p>
+            </div>
+            <div className={`pb-6 mb-6 border-b ${plan.dark ? "border-slate-800" : "border-slate-100"}`}>
+              <div className="flex items-end gap-2 flex-wrap">
+                <span className={`text-4xl font-black tracking-tighter leading-none ${plan.dark ? "text-white" : "text-slate-900"}`}>
+                  {plan.price}
+                </span>
+                <div className="flex flex-col pb-0.5 gap-0.5">
+                  <span className={`text-sm font-bold line-through leading-none ${plan.dark ? "text-slate-600" : "text-slate-400"}`}>
+                    {plan.originalPrice}
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-500 tracking-wider uppercase leading-none">{plan.discount} off</span>
+                </div>
+                <span className={`text-sm font-medium pb-0.5 ${plan.dark ? "text-slate-500" : "text-slate-400"}`}>/mo</span>
+              </div>
+            </div>
+            <ul className="space-y-3 mb-8 flex-grow">
+              {plan.features.map((f, i) => (
+                <li key={i} className={`flex items-center gap-3 text-sm font-medium ${plan.dark ? "text-slate-200" : "text-slate-700"}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.dark ? "bg-blue-500/20" : "bg-blue-50"}`}>
+                    <Check className={`w-3 h-3 ${plan.dark ? "text-blue-400" : "text-blue-600"}`} />
+                  </div>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/pricing"
+              className={`w-full block text-center py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 ${
+                plan.dark
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:opacity-90 shadow-[0_0_20px_rgba(79,70,229,0.35)]"
+                  : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+              }`}
+            >
+              {plan.cta}
+            </Link>
+          </div>
         </div>
-        <h3 className="text-xl font-bold mb-1 text-slate-900">Growth</h3>
-        <p className="text-slate-500 text-sm mb-6 font-medium">For marketers</p>
-        <ul className="space-y-4 mb-10 flex-grow border-t border-slate-100 pt-6">
-          <li className="flex items-center gap-3 text-slate-900 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-600 shrink-0" /> 20 analyses
-          </li>
-          <li className="flex items-center gap-3 text-slate-900 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-600 shrink-0" /> Full analysis - copy & compliance
-          </li>
-          <li className="flex items-center gap-3 text-slate-900 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-600 shrink-0" /> AI copy rewrite
-          </li>
-          <li className="flex items-center gap-3 text-slate-900 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-600 shrink-0" /> Advanced suggestions
-          </li>
-        </ul>
-        <Link href="/pricing" className="w-full block text-center py-3 rounded-xl bg-slate-900 text-white font-bold transition-colors shadow-md hover:bg-slate-800">
-          Get Started
-        </Link>
-      </div>
-
-      <div className="bg-white border border-slate-200 rounded-3xl p-10 flex flex-col hover:-translate-y-2 transition-transform duration-300 shadow-sm">
-        <h3 className="text-xl font-bold mb-1 text-slate-900">Pro</h3>
-        <p className="text-slate-500 text-sm mb-6 font-medium">For teams</p>
-        <ul className="space-y-4 mb-10 flex-grow border-t border-slate-100 pt-6">
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> High-volume usage
-          </li>
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> Priority processing
-          </li>
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> Deep analysis
-          </li>
-          <li className="flex items-center gap-3 text-slate-700 font-medium text-sm">
-            <Check className="w-5 h-5 text-blue-500 shrink-0" /> Team access
-          </li>
-        </ul>
-        <Link href="/pricing" className="w-full block text-center py-3 rounded-xl border border-slate-200 text-slate-900 font-bold transition-colors shadow-sm">
-          Get Started
-        </Link>
-      </div>
+      ))}
     </div>
   );
 };
