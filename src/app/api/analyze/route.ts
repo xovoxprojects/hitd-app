@@ -4,6 +4,10 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 import { GoogleGenerativeAI, Part } from "@google/generative-ai";
+import { GoogleAIFileManager } from "@google/generative-ai/server";
+import { writeFileSync, unlinkSync } from "fs";
+import { join } from "path";
+import os from "os";
 
 const MASTER_PROMPT = `Actúa como un representante oficial de Meta que conoce TODAS las políticas de Meta basadas en el sitio web oficial. Analizarás el contenido, screenshot, texto, copywriting o video enviado para verificar que cumple con las políticas de Meta (Meta-Compliant). Este contenido es específicamente para Instagram y Facebook: contenido orgánico, historias, anuncios y creativos.
 
@@ -65,27 +69,51 @@ export async function POST(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let jsonResult: any;
 
-    // ── VIDEO → Gemini 1.5 Pro (real video frame-by-frame comprehension) ───
+    // ── VIDEO → Gemini Files API + gemini-2.5-flash ───────────────────────
     if (type === "video" && fileUrl) {
+      const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY!);
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      const videoPart: Part = {
-        fileData: {
+      // 1. Download the video from Supabase into /tmp
+      const videoResponse = await fetch(fileUrl);
+      if (!videoResponse.ok) throw new Error("Failed to download video from storage");
+      const videoBuffer = await videoResponse.arrayBuffer();
+      const ext = (fileMimeType as string).split("/")[1] || "mp4";
+      const tmpPath = join(os.tmpdir(), `hitd_${Date.now()}.${ext}`);
+      writeFileSync(tmpPath, Buffer.from(videoBuffer));
+
+      let uploadedFileUri = "";
+      try {
+        // 2. Upload to Gemini Files API
+        const uploadResult = await fileManager.uploadFile(tmpPath, {
           mimeType: fileMimeType as string,
-          fileUri: fileUrl,
-        },
-      };
+          displayName: fileName || "ad_creative",
+        });
+        uploadedFileUri = uploadResult.file.uri;
 
-      const textPart: Part = {
-        text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy provided with the video:\n${text}` : ""),
-      };
+        // 3. Wait until file is ACTIVE (processing)
+        let fileInfo = await fileManager.getFile(uploadResult.file.name);
+        while (fileInfo.state === "PROCESSING") {
+          await new Promise((r) => setTimeout(r, 2000));
+          fileInfo = await fileManager.getFile(uploadResult.file.name);
+        }
+        if (fileInfo.state === "FAILED") throw new Error("Gemini file processing failed.");
 
-      const result = await model.generateContent([textPart, videoPart]);
-      const rawText = result.response.text();
-      // Strip markdown fences if Gemini wraps the JSON
-      const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      jsonResult = JSON.parse(cleaned);
+        // 4. Analyze
+        const videoPart: Part = { fileData: { mimeType: fileMimeType as string, fileUri: uploadedFileUri } };
+        const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
+        const result = await model.generateContent([textPart, videoPart]);
+        const rawText = result.response.text();
+        const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+        jsonResult = JSON.parse(cleaned);
+
+        // 5. Delete the uploaded file from Gemini to avoid quota buildup
+        await fileManager.deleteFile(uploadResult.file.name).catch(() => {});
+      } finally {
+        // Always clean up /tmp
+        unlinkSync(tmpPath);
+      }
 
     // ── IMAGE / TEXT → GPT-4o ─────────────────────────────────────────────
     } else {
