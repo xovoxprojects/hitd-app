@@ -13,17 +13,23 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
   callbacks: {
-    async session({ session, user }) {
-      if (session.user && user) {
-        session.user.id = user.id;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user.id = token.id as string;
 
         // Fetch user from db to get credits and plan
         try {
           const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
+            where: { id: token.id as string },
             select: { credits: true, plan: true }
           });
 
@@ -32,8 +38,7 @@ export const authOptions: NextAuthOptions = {
             session.user.plan = dbUser.plan ?? "none";
           }
         } catch (dbError) {
-          console.error("Auth session db error (schema mismatch?):", dbError);
-          // Fallbacks to prevent auth break
+          console.error("Auth session db error:", dbError);
           session.user.credits = 0;
           session.user.plan = "none";
         }
