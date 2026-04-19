@@ -278,6 +278,10 @@ export default function Home() {
     i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en');
   };
 
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
   const faqs = [
     { q: t('faq_1_q'), a: t('faq_1_a') },
     { q: t('faq_2_q'), a: t('faq_2_a') },
