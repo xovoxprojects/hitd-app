@@ -98,7 +98,32 @@ const resources = {
       faq_5_a: "No. The tool explains everything in simple terms and gives actionable recommendations anyone can follow.",
       foot_badge: "Ready?",
       foot_h2: "Your Ads Can Perform Better.\nFix Them Today.",
-      foot_sub: "Stop wasting ad spend on creatives that don't convert."
+      foot_sub: "Stop wasting ad spend on creatives that don't convert.",
+      plan_growth_name: "Growth",
+      plan_growth_sub: "Perfect for advertisers who want to verify their ad copy.",
+      plan_growth_f1: "20 credits per month",
+      plan_growth_f2: "Full support (Image, Text)",
+      plan_growth_f3: "Video & Screenshot analysis",
+      plan_growth_f4: "AI copy rewrite",
+      plan_growth_cta: "Start with Growth",
+      plan_pro_name: "Pro",
+      plan_pro_sub: "The full suite for serious media buyers and agencies.",
+      plan_pro_f1: "50 credits per month",
+      plan_pro_f2: "Priority processing",
+      plan_pro_f3: "Advanced analysis depth",
+      plan_pro_f4: "Detailed Actionable Insights",
+      plan_pro_f5: "Courses & tools to fix Instagram ad issues",
+      plan_pro_cta: "Start with Pro",
+      plan_pro_popular: "★ Most Popular",
+      plan_elite_name: "Elite",
+      plan_elite_sub: "Volume analysis for scaling multiple ad accounts.",
+      plan_elite_f1: "Unlimited usage*",
+      plan_elite_f2: "Weekly calls with Ads Expert",
+      plan_elite_f3: "Manual review by Meta Expert",
+      plan_elite_f4: "Skool Community Access",
+      plan_elite_cta: "Start with Elite",
+      plan_fair_use: "*Subject to fair use policy",
+      plan_off: "off"
     }
   },
   es: {
@@ -188,65 +213,77 @@ const resources = {
       faq_5_a: "Con los consejos prácticos ya generados no se requiere técnica previa.",
       foot_badge: "¿Listo?",
       foot_h2: "Tus Anuncios Pueden Rendir Mejor.\nArréglalos Hoy.",
-      foot_sub: "Deja de quemar inversión en contenido que no aporta resultados."
+      foot_sub: "Deja de quemar inversión en contenido que no aporta resultados.",
+      plan_growth_name: "Growth",
+      plan_growth_sub: "Perfecto para anunciantes que quieren verificar su copy.",
+      plan_growth_f1: "20 créditos por mes",
+      plan_growth_f2: "Soporte completo (Imagen, Texto)",
+      plan_growth_f3: "Análisis de Video y Capturas",
+      plan_growth_f4: "Reescritura de copy con IA",
+      plan_growth_cta: "Comenzar con Growth",
+      plan_pro_name: "Pro",
+      plan_pro_sub: "La suite completa para media buyers y agencias serias.",
+      plan_pro_f1: "50 créditos por mes",
+      plan_pro_f2: "Procesamiento prioritario",
+      plan_pro_f3: "Análisis avanzado en profundidad",
+      plan_pro_f4: "Insights detallados y accionables",
+      plan_pro_f5: "Cursos y herramientas para arreglar problemas en Instagram",
+      plan_pro_cta: "Comenzar con Pro",
+      plan_pro_popular: "★ Más Popular",
+      plan_elite_name: "Elite",
+      plan_elite_sub: "Análisis de volumen para escalar múltiples cuentas publicitarias.",
+      plan_elite_f1: "Uso ilimitado*",
+      plan_elite_f2: "Llamadas semanales con Experto en Ads",
+      plan_elite_f3: "Revisión manual por Experto Meta",
+      plan_elite_f4: "Acceso a Comunidad Skool",
+      plan_elite_cta: "Comenzar con Elite",
+      plan_fair_use: "*Sujeto a política de uso justo",
+      plan_off: "dto"
     }
   }
 };
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en",
+  lng: "es",
   fallbackLng: "en",
   interpolation: { escapeValue: false }
 });
 
 const LandingPricing = () => {
-  const plans: { name: string; subtitle: string; price: string; originalPrice: string; discount: string; features: string[]; cta: string; dark: boolean; featured: boolean; fairUse?: boolean }[] = [
+  const { t } = useTranslation();
+
+  const plans: { nameKey: string; subKey: string; price: string; originalPrice: string; discount: string; featureKeys: string[]; ctaKey: string; dark: boolean; featured: boolean; fairUse?: boolean }[] = [
     {
-      name: "Growth",
-      subtitle: "Perfect for casual advertisers looking to verify ad copy.",
-      price: "$19.99",
-      originalPrice: "$49.99",
-      discount: "-60%",
-      features: [
-        "20 credits per month",
-        "Full support (Image, Text)",
-        "Video & Screenshot analysis",
-        "AI copy rewrite",
-      ],
-      cta: "Start with Growth",
+      nameKey: "plan_growth_name",
+      subKey: "plan_growth_sub",
+      price: "$9.99",
+      originalPrice: "$29.99",
+      discount: "-67%",
+      featureKeys: ["plan_growth_f1", "plan_growth_f2", "plan_growth_f3", "plan_growth_f4"],
+      ctaKey: "plan_growth_cta",
       dark: false,
       featured: false,
     },
     {
-      name: "Pro",
-      subtitle: "The full suite for serious media buyers and agencies.",
+      nameKey: "plan_pro_name",
+      subKey: "plan_pro_sub",
       price: "$49.99",
       originalPrice: "$129.99",
       discount: "-62%",
-      features: [
-        "50 credits per month",
-        "Priority processing",
-        "Advanced analysis depth",
-        "Detailed Actionable Insights",
-      ],
-      cta: "Start with Pro",
+      featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
+      ctaKey: "plan_pro_cta",
       dark: true,
       featured: true,
     },
     {
-      name: "Elite",
-      subtitle: "Volume analysis for scaling multiple ad accounts.",
+      nameKey: "plan_elite_name",
+      subKey: "plan_elite_sub",
       price: "$499",
       originalPrice: "$999",
       discount: "-50%",
-      features: [
-        "Unlimited usage*",
-        "Weekly calls with Ads Expert",
-        "Manual review by Meta Expert",
-        "Skool Community Access",
-      ],
-      cta: "Start with Elite",
+      featureKeys: ["plan_elite_f1", "plan_elite_f2", "plan_elite_f3", "plan_elite_f4"],
+      ctaKey: "plan_elite_cta",
       dark: false,
       featured: false,
       fairUse: true,
@@ -257,7 +294,7 @@ const LandingPricing = () => {
     <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-end pt-8">
       {plans.map((plan) => (
         <div
-          key={plan.name}
+          key={plan.nameKey}
           className={`relative rounded-3xl flex flex-col transition-all duration-300 ${
             plan.dark
               ? "bg-[#0f172a] text-white shadow-2xl shadow-blue-900/30 md:-translate-y-6 ring-2 ring-blue-500/30"
@@ -266,13 +303,13 @@ const LandingPricing = () => {
         >
           {plan.featured && (
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg whitespace-nowrap">
-              ★ Most Popular
+              {t('plan_pro_popular')}
             </div>
           )}
           <div className="p-8 md:p-10 flex flex-col flex-1">
             <div className="mb-5">
-              <h3 className={`text-xl font-bold mb-1 ${plan.dark ? "text-white" : "text-slate-900"}`}>{plan.name}</h3>
-              <p className={`text-sm font-medium leading-snug ${plan.dark ? "text-slate-400" : "text-slate-500"}`}>{plan.subtitle}</p>
+              <h3 className={`text-xl font-bold mb-1 ${plan.dark ? "text-white" : "text-slate-900"}`}>{t(plan.nameKey)}</h3>
+              <p className={`text-sm font-medium leading-snug ${plan.dark ? "text-slate-400" : "text-slate-500"}`}>{t(plan.subKey)}</p>
             </div>
             <div className={`pb-6 mb-6 border-b ${plan.dark ? "border-slate-800" : "border-slate-100"}`}>
               <div className="flex items-end gap-2 flex-wrap">
@@ -283,18 +320,18 @@ const LandingPricing = () => {
                   <span className={`text-sm font-bold line-through leading-none ${plan.dark ? "text-slate-600" : "text-slate-400"}`}>
                     {plan.originalPrice}
                   </span>
-                  <span className="text-[10px] font-black text-emerald-500 tracking-wider uppercase leading-none">{plan.discount} off</span>
+                  <span className="text-[10px] font-black text-emerald-500 tracking-wider uppercase leading-none">{plan.discount} {t('plan_off')}</span>
                 </div>
                 <span className={`text-sm font-medium pb-0.5 ${plan.dark ? "text-slate-500" : "text-slate-400"}`}>/mo</span>
               </div>
             </div>
             <ul className="space-y-3 mb-8 flex-grow">
-              {plan.features.map((f, i) => (
+              {plan.featureKeys.map((fk, i) => (
                 <li key={i} className={`flex items-center gap-3 text-sm font-medium ${plan.dark ? "text-slate-200" : "text-slate-700"}`}>
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.dark ? "bg-blue-500/20" : "bg-blue-50"}`}>
                     <Check className={`w-3 h-3 ${plan.dark ? "text-blue-400" : "text-blue-600"}`} />
                   </div>
-                  {f}
+                  {t(fk)}
                 </li>
               ))}
             </ul>
@@ -306,10 +343,10 @@ const LandingPricing = () => {
                   : "bg-slate-100 text-slate-900 hover:bg-slate-200"
               }`}
             >
-              {plan.cta}
+              {t(plan.ctaKey)}
             </Link>
             {plan.fairUse && (
-              <p className="text-[10px] text-slate-400 text-center mt-3 font-medium">*Subject to fair use policy</p>
+              <p className="text-[10px] text-slate-400 text-center mt-3 font-medium">{t('plan_fair_use')}</p>
             )}
           </div>
         </div>
