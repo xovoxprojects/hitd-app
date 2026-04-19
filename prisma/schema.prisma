@@ -59,18 +59,20 @@ model VerificationToken {
 }
 
 model Analysis {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type         String   // "image", "video", "text"
-  contentUrl   String?  // URL to Supabase storage
-  textContent  String?
-  score        Int
-  riskLevel    String
-  violations   Json
-  warnings     Json
-  improvements Json
-  rewrittenCopy String?
-  cost         Float    // Credits deducted
-  createdAt    DateTime @default(now())
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type                 String   // "image", "video", "text"
+  contentUrl           String?  // URL to Supabase storage
+  textContent          String?
+  score                Int
+  riskLevel            String
+  violations           Json
+  warnings             Json
+  improvements         Json
+  rewrittenCopy        String?
+  complianceExplanation String?
+  alternatives         Json?    // { soft, medium, aggressive }
+  cost                 Float    // Credits deducted
+  createdAt            DateTime @default(now())
 }
