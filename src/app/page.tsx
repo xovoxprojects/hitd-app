@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap, Activity, TrendingUp, Check, X, ChevronDown, Video, FileText, BarChart, Globe } from "lucide-react";
+import { ArrowRight, ShieldCheck, Zap, Activity, TrendingUp, Check, X, ChevronDown, Video, FileText, BarChart, Globe, Menu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import i18n from "i18next";
@@ -273,6 +273,7 @@ const LandingPricing = () => {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const { data: session, status } = useSession();
   const isLoggedIn = status === 'authenticated';
@@ -297,36 +298,45 @@ export default function Home() {
     <div className="bg-slate-50 text-slate-900 font-sans selection:bg-blue-200 selection:text-blue-900 min-h-screen">
       
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 lg:px-12 py-4 w-full sticky top-0 z-50 bg-slate-50/90 backdrop-blur-md">
+      <nav className="flex flex-wrap items-center justify-between px-6 lg:px-12 py-4 w-full sticky top-0 z-50 bg-slate-50/90 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
           <span className="text-xl font-black tracking-tight text-slate-900 ml-1">hitd.ai</span>
         </div>
-        <div className="flex items-center gap-6">
-          <button onClick={toggleLang} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer">
+        
+        {/* Mobile menu button */}
+        <div className="md:hidden flex items-center">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-600 hover:text-slate-900">
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Desktop and Mobile Menu Items */}
+        <div className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto mt-4 md:mt-0`}>
+          <button onClick={toggleLang} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer w-full md:w-auto text-left py-2 md:py-0">
             <Globe className="w-4 h-4" /> {i18n.language}
           </button>
-          <Link href="/pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors hidden md:block">{t('nav_pricing')}</Link>
+          <Link href="/pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 md:py-0 w-full md:w-auto block">{t('nav_pricing')}</Link>
           
           {isLoggedIn ? (
-            <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
+            <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm w-full md:w-auto text-center mt-2 md:mt-0">
               Dashboard
             </Link>
           ) : status === 'loading' ? (
-            <div className="w-24 h-9 rounded-full bg-slate-200 animate-pulse" />
+            <div className="w-24 h-9 rounded-full bg-slate-200 animate-pulse mt-2 md:mt-0" />
           ) : (
-            <>
-              <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">{t('nav_login')}</Link>
-              <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
+              <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors w-full md:w-auto block py-2 md:py-0">{t('nav_login')}</Link>
+              <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm w-full md:w-auto text-center">
                 {t('nav_get_started')}
               </Link>
-            </>
+            </div>
           )}
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-20 px-6 text-center max-w-5xl mx-auto flex flex-col items-center">
+      <section className="pt-12 md:pt-24 pb-12 md:pb-20 px-6 text-center max-w-5xl mx-auto flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -338,7 +348,7 @@ export default function Home() {
 
         <motion.h1 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="text-[2.75rem] md:text-6xl font-[800] tracking-tight text-slate-900 mb-6 leading-[1.1]"
+          className="text-[2.25rem] md:text-[2.75rem] lg:text-6xl font-[800] tracking-tight text-slate-900 mb-6 leading-[1.1]"
         >
           {t('hero_h1_1')}<br />
           <span className="text-[#3b82f6]">{t('hero_h1_2')}</span>
@@ -360,22 +370,22 @@ export default function Home() {
 
         <motion.div 
           initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-16 w-full max-w-3xl"
+          className="mt-12 md:mt-16 w-full max-w-3xl"
         >
-          <div className="bg-white rounded-[20px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] py-8 px-10 relative border border-slate-100 flex flex-col md:flex-row gap-8 items-center justify-center">
+          <div className="bg-white rounded-[20px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] py-8 px-6 md:px-10 relative border border-slate-100 flex flex-col md:flex-row gap-8 items-center justify-center">
             <div className="absolute top-4 left-4 flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></div>
               <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></div>
               <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
             </div>
-            <div className="absolute top-3 w-full flex justify-center pointer-events-none">
+            <div className="absolute top-3 w-full flex justify-center pointer-events-none hidden sm:flex">
                <div className="px-4 py-1 border border-slate-100 rounded-md text-[9px] text-slate-300 font-mono tracking-wider">
                   hitd.ai/dashboard/analyze
                </div>
             </div>
             
-            <div className="mt-8 flex flex-col md:flex-row gap-6 w-full hidden md:flex">
-              <div className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl w-1/3 shadow-sm">
+            <div className="mt-8 flex flex-col md:flex-row gap-6 w-full md:flex">
+              <div className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl w-full md:w-1/3 shadow-sm">
                 <div className="relative w-24 h-24 flex items-center justify-center mb-2">
                   <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="45" fill="none" className="stroke-slate-100" strokeWidth="8" />
@@ -385,7 +395,7 @@ export default function Home() {
                 </div>
                 <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest text-center mt-2">{t('score_perf')}</div>
               </div>
-              <div className="flex flex-col gap-3 flex-1 w-full relative h-[180px]">
+              <div className="flex flex-col gap-3 flex-1 w-full relative sm:h-[180px]">
                 <div className="flex items-start gap-4 p-4 bg-white border border-emerald-100 shadow-sm rounded-xl">
                   <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
                   <div>
@@ -407,11 +417,11 @@ export default function Home() {
       </section>
 
       {/* Problem Section */}
-      <section className="bg-white py-24 px-6 border-t border-slate-100">
+      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-12">
+          <div className="mb-8 md:mb-12">
             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('prob_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-[#0f172a] tracking-tight">{t('prob_h2')}</h2>
+            <h2 className="text-[2rem] md:text-4xl font-[800] text-[#0f172a] tracking-tight leading-tight">{t('prob_h2')}</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
@@ -423,7 +433,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8">
                <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">{t('prob_alg_sees')}</h5>
                <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 bg-[#fffbfb] border border-[#ffebeb] rounded-lg">
@@ -450,11 +460,11 @@ export default function Home() {
       </section>
 
       {/* Solution Section */}
-      <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
+      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-14">
+          <div className="mb-10 md:mb-14">
             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('sol_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-4 tracking-tight">{t('sol_h2')}</h2>
+            <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-4 tracking-tight leading-tight">{t('sol_h2')}</h2>
             <p className="text-slate-500 text-sm md:text-base max-w-2xl font-medium leading-relaxed">{t('sol_sub')}</p>
           </div>
           
@@ -483,34 +493,34 @@ export default function Home() {
       </section>
 
       {/* Features Detail */}
-      <section className="bg-white py-24 px-6 border-t border-slate-100">
+      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('feat_badge')}</h4>
             <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-4 tracking-tight leading-tight max-w-xl mx-auto">{t('feat_h2')}</h2>
             <p className="text-slate-500 font-medium text-sm max-w-md mx-auto">{t('feat_sub')}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
+            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
                <ShieldCheck className="w-8 h-8 text-[#3b82f6] mb-4" />
                <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_1_t')}</h3>
                <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_1_s')}</p>
                <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_1_d')}</p>
             </div>
-            <div className="p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
+            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
                <FileText className="w-8 h-8 text-[#f59e0b] mb-4" />
                <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_2_t')}</h3>
                <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_2_s')}</p>
                <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_2_d')}</p>
             </div>
-            <div className="p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
+            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
                <BarChart className="w-8 h-8 text-[#8b5cf6] mb-4" />
                <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_3_t')}</h3>
                <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_3_s')}</p>
                <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_3_d')}</p>
             </div>
-            <div className="p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
+            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
                <Video className="w-8 h-8 text-[#f43f5e] mb-4" />
                <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_4_t')}</h3>
                <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_4_s')}</p>
@@ -521,10 +531,10 @@ export default function Home() {
       </section>
 
       {/* How It Works Steps */}
-      <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
+      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-5xl mx-auto text-center">
           <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('hw_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-20 tracking-tight">{t('hw_h2')}</h2>
+          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-12 md:mb-20 tracking-tight leading-tight">{t('hw_h2')}</h2>
           
           <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-10 md:gap-4 px-4">
             <div className="hidden md:block absolute top-[18px] left-[10%] w-[80%] h-[1px] bg-slate-200 z-0"></div>
@@ -543,7 +553,7 @@ export default function Home() {
                 transition={{ delay: i * 0.15 }}
                 className="relative z-10 flex flex-col items-center flex-1 mx-auto max-w-[200px]"
               >
-                <div className="w-9 h-9 rounded-full bg-blue-600 text-white font-[800] flex items-center justify-center text-sm mb-5 shadow-sm">
+                <div className="w-9 h-9 rounded-full bg-blue-600 text-white font-[800] flex items-center justify-center text-sm mb-4 shadow-sm">
                   {i + 1}
                 </div>
                 <h3 className="text-[13px] font-[800] text-slate-900 mb-1">{step.title}</h3>
@@ -555,7 +565,7 @@ export default function Home() {
       </section>
 
       {/* Stop Guessing CTA */}
-      <section className="bg-white py-32 px-6 border-t border-slate-100 text-center">
+      <section className="bg-white py-16 md:py-32 px-6 border-t border-slate-100 text-center">
         <div className="max-w-2xl mx-auto">
           <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('cta_badge')}</h4>
           <h2 className="text-[2rem] md:text-5xl font-[800] text-slate-900 mb-6 tracking-tight leading-tight whitespace-pre-line">{t('cta_h2')}</h2>
@@ -567,10 +577,10 @@ export default function Home() {
       </section>
 
       {/* Why Ads Fail Content */}
-      <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
+      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-3xl mx-auto text-center md:text-left">
           <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('why_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-8 tracking-tight">{t('why_h2')}</h2>
+          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-8 tracking-tight leading-tight">{t('why_h2')}</h2>
           <div className="space-y-4 text-slate-500 text-[14px] font-medium leading-relaxed max-w-2xl">
             <p>{t('why_p1')}</p>
             <p>{t('why_p2')}</p>
@@ -579,7 +589,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="bg-white py-24 px-6 border-t border-slate-100">
+      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('price_badge')}</h4>
@@ -590,20 +600,20 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
+      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
          <div className="max-w-3xl mx-auto">
           <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3 text-center">{t('faq_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-12 text-center tracking-tight">{t('faq_h2')}</h2>
+          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-8 md:mb-12 text-center tracking-tight leading-tight">{t('faq_h2')}</h2>
           
           <div className="space-y-3">
              {faqs.map((faq, index) => (
                 <div key={index} className="bg-white border border-slate-200 rounded-xl overflow-hidden">
                    <button 
                      onClick={() => toggleFaq(index)}
-                     className="w-full text-left px-6 py-5 font-[800] text-[14px] text-slate-900 flex justify-between items-center hover:bg-slate-50 transition-colors"
+                     className="w-full text-left px-5 md:px-6 py-4 md:py-5 font-[800] text-[13px] md:text-[14px] text-slate-900 flex justify-between items-center hover:bg-slate-50 transition-colors"
                    >
                       {faq.q}
-                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
                    </button>
                    <AnimatePresence>
                       {openFaq === index && (
@@ -614,7 +624,7 @@ export default function Home() {
                            transition={{ duration: 0.2 }}
                            className="overflow-hidden bg-white"
                          >
-                            <div className="px-6 pb-5 pt-0 text-[13px] text-slate-500 font-medium leading-relaxed">
+                            <div className="px-5 md:px-6 pb-4 md:pb-5 pt-0 text-[13px] text-slate-500 font-medium leading-relaxed">
                                {faq.a}
                             </div>
                          </motion.div>
@@ -627,10 +637,10 @@ export default function Home() {
       </section>
 
       {/* Final Footer CTA */}
-      <section className="bg-white py-24 px-6 text-center pb-32">
+      <section className="bg-white py-16 md:py-24 px-6 text-center pb-20 md:pb-32">
         <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-4">{t('foot_badge')}</h4>
         <h2 className="text-[2.25rem] md:text-5xl font-[800] text-slate-900 mb-6 tracking-tight leading-tight whitespace-pre-line">{t('foot_h2')}</h2>
-        <p className="text-[14px] text-slate-500 mb-10 font-medium">{t('foot_sub')}</p>
+        <p className="text-[14px] text-slate-500 mb-10 font-medium px-4">{t('foot_sub')}</p>
         <Link href="/dashboard" className="inline-flex px-8 py-3.5 bg-[#1b1f2e] text-white rounded-full font-bold text-sm items-center gap-2 hover:bg-slate-900 transition-colors shadow-md">
           {t('btn_start')} <ArrowRight className="w-4 h-4 text-slate-400" />
         </Link>
