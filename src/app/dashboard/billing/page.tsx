@@ -54,7 +54,7 @@ export default function BillingPage() {
           <h3 className="text-5xl font-black text-slate-900 mb-6">{userCredits}</h3>
           <Button 
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-200"
-            onClick={() => router.push('/pricing')}
+            onClick={() => router.push('/#pricing')}
           >
             Refill Credits
           </Button>
@@ -98,15 +98,10 @@ export default function BillingPage() {
             <div className="mt-auto pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
               <Button 
                 variant="outline" 
-                className="flex-1 rounded-xl h-12 font-bold border-slate-200 hover:bg-slate-50"
-                onClick={() => router.push('/pricing')}
+                className="w-full rounded-xl h-12 font-bold border-slate-200 hover:bg-slate-50"
+                onClick={() => router.push('/#pricing')}
               >
                 Change Plan
-              </Button>
-              <Button 
-                className="flex-1 rounded-xl h-12 font-bold bg-slate-900 border-none shadow-xl shadow-slate-200"
-              >
-                Stripe Portal
               </Button>
             </div>
           </div>
