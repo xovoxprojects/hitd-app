@@ -292,18 +292,6 @@ const LandingPricing = () => {
       featured: false,
     },
     {
-      nameKey: "plan_pro_name",
-      subKey: "plan_pro_sub",
-      price: "$49.99",
-      originalPrice: "$129.99",
-      discount: "-62%",
-      featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
-      ctaKey: "plan_pro_cta",
-      planId: "pro",
-      dark: false,
-      featured: false,
-    },
-    {
       nameKey: "plan_elite_name",
       subKey: "plan_elite_sub",
       price: "$499",
@@ -315,6 +303,18 @@ const LandingPricing = () => {
       dark: true,
       featured: true,
       fairUse: true,
+    },
+    {
+      nameKey: "plan_pro_name",
+      subKey: "plan_pro_sub",
+      price: "$49.99",
+      originalPrice: "$129.99",
+      discount: "-62%",
+      featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
+      ctaKey: "plan_pro_cta",
+      planId: "pro",
+      dark: false,
+      featured: false,
     },
   ];
 
