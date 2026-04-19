@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       let creditsToAdd = 0;
       if (planName === "growth") creditsToAdd = 20;
       else if (planName === "pro") creditsToAdd = 50;
-      else if (planName === "elite") creditsToAdd = 200;
+      else if (planName === "elite") creditsToAdd = 9999;
 
       await prisma.user.update({
         where: { id: userId },
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         let creditsToReset = 0;
         if (user.plan === "growth") creditsToReset = 20;
         else if (user.plan === "pro") creditsToReset = 50;
-        else if (user.plan === "elite") creditsToReset = 200;
+        else if (user.plan === "elite") creditsToReset = 9999;
 
         await prisma.user.update({
           where: { id: user.id },
