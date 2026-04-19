@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
 import { useSession } from "next-auth/react";
+import { Footer } from "@/components/layout/Footer";
 
 // i18n Configuration
 const resources = {
@@ -803,6 +804,7 @@ export default function Home() {
         </Link>
       </section>
       
+      <Footer />
     </div>
   );
 }
