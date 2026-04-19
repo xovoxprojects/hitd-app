@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Zap, Activity, TrendingUp, Check, X, ChevronDown, Video, FileText, BarChart, Globe, Menu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
 import { useSession } from "next-auth/react";
@@ -313,6 +313,163 @@ const LandingPricing = () => {
   );
 };
 
+// ── Hero Dashboard Mockup ──────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1200, start = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let startTime: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [start, target, duration]);
+  return count;
+}
+
+function HeroMockup({ t }: { t: (key: string) => string }) {
+  const [started, setStarted] = useState(false);
+  const score = useCountUp(92, 1400, started);
+
+  const circumference = 2 * Math.PI * 45; // ~282.7
+  const offset = circumference - (score / 100) * circumference;
+
+  const bars = [
+    { label: "Hook strength", value: 88, color: "#3b82f6" },
+    { label: "Compliance",    value: 100, color: "#22c55e" },
+    { label: "CTA clarity",   value: 74,  color: "#f97316" },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.8 }}
+      onAnimationComplete={() => setStarted(true)}
+      className="mt-12 md:mt-16 w-full max-w-3xl"
+    >
+      {/* Browser chrome */}
+      <div className="bg-white rounded-[20px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.10)] border border-slate-200 overflow-hidden">
+        {/* Top bar */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+            <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+            <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+          </div>
+          <div className="flex-1 flex justify-center">
+            <div className="px-4 py-1 bg-white border border-slate-200 rounded-md text-[10px] text-slate-400 font-mono tracking-wide shadow-sm">
+              hitd.ai/dashboard/analyze
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 flex flex-col sm:flex-row gap-4 bg-slate-50/60">
+
+          {/* Left panel — Score */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col items-center sm:w-[200px] shrink-0">
+            {/* Circle */}
+            <div className="relative w-28 h-28 flex items-center justify-center mb-1">
+              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" strokeWidth="7" />
+                <circle
+                  cx="50" cy="50" r="45" fill="none"
+                  stroke="#3b82f6" strokeWidth="7"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  style={{ transition: "stroke-dashoffset 0.05s linear" }}
+                />
+              </svg>
+              <div className="flex flex-col items-center leading-none">
+                <span className="text-[2rem] font-[900] text-blue-700 leading-none">{score}</span>
+                <span className="text-[10px] text-slate-400 font-semibold">/100</span>
+              </div>
+            </div>
+            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">
+              Performance Score
+            </div>
+
+            {/* Bars */}
+            <div className="w-full space-y-2.5">
+              {bars.map((bar) => (
+                <div key={bar.label}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-[10px] text-slate-500 font-medium">{bar.label}</span>
+                    <span className="text-[10px] font-bold" style={{ color: bar.color }}>{started ? bar.value : 0}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: bar.color }}
+                      initial={{ width: 0 }}
+                      animate={{ width: started ? `${bar.value}%` : 0 }}
+                      transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right panel — Cards */}
+          <div className="flex flex-col gap-3 flex-1">
+            {/* Card 1 — violations */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-start gap-3">
+              <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-[800] text-slate-800 leading-tight">{t('score_0_viol')}</p>
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">{t('score_0_viol_sub')}</p>
+                <span className="inline-flex mt-2 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-bold tracking-widest uppercase border border-emerald-200">
+                  Compliant
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2 — improvement */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-start gap-3">
+              <div className="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+                <span className="text-amber-600 font-black text-sm leading-none">!</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-[800] text-slate-800 leading-tight">{t('score_insight')}</p>
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">{t('score_insight_sub')}</p>
+                <span className="inline-flex mt-2 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[9px] font-bold tracking-widest uppercase border border-amber-200">
+                  Quick Fix
+                </span>
+              </div>
+            </div>
+
+            {/* Suggested improvements */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">Suggested Improvements</p>
+              <ul className="space-y-1.5">
+                {[
+                  { color: "#3b82f6", text: "Strengthen opening hook — first 3 seconds are critical" },
+                  { color: "#f97316", text: "Increase CTA button contrast ratio" },
+                  { color: "#94a3b8", text: "Add social proof element near CTA" },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -410,52 +567,7 @@ export default function Home() {
           <p className="text-[11px] text-slate-400 mt-4 font-semibold">{t('hero_sub2')}</p>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-12 md:mt-16 w-full max-w-3xl"
-        >
-          <div className="bg-white rounded-[20px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] py-8 px-6 md:px-10 relative border border-slate-100 flex flex-col md:flex-row gap-8 items-center justify-center">
-            <div className="absolute top-4 left-4 flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
-            </div>
-            <div className="absolute top-3 w-full flex justify-center pointer-events-none hidden sm:flex">
-               <div className="px-4 py-1 border border-slate-100 rounded-md text-[9px] text-slate-300 font-mono tracking-wider">
-                  hitd.ai/dashboard/analyze
-               </div>
-            </div>
-            
-            <div className="mt-8 flex flex-col md:flex-row gap-6 w-full md:flex">
-              <div className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-2xl w-full md:w-1/3 shadow-sm">
-                <div className="relative w-24 h-24 flex items-center justify-center mb-2">
-                  <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="none" className="stroke-slate-100" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="45" fill="none" className="stroke-[#3b82f6]" strokeWidth="8" strokeLinecap="round" strokeDasharray="283" strokeDashoffset="22.6" />
-                  </svg>
-                  <span className="text-3xl font-[800] text-blue-700">92</span>
-                </div>
-                <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest text-center mt-2">{t('score_perf')}</div>
-              </div>
-              <div className="flex flex-col gap-3 flex-1 w-full relative sm:h-[180px]">
-                <div className="flex items-start gap-4 p-4 bg-white border border-emerald-100 shadow-sm rounded-xl">
-                  <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
-                  <div>
-                    <h4 className="text-[13px] font-[800] text-slate-800">{t('score_0_viol')}</h4>
-                    <p className="text-[11px] text-slate-500 font-medium">{t('score_0_viol_sub')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-white border border-slate-200 shadow-sm rounded-xl">
-                  <Activity className="w-5 h-5 text-blue-500 shrink-0" />
-                  <div>
-                    <h4 className="text-[13px] font-[800] text-slate-800">{t('score_insight')}</h4>
-                    <p className="text-[11px] text-slate-500 font-medium">{t('score_insight_sub')}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <HeroMockup t={t} />
       </section>
 
       {/* Problem Section */}
