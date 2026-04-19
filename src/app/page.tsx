@@ -274,7 +274,8 @@ const LandingPricing = () => {
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const { t, i18n } = useTranslation();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === 'authenticated';
 
   const toggleLang = () => {
     i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en');
@@ -307,10 +308,12 @@ export default function Home() {
           </button>
           <Link href="/pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors hidden md:block">{t('nav_pricing')}</Link>
           
-          {session ? (
+          {isLoggedIn ? (
             <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm">
               Dashboard
             </Link>
+          ) : status === 'loading' ? (
+            <div className="w-24 h-9 rounded-full bg-slate-200 animate-pulse" />
           ) : (
             <>
               <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">{t('nav_login')}</Link>
