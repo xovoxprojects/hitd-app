@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 // Minimal config for diagnostics - adapter temporarily removed
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "hitd-fallback-secret-please-set-env",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
