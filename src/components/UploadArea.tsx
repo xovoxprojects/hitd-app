@@ -12,7 +12,13 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > 800 * 1024 * 1024) {
+        setError("File size exceeds 800MB limit.");
+        return;
+      }
+      setError("");
+      setFile(selectedFile);
     }
   };
 
@@ -23,7 +29,13 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+      const selectedFile = e.dataTransfer.files[0];
+      if (selectedFile.size > 800 * 1024 * 1024) {
+        setError("File size exceeds 800MB limit.");
+        return;
+      }
+      setError("");
+      setFile(selectedFile);
     }
   };
 
@@ -154,7 +166,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
                   <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                 </div>
                 <p className="font-bold text-slate-900 text-lg mb-2">Select a file or drag and drop here</p>
-                <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 up to 50MB</p>
+                <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 up to 800MB</p>
               </div>
             )}
           </div>
