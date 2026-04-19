@@ -1,7 +1,48 @@
+"use client";
+
 import Link from "next/link";
 import { Check, Sparkles } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function PricingPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [loadingPriceId, setLoadingPriceId] = useState<string | null>(null);
+
+  const handleCheckout = async (priceId: string, planName: string) => {
+    if (!session?.user) {
+      router.push("/login?callbackUrl=/pricing");
+      return;
+    }
+
+    setLoadingPriceId(priceId);
+
+    try {
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ priceId, planName }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe Checkout
+      } else {
+        console.error("No checkout URL returned:", data);
+        alert("There was an error initiating checkout. Check the console.");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    } finally {
+      setLoadingPriceId(null);
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900 py-24 px-6 font-sans overflow-hidden">
       
@@ -44,9 +85,13 @@ export default function PricingPage() {
               <Check className="w-5 h-5 text-blue-500 shrink-0" /> Video & Screenshot analysis
             </li>
           </ul>
-          <Link href="/login" className="w-full block text-center py-4 rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 font-bold transition-colors">
-            Get Growth
-          </Link>
+          <button 
+            onClick={() => handleCheckout("price_placeholder_growth", "growth")}
+            disabled={loadingPriceId !== null}
+            className="w-full block text-center py-4 rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 font-bold transition-colors disabled:opacity-50"
+          >
+            {loadingPriceId === "price_placeholder_growth" ? "Processing..." : (session ? "Get Growth" : "Login to Subscribe")}
+          </button>
         </div>
 
         {/* Pro Plan */}
@@ -79,10 +124,16 @@ export default function PricingPage() {
               <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Detailed Actionable Insights
             </li>
           </ul>
-          <Link href="/login" className="relative group overflow-hidden w-full block text-center py-4 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)]">
-            <span className="relative z-10 text-white">Get Pro</span>
+          <button 
+            onClick={() => handleCheckout("price_placeholder_pro", "pro")}
+            disabled={loadingPriceId !== null}
+            className="relative group overflow-hidden w-full block text-center py-4 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] disabled:opacity-50"
+          >
+            <span className="relative z-10 text-white">
+               {loadingPriceId === "price_placeholder_pro" ? "Processing..." : (session ? "Get Pro" : "Login to Subscribe")}
+            </span>
             <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:scale-105 transition-transform duration-300"></div>
-          </Link>
+          </button>
         </div>
 
         {/* Elite Plan */}
@@ -110,9 +161,13 @@ export default function PricingPage() {
               <Check className="w-5 h-5 text-blue-500 shrink-0" /> Skool Community Access (Ads Protection & Content Creation)
             </li>
           </ul>
-          <Link href="/login" className="w-full block text-center py-4 rounded-full bg-slate-900 text-white hover:bg-slate-800 font-bold transition-colors">
-            Get Elite
-          </Link>
+          <button 
+            onClick={() => handleCheckout("price_placeholder_elite", "elite")}
+            disabled={loadingPriceId !== null}
+            className="w-full block text-center py-4 rounded-full bg-slate-900 text-white hover:bg-slate-800 font-bold transition-colors disabled:opacity-50"
+          >
+             {loadingPriceId === "price_placeholder_elite" ? "Processing..." : (session ? "Get Elite" : "Login to Subscribe")}
+          </button>
           <p className="text-xs font-semibold text-slate-400 text-center mt-6 uppercase tracking-wider">
             *Subject to fair use policy
           </p>
