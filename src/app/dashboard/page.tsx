@@ -37,18 +37,18 @@ export default function Dashboard() {
     <div className="animate-in fade-in duration-500 relative">
       <header className="mb-12 mt-4">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
-           <Sparkles className="w-3.5 h-3.5" /> AI Scanning Engine
+           <Sparkles className="w-3.5 h-3.5" /> Motor de Escaneo IA
         </div>
-        <h1 className="text-4xl font-black mb-3 tracking-tight text-slate-900">AI Compliance Check</h1>
-        <p className="text-lg text-slate-500 font-medium">Upload your creatives to automatically scan for Meta Ads policy violations based on machine-learning heuristics.</p>
+        <h1 className="text-4xl font-black mb-3 tracking-tight text-slate-900">Verificación de Compliance</h1>
+        <p className="text-lg text-slate-500 font-medium">Subí tus creativos para detectar automáticamente infracciones a las políticas de Meta Ads con inteligencia artificial.</p>
       </header>
 
       {isLocked && (
         <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl mb-10 flex flex-col sm:flex-row justify-between items-center text-sm shadow-xl shadow-blue-500/20 overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-          <span className="mb-4 sm:mb-0 text-base font-semibold relative z-10 w-full sm:w-2/3">Activa tu suscripción inicial para desbloquear el escáner de inteligencia artificial.</span>
+          <span className="mb-4 sm:mb-0 text-base font-semibold relative z-10 w-full sm:w-2/3">Activá tu suscripción para desbloquear el escáner de inteligencia artificial.</span>
           <button onClick={() => router.push('/#pricing')} className="relative z-10 px-8 py-3 bg-white text-indigo-600 rounded-xl font-bold hover:bg-neutral-50 hover:scale-105 transition-all shadow-md w-full sm:w-auto text-center">
-            View Plans &rarr;
+            Ver Planes &rarr;
           </button>
         </div>
       )}

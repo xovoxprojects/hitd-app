@@ -14,7 +14,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       if (selectedFile.size > 800 * 1024 * 1024) {
-        setError("File size exceeds 800MB limit.");
+        setError("El archivo supera el límite de 800MB.");
         return;
       }
       setError("");
@@ -31,7 +31,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const selectedFile = e.dataTransfer.files[0];
       if (selectedFile.size > 800 * 1024 * 1024) {
-        setError("File size exceeds 800MB limit.");
+        setError("El archivo supera el límite de 800MB.");
         return;
       }
       setError("");
@@ -50,7 +50,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
 
   const analyze = async () => {
     if (!file && !textContent) {
-      setError("Please provide an image, video, or text to analyze.");
+      setError("Por favor, subí una imagen, video o pegá un texto para analizar.");
       return;
     }
     
@@ -90,7 +90,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
       });
 
       const responseData = await res.json();
-      if (!res.ok) throw new Error(responseData.error || "Failed to analyze");
+      if (!res.ok) throw new Error(responseData.error || "Error al analizar");
 
       onAnalysisComplete(responseData);
       setFile(null);
@@ -109,19 +109,19 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
       <div className="absolute -top-32 -left-32 w-64 h-64 bg-blue-100/50 rounded-full blur-[80px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
       <div className="flex justify-between items-center mb-8 relative z-10">
-        <h2 className="text-2xl font-bold text-slate-900 border-l-4 border-indigo-600 pl-4 tracking-tight">New Analysis</h2>
+        <h2 className="text-2xl font-bold text-slate-900 border-l-4 border-indigo-600 pl-4 tracking-tight">Nuevo Análisis</h2>
         <div className="bg-slate-100 rounded-xl p-1.5 flex shadow-inner border border-slate-200/60">
           <button 
             onClick={() => setTextMode(false)}
             className={`px-6 py-2 text-sm rounded-lg transition-all duration-300 ${!textMode ? 'bg-white text-indigo-700 font-bold shadow-sm' : 'text-slate-500 hover:text-slate-900 font-semibold'}`}
           >
-            Visual Creative
+            Creativo Visual
           </button>
           <button 
             onClick={() => setTextMode(true)}
             className={`px-6 py-2 text-sm rounded-lg transition-all duration-300 ${textMode ? 'bg-white text-indigo-700 font-bold shadow-sm' : 'text-slate-500 hover:text-slate-900 font-semibold'}`}
           >
-            Copy Only
+            Solo Copy
           </button>
         </div>
       </div>
@@ -158,15 +158,15 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
                    {file.type.startsWith("video/") ? <FileVideo className="w-10 h-10 text-indigo-500" /> : <FileImage className="w-10 h-10 text-indigo-500" />}
                 </div>
                 <p className="font-bold text-slate-800 text-lg mb-1 tracking-tight">{file.name}</p>
-                <p className="text-sm font-medium text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready for scan</p>
+                <p className="text-sm font-medium text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} MB • Listo para escanear</p>
               </div>
             ) : (
               <div className="flex flex-col items-center">
                 <div className="w-20 h-20 bg-white rounded-full shadow-sm border border-slate-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                   <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                 </div>
-                <p className="font-bold text-slate-900 text-lg mb-2">Select a file or drag and drop here</p>
-                <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 up to 800MB</p>
+                <p className="font-bold text-slate-900 text-lg mb-2">Seleccioná un archivo o arrastralo aquí</p>
+                <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 hasta 800MB</p>
               </div>
             )}
           </div>
@@ -176,7 +176,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
             <textarea 
               value={textContent}
               onChange={(e) => setTextContent(e.target.value)}
-              placeholder="Paste your ad copy here to scan for aggressive language, misleading claims, or sensacionalism..."
+              placeholder="Pegá tu copy de anuncio aquí para escanear lenguaje agresivo, promesas engañosas o violaciones de política..."
               className="relative w-full h-56 bg-white border border-slate-200 rounded-[2rem] p-8 text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none transition-colors shadow-inner"
             />
           </div>
@@ -185,7 +185,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
 
       <div className="mt-10 flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 pt-8 relative z-10">
         <div className="text-slate-500 text-sm font-bold flex items-center gap-2 mb-6 sm:mb-0">
-          Estimated Cost: <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-900 rounded-lg text-base"><Sparkles className="w-4 h-4 text-amber-500" /> {calculateCost()} credits</span>
+          Costo estimado: <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-900 rounded-lg text-base"><Sparkles className="w-4 h-4 text-amber-500" /> {calculateCost()} crédito{calculateCost() !== 1 ? 's' : ''}</span>
         </div>
         
         <button 
@@ -196,12 +196,12 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
           {analyzing ? (
             <div className="flex items-center justify-center gap-3 relative z-10">
               <span className="w-5 h-5 rounded-full border-2 border-slate-400 border-t-white animate-spin" />
-              Scanning heuristics...
+              Escaneando con IA...
             </div>
           ) : (
             <>
               <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 flex items-center justify-center gap-2">Execute Scan <Sparkles className="w-4 h-4"/></span>
+              <span className="relative z-10 flex items-center justify-center gap-2">Ejecutar Análisis <Sparkles className="w-4 h-4"/></span>
             </>
           )}
         </button>

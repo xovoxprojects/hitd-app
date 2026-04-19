@@ -18,11 +18,11 @@ export default function ResultsPanel({ result }: { result: any }) {
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start justify-between mb-12 pb-10 border-b border-slate-200/60 relative z-10">
         <div className="mb-8 md:mb-0">
-          <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Analysis Report</h2>
+          <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Reporte de Análisis</h2>
           <div className="flex items-center gap-3">
             <span className={`px-5 py-2 rounded-xl text-sm font-black tracking-widest uppercase shadow-sm flex items-center gap-2 ${isHighRisk ? 'bg-red-50 text-red-600 border border-red-200' : isMediumRisk ? 'bg-amber-50 text-amber-600 border border-amber-200' : 'bg-green-50 text-green-600 border border-green-200'}`}>
               <div className={`w-2 h-2 rounded-full animate-pulse ${isHighRisk ? 'bg-red-600' : isMediumRisk ? 'bg-amber-600' : 'bg-green-600'}`}></div>
-              {result.risk_level} RISK
+              RIESGO {result.risk_level?.toUpperCase()}
             </span>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function ResultsPanel({ result }: { result: any }) {
           <div className="text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-slate-900 via-slate-700 to-slate-400 tracking-tighter">
             {result.score}<span className="text-4xl text-slate-300">/100</span>
           </div>
-          <span className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Conversion Value Score</span>
+          <span className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Puntuación de Conversión</span>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function ResultsPanel({ result }: { result: any }) {
             <div className={`p-3 rounded-2xl ${hasViolations ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500'}`}>
               {hasViolations ? <ShieldAlert className="w-7 h-7" /> : <ShieldCheck className="w-7 h-7" />}
             </div>
-            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Policy Violations</h3>
+            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Violaciones de Política</h3>
           </div>
           {hasViolations ? (
             <ul className="space-y-4">
@@ -57,7 +57,7 @@ export default function ResultsPanel({ result }: { result: any }) {
           ) : (
             <div className="flex flex-col gap-3">
               <p className="text-sm font-bold text-green-700 flex items-center gap-2 bg-green-50 border border-green-100 px-5 py-3 rounded-xl w-full">
-                <CheckCircle2 className="w-5 h-5" /> Zero violations detected
+                <CheckCircle2 className="w-5 h-5" /> Sin violaciones detectadas
               </p>
               {result.compliance_explanation && (
                 <p className="text-sm text-slate-500 leading-relaxed px-1">{result.compliance_explanation}</p>
@@ -72,7 +72,7 @@ export default function ResultsPanel({ result }: { result: any }) {
             <div className={`p-3 rounded-2xl ${isMediumRisk || result.warnings?.length > 0 ? 'bg-amber-50 text-amber-500' : 'bg-slate-50 text-slate-400'}`}>
               <AlertTriangle className="w-7 h-7" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Vulnerability Warnings</h3>
+            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Advertencias de Vulnerabilidad</h3>
           </div>
           {result.warnings && result.warnings.length > 0 ? (
             <ul className="space-y-4">
@@ -84,7 +84,7 @@ export default function ResultsPanel({ result }: { result: any }) {
               ))}
             </ul>
           ) : (
-            <p className="text-sm font-bold text-slate-500 bg-slate-50 border border-slate-100 px-5 py-3 rounded-xl w-full">No gray-area concerns detected.</p>
+            <p className="text-sm font-bold text-slate-500 bg-slate-50 border border-slate-100 px-5 py-3 rounded-xl w-full">El creativo sigue las mejores prácticas.</p>
           )}
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function ResultsPanel({ result }: { result: any }) {
             <div className="p-3 rounded-2xl bg-blue-50 text-blue-600">
               <Zap className="w-7 h-7" />
             </div>
-            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Performance Boosters</h3>
+            <h3 className="font-bold text-slate-900 text-xl tracking-tight">Mejoras de Performance</h3>
           </div>
           <ul className="space-y-3">
             {result.improvements.map((imp: string, i: number) => (
@@ -117,8 +117,8 @@ export default function ResultsPanel({ result }: { result: any }) {
               <Sparkles className="w-7 h-7" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-xl tracking-tight">3 Meta-Compliant Alternatives</h3>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">Soft · Medium · Agresivo — todos 100% Meta-Compliant</p>
+              <h3 className="font-bold text-xl tracking-tight text-slate-900">3 Alternativas Meta-Compliant</h3>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">Generadas automáticamente por hitd.ai</p>
             </div>
           </div>
 

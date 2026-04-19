@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
             <div className="flex items-center gap-3 font-semibold">
-              <LayoutDashboard className="w-5 h-5" /> Analysis Tool
+              <LayoutDashboard className="w-5 h-5" /> Herramienta IA
             </div>
             {pathname !== '/dashboard' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
@@ -36,7 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/billing' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
             <div className="flex items-center gap-3 font-semibold">
-              <CreditCard className="w-5 h-5" /> Billing & Usage
+              <CreditCard className="w-5 h-5" /> Facturación
             </div>
             {pathname !== '/dashboard/billing' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/history' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
             <div className="flex items-center gap-3 font-semibold">
-              <History className="w-5 h-5" /> History
+              <History className="w-5 h-5" /> Historial
             </div>
             {pathname !== '/dashboard/history' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/analytics' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
             <div className="flex items-center gap-3 font-semibold">
-              <BarChart3 className="w-5 h-5" /> Analytics
+              <BarChart3 className="w-5 h-5" /> Analíticas
             </div>
             {pathname !== '/dashboard/analytics' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/settings' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
           >
             <div className="flex items-center gap-3 font-semibold">
-              <Settings className="w-5 h-5" /> Settings
+              <Settings className="w-5 h-5" /> Configuración
             </div>
             {pathname !== '/dashboard/settings' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
@@ -74,20 +74,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Subtle decorative orb */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
             
-            <div className="text-xs text-slate-500 mb-1 font-bold uppercase tracking-wider">Available Credits</div>
+            <div className="text-xs text-slate-500 mb-1 font-bold uppercase tracking-wider">Créditos Disponibles</div>
             <div className="flex items-end justify-between relative z-10">
               <span className="text-3xl font-black text-slate-900 tracking-tight">{session?.user?.credits || 0}</span>
-              <Link href="/#pricing" className="text-xs text-blue-600 hover:text-blue-800 font-bold transition-colors">Get more &rarr;</Link>
+              <Link href="/#pricing" className="text-xs text-blue-600 hover:text-blue-800 font-bold transition-colors">Ver planes &rarr;</Link>
             </div>
             {session?.user?.plan === "none" && (
               <Link href="/#pricing" className="mt-4 w-full block text-center py-2.5 bg-black text-white text-sm font-semibold rounded-xl hover:bg-slate-800 transition-all shadow-md hover:shadow-lg">
-                Upgrade Plan
+                Mejorar Plan
               </Link>
             )}
           </div>
           
           <button onClick={() => signOut()} className="flex items-center gap-3 px-4 py-3 w-full text-left text-sm font-semibold text-slate-500 hover:text-red-600 rounded-xl hover:bg-red-50 transition-colors group">
-            <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" /> Sign out
+            <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" /> Cerrar sesión
           </button>
         </div>
       </aside>
