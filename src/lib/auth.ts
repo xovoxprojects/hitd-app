@@ -1,13 +1,11 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  secret: process.env.NEXTAUTH_SECRET || "hitd-fallback-secret-please-set-env",
-  debug: process.env.NODE_ENV !== "production",
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID ? [
       GoogleProvider({
@@ -15,43 +13,31 @@ export const authOptions: NextAuthOptions = {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       })
     ] : []),
-    ...(process.env.EMAIL_SERVER ? [
-      EmailProvider({
-        server: process.env.EMAIL_SERVER,
-        from: process.env.EMAIL_FROM,
-      })
-    ] : []),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "database",
   },
   callbacks: {
-    async session({ session, token }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
+    async session({ session, user }) {
+      if (session.user && user) {
+        session.user.id = user.id;
 
         // Fetch user from db to get credits and plan
         const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
+          where: { id: user.id },
           select: { credits: true, plan: true }
         });
 
         if (dbUser) {
-          session.user.credits = dbUser.credits;
-          session.user.plan = dbUser.plan;
+          session.user.credits = dbUser.credits ?? 0;
+          session.user.plan = dbUser.plan ?? "none";
         }
       }
       return session;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-      }
-      return token;
-    }
   },
   pages: {
     signIn: "/login",
-    error: "/auth/error",
+    error: "/login",
   }
 };
