@@ -21,14 +21,21 @@ export const authOptions: NextAuthOptions = {
         session.user.id = user.id;
 
         // Fetch user from db to get credits and plan
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { credits: true, plan: true }
-        });
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { credits: true, plan: true }
+          });
 
-        if (dbUser) {
-          session.user.credits = dbUser.credits ?? 0;
-          session.user.plan = dbUser.plan ?? "none";
+          if (dbUser) {
+            session.user.credits = dbUser.credits ?? 0;
+            session.user.plan = dbUser.plan ?? "none";
+          }
+        } catch (dbError) {
+          console.error("Auth session db error (schema mismatch?):", dbError);
+          // Fallbacks to prevent auth break
+          session.user.credits = 0;
+          session.user.plan = "none";
         }
       }
       return session;
