@@ -42,10 +42,10 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
   const calculateCost = () => {
     if (!file && !textContent) return 0;
     if (file) {
-      if (file.type.startsWith("video/")) return 4;
+      if (file.type.startsWith("video/")) return 2;
       return 1;
     }
-    return 0.5;
+    return 1;
   };
 
   const analyze = async () => {

@@ -30,12 +30,12 @@ export async function POST(req: Request) {
 
     // Determine type and cost
     let type = "text";
-    let cost = 0.5;
+    let cost = 1;
 
     if (fileUrl) {
       if (fileMimeType?.startsWith("video/")) {
         type = "video";
-        cost = 4;
+        cost = 2;
       } else {
         type = "image";
         cost = 1;
