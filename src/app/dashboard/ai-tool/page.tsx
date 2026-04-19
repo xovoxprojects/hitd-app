@@ -4,15 +4,26 @@ import React, { useState } from 'react';
 import { currentUser } from '@/lib/mockData';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function AIToolPage() {
-  const isLocked = currentUser.plan === 'basic';
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const isLocked = !session?.user || session.user.plan === 'none' || session.user.credits <= 0;
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!session?.user) {
+      router.push('/login');
+    }
+  }, [session, router]);
+
   const handleFeedback = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLocked) return;
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -20,19 +31,21 @@ export default function AIToolPage() {
     }, 1500);
   };
 
+  if (!session?.user) return null;
+
   if (isLocked) {
     return (
       <div className="animate-in fade-in duration-500 h-full flex flex-col items-center justify-center py-20">
-        <div className="w-20 h-20 bg-primary-100 text-primary rounded-full flex items-center justify-center mb-6">
+        <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
           <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
-        <h2 className="text-3xl font-bold text-foreground mb-4">AI Feedback Tool Locked</h2>
-        <p className="text-muted text-center max-w-md mb-8">
-          The AI Feedback Tool is exclusively available to Premium and Yearly members. Upgrade your plan to instantly evaluate your hooks and pacing.
+        <h2 className="text-3xl font-bold text-slate-900 mb-4">AI Feedback Tool Locked</h2>
+        <p className="text-slate-500 text-center max-w-md mb-8">
+          The AI Feedback Tool is exclusively available to members with active credits. Upgrade your plan to instantly evaluate your hooks and pacing.
         </p>
-        <Button size="lg">Upgrade Plan</Button>
+        <Button size="lg" onClick={() => router.push('/pricing')}>Upgrade Plan</Button>
       </div>
     );
   }

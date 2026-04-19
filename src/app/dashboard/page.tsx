@@ -31,8 +31,10 @@ export default function Dashboard() {
 
   if (!session?.user) return null;
 
+  const isLocked = session.user.plan === "none" || session.user.credits <= 0;
+
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="animate-in fade-in duration-500 relative">
       <header className="mb-12 mt-4">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
            <Sparkles className="w-3.5 h-3.5" /> AI Scanning Engine
@@ -41,7 +43,7 @@ export default function Dashboard() {
         <p className="text-lg text-slate-500 font-medium">Upload your creatives to automatically scan for Meta Ads policy violations based on machine-learning heuristics.</p>
       </header>
 
-      {session.user.plan === "none" && (
+      {isLocked && (
         <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl mb-10 flex flex-col sm:flex-row justify-between items-center text-sm shadow-xl shadow-blue-500/20 overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <span className="mb-4 sm:mb-0 text-base font-semibold relative z-10 w-full sm:w-2/3">Activa tu suscripción inicial para desbloquear el escáner de inteligencia artificial.</span>
@@ -51,9 +53,11 @@ export default function Dashboard() {
         </div>
       )}
 
-      <UploadArea onAnalysisComplete={(data) => setResult(data.analysis)} />
+      <div className={isLocked ? "pointer-events-none opacity-50 select-none grayscale-[0.5]" : ""}>
+        <UploadArea onAnalysisComplete={(data) => setResult(data.analysis)} />
+      </div>
       
-      {result && (
+      {result && !isLocked && (
         <div className="animate-in slide-in-from-bottom-8 duration-700">
            <ResultsPanel result={result} />
         </div>
