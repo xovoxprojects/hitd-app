@@ -47,7 +47,7 @@ export default function Dashboard() {
         <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl mb-10 flex flex-col sm:flex-row justify-between items-center text-sm shadow-xl shadow-blue-500/20 overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <span className="mb-4 sm:mb-0 text-base font-semibold relative z-10 w-full sm:w-2/3">Activa tu suscripción inicial para desbloquear el escáner de inteligencia artificial.</span>
-          <button onClick={() => router.push('/pricing')} className="relative z-10 px-8 py-3 bg-white text-indigo-600 rounded-xl font-bold hover:bg-neutral-50 hover:scale-105 transition-all shadow-md w-full sm:w-auto text-center">
+          <button onClick={() => router.push('/#pricing')} className="relative z-10 px-8 py-3 bg-white text-indigo-600 rounded-xl font-bold hover:bg-neutral-50 hover:scale-105 transition-all shadow-md w-full sm:w-auto text-center">
             View Plans &rarr;
           </button>
         </div>
