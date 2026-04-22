@@ -18,7 +18,6 @@ export default async function AdminDashboard() {
     select: {
       id: true,
       plan: true,
-      createdAt: true,
     }
   });
 
