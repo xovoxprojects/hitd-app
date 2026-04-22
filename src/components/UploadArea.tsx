@@ -135,40 +135,51 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
 
       <div className="relative z-10">
         {!textMode ? (
-          <div 
-            className={`border-2 border-dashed ${file ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-300 bg-slate-50/50 hover:border-slate-400 hover:bg-slate-100/50'} rounded-[2rem] p-16 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer`}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleFileChange} 
-              className="hidden" 
-              accept="image/*,video/*"
-            />
-            
-            {file ? (
-              <div className="animate-in zoom-in-95 duration-300 flex flex-col items-center">
-                <div className="w-20 h-20 bg-white rounded-2xl shadow-sm border border-indigo-100 flex items-center justify-center mb-6 relative">
-                   <div className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1 border-2 border-white shadow-sm">
-                      <CheckCircle2 className="w-4 h-4" />
-                   </div>
-                   {file.type.startsWith("video/") ? <FileVideo className="w-10 h-10 text-indigo-500" /> : <FileImage className="w-10 h-10 text-indigo-500" />}
+          <div className="flex flex-col gap-4">
+            <div 
+              className={`border-2 border-dashed ${file ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-300 bg-slate-50/50 hover:border-slate-400 hover:bg-slate-100/50'} rounded-[2rem] p-16 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer`}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                className="hidden" 
+                accept="image/*,video/*"
+              />
+              
+              {file ? (
+                <div className="animate-in zoom-in-95 duration-300 flex flex-col items-center">
+                  <div className="w-20 h-20 bg-white rounded-2xl shadow-sm border border-indigo-100 flex items-center justify-center mb-6 relative">
+                     <div className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1 border-2 border-white shadow-sm">
+                        <CheckCircle2 className="w-4 h-4" />
+                     </div>
+                     {file.type.startsWith("video/") ? <FileVideo className="w-10 h-10 text-indigo-500" /> : <FileImage className="w-10 h-10 text-indigo-500" />}
+                  </div>
+                  <p className="font-bold text-slate-800 text-lg mb-1 tracking-tight">{file.name}</p>
+                  <p className="text-sm font-medium text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} MB • Listo para escanear</p>
                 </div>
-                <p className="font-bold text-slate-800 text-lg mb-1 tracking-tight">{file.name}</p>
-                <p className="text-sm font-medium text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} MB • Listo para escanear</p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <div className="w-20 h-20 bg-white rounded-full shadow-sm border border-slate-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                  <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <div className="w-20 h-20 bg-white rounded-full shadow-sm border border-slate-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                  </div>
+                  <p className="font-bold text-slate-900 text-lg mb-2">Seleccioná un archivo o arrastralo aquí</p>
+                  <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 hasta 800MB</p>
                 </div>
-                <p className="font-bold text-slate-900 text-lg mb-2">Seleccioná un archivo o arrastralo aquí</p>
-                <p className="text-sm font-medium text-slate-500">JPG, PNG, GIF, MP4 hasta 800MB</p>
-              </div>
-            )}
+              )}
+            </div>
+
+            <div className="relative group">
+              <textarea 
+                value={textContent}
+                onChange={(e) => setTextContent(e.target.value)}
+                placeholder="Añade contexto opcional o texto de apoyo (ej: copy del anuncio, a quién va dirigido, etc.)"
+                className="w-full h-32 bg-slate-50 border border-slate-200 rounded-[1.5rem] p-6 text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white resize-none transition-colors"
+              />
+            </div>
           </div>
         ) : (
           <div className="relative group">
