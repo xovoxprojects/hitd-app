@@ -67,8 +67,8 @@ export default function PricingPage() {
         <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2.5rem] p-10 flex flex-col shadow-lg shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 mt-8 md:mt-4">
           <h3 className="text-2xl font-bold mb-2 text-slate-900">Growth</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
-            <span className="text-5xl font-black text-slate-900">$19.99</span>
-            <span className="text-lg text-slate-400 line-through font-bold decoration-slate-300">$49.99</span>
+            <span className="text-5xl font-black text-slate-900">$9.99</span>
+            <span className="text-lg text-slate-400 line-through font-bold decoration-slate-300">$29.99</span>
             <span className="text-slate-500 font-medium">/mo</span>
           </div>
           <p className="text-slate-500 mb-8 border-b border-slate-100 pb-8 text-sm font-medium">
