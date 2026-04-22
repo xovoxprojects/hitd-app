@@ -89,7 +89,14 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
         }),
       });
 
-      const responseData = await res.json();
+      let responseData;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        responseData = await res.json();
+      } else {
+        throw new Error("El servidor no pudo responder correctamente (posible sobrecarga o actualización en curso). Por favor, intenta de nuevo.");
+      }
+
       if (!res.ok) throw new Error(responseData.error || "Error al analizar");
 
       onAnalysisComplete(responseData);
