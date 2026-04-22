@@ -36,6 +36,26 @@ Responde ÚNICAMENTE con un JSON válido en este formato exacto (sin markdown, s
   }
 }`;
 
+export const maxDuration = 60; // Allow function to run up to 60 seconds
+
+async function executeWithRetry<T>(fn: () => Promise<T>, retries = 3, delayMs = 2000): Promise<T> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      if (i === retries - 1) throw error;
+      const msg = error.message || "";
+      if (msg.includes("503") || msg.includes("429") || msg.includes("Too Many Requests") || msg.includes("high demand") || msg.includes("Resource has been exhausted") || msg.includes("Service Unavailable")) {
+        console.warn(`AI Provider Error (${msg}). Retrying ${i + 1}/${retries} in ${delayMs * (i + 1)}ms...`);
+        await new Promise(r => setTimeout(r, delayMs * (i + 1))); // Exponential backoff
+      } else {
+        throw error;
+      }
+    }
+  }
+  throw new Error("Retry failed");
+}
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -103,7 +123,7 @@ export async function POST(req: Request) {
         // 4. Analyze
         const videoPart: Part = { fileData: { mimeType: fileMimeType as string, fileUri: uploadedFileUri } };
         const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
-        const result = await model.generateContent([textPart, videoPart]);
+        const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]));
         const rawText = result.response.text();
         const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
         jsonResult = JSON.parse(cleaned);
@@ -133,11 +153,11 @@ export async function POST(req: Request) {
         });
       }
 
-      const response = await openai.chat.completions.create({
+      const response = await executeWithRetry(() => openai.chat.completions.create({
         model: "gpt-4o",
         messages: [{ role: "user", content: contentArray }],
         response_format: { type: "json_object" },
-      });
+      }));
 
       const aiText = response.choices[0].message.content;
       if (!aiText) throw new Error("No response from AI");
