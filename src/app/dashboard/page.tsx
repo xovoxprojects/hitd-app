@@ -40,7 +40,7 @@ export default function Dashboard() {
            <Sparkles className="w-3.5 h-3.5" /> Motor de Escaneo IA
         </div>
         <h1 className="text-4xl font-black mb-3 tracking-tight text-slate-900">Verificación de Compliance</h1>
-        <p className="text-lg text-slate-500 font-medium">Subí tus creativos para detectar automáticamente infracciones a las políticas de Meta Ads con inteligencia artificial.</p>
+        <p className="text-lg text-slate-500 font-medium">Subí tus creativos para detectar automáticamente infracciones a las políticas de Meta con inteligencia artificial.</p>
       </header>
 
       {isLocked && (

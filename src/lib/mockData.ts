@@ -19,24 +19,24 @@ export const currentUser: User = {
 export const MOCK_COURSES = [
   {
     id: "c_1",
-    title: "Content Mastery 101",
-    description: "Learn how to write high-converting copy and grow an audience.",
+    title: "Maestría en Contenido 101",
+    description: "Aprende a escribir copy de alta conversión y hacer crecer tu audiencia.",
     thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
     modules: 12,
     locked: false,
   },
   {
     id: "c_2",
-    title: "Audience Monetization",
-    description: "Turn your audience into a predictable revenue stream.",
+    title: "Monetización de Audiencia",
+    description: "Convierte tu audiencia en un flujo de ingresos predecible.",
     thumbnail: "https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=800&q=80",
     modules: 8,
     locked: false, // For premium users
   },
   {
     id: "c_3",
-    title: "Advanced Viral Hooks",
-    description: "The secret framework to making any piece of content go viral.",
+    title: "Ganchos Virales Avanzados",
+    description: "El marco secreto para hacer que cualquier pieza de contenido se vuelva viral.",
     thumbnail: "https://images.unsplash.com/photo-1616469829581-73993eb8afb0?w=800&q=80",
     modules: 5,
     locked: true, // Drip content or higher tier
