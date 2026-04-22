@@ -15,9 +15,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar background styling */}
       <aside className="w-[280px] border-r border-slate-200/60 flex flex-col fixed inset-y-0 bg-white/80 backdrop-blur-xl z-20">
         <div className="p-8 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
+          <Link href="/">
+            <img src="/logo.png" alt="hitd.ai logo" className="w-8 h-8 object-contain rounded-xl" />
+          </Link>
           <Link href="/" className="text-xl font-bold tracking-tight text-slate-900">hitd.ai</Link>
         </div>
 
