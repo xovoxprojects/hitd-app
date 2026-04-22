@@ -36,9 +36,9 @@ Responde ÚNICAMENTE con un JSON válido en este formato exacto (sin markdown, s
   }
 }`;
 
-export const maxDuration = 60; // Allow function to run up to 60 seconds
+export const maxDuration = 300; // Allow function to run up to 300 seconds
 
-async function executeWithRetry<T>(fn: () => Promise<T>, retries = 3, delayMs = 2000): Promise<T> {
+async function executeWithRetry<T>(fn: () => Promise<T>, retries = 15, delayMs = 2500): Promise<T> {
   for (let i = 0; i < retries; i++) {
     try {
       return await fn();
@@ -46,8 +46,8 @@ async function executeWithRetry<T>(fn: () => Promise<T>, retries = 3, delayMs = 
       if (i === retries - 1) throw error;
       const msg = error.message || "";
       if (msg.includes("503") || msg.includes("429") || msg.includes("Too Many Requests") || msg.includes("high demand") || msg.includes("Resource has been exhausted") || msg.includes("Service Unavailable")) {
-        console.warn(`AI Provider Error (${msg}). Retrying ${i + 1}/${retries} in ${delayMs * (i + 1)}ms...`);
-        await new Promise(r => setTimeout(r, delayMs * (i + 1))); // Exponential backoff
+        console.warn(`AI Provider Error (${msg}). Retrying ${i + 1}/${retries}...`);
+        await new Promise(r => setTimeout(r, delayMs)); // Fixed 2.5s delay
       } else {
         throw error;
       }
@@ -106,10 +106,10 @@ export async function POST(req: Request) {
       let uploadedFileUri = "";
       try {
         // 2. Upload to Gemini Files API
-        const uploadResult = await fileManager.uploadFile(tmpPath, {
+        const uploadResult = await executeWithRetry(() => fileManager.uploadFile(tmpPath, {
           mimeType: fileMimeType as string,
           displayName: fileName || "ad_creative",
-        });
+        }));
         uploadedFileUri = uploadResult.file.uri;
 
         // 3. Wait until file is ACTIVE (processing)
