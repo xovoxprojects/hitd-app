@@ -58,6 +58,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             {pathname !== '/dashboard/history' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
+          
+          {session?.user?.email === 'hello@hitd.ai' && (
+            <Link 
+              href="/dashboard/admin" 
+              className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 mt-8 border ${pathname === '/dashboard/admin' ? 'bg-slate-900 text-white shadow-md border-slate-800' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100 hover:text-rose-700'}`}
+            >
+              <div className="flex items-center gap-3 font-semibold">
+                Admin Panel
+              </div>
+              {pathname !== '/dashboard/admin' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+            </Link>
+          )}
           <Link 
             href="/dashboard/analytics" 
             className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/analytics' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
