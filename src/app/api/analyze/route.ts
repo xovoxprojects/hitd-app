@@ -172,7 +172,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, remainingCredits, analysis: jsonResult });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Failed to analyze";
+    let message = error instanceof Error ? error.message : "Failed to analyze";
+    
+    // Translate common provider errors to friendly Spanish messages
+    if (message.includes("503") || message.includes("high demand") || message.includes("Service Unavailable")) {
+      message = "Los servidores de IA están experimentando una alta demanda temporal. Por favor, intentá de nuevo en unos segundos.";
+    } else if (message.includes("429") || message.includes("Resource has been exhausted") || message.includes("Too Many Requests")) {
+      message = "Límite de peticiones a la IA alcanzado. Por favor, intentá de nuevo en un minuto.";
+    }
+
     console.error("Analysis Error:", error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
