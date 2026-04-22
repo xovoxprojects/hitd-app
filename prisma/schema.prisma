@@ -18,6 +18,13 @@ model User {
   plan          String    @default("none") // "starter", "growth", "pro"
   stripeCustomerId String? @unique
   stripeSubscriptionId String? @unique
+  
+  role          String    @default("user") // "user", "broker", "admin"
+  brokerCode    String?   @unique
+  referredById  String?
+  referredBy    User?     @relation("BrokerReferrals", fields: [referredById], references: [id])
+  referrals     User[]    @relation("BrokerReferrals")
+
   analyses      Analysis[]
   accounts      Account[]
   sessions      Session[]

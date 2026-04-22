@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
+import { Suspense } from 'react';
+import { RefCapture } from '@/components/RefCapture';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,6 +21,10 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <Providers>
+          {/* Silently captures ?ref= for broker attribution — renders nothing */}
+          <Suspense fallback={null}>
+            <RefCapture />
+          </Suspense>
           {children}
         </Providers>
       </body>

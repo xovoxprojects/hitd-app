@@ -5,6 +5,8 @@ declare module "next-auth" {
     id: string;
     credits?: number;
     plan?: string;
+    role?: string;
+    brokerCode?: string | null;
   }
 
   interface Session {

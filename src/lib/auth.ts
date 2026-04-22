@@ -44,17 +44,21 @@ export const authOptions: NextAuthOptions = {
         try {
           const dbUser = await prisma.user.findUnique({
             where: { id: token.id as string },
-            select: { credits: true, plan: true }
+            select: { credits: true, plan: true, role: true, brokerCode: true }
           });
 
           if (dbUser) {
             session.user.credits = dbUser.credits ?? 0;
             session.user.plan = dbUser.plan ?? "none";
+            session.user.role = dbUser.role ?? "user";
+            session.user.brokerCode = dbUser.brokerCode ?? null;
           }
         } catch (dbError) {
           console.error("Auth session db error:", dbError);
           session.user.credits = 0;
           session.user.plan = "none";
+          session.user.role = "user";
+          session.user.brokerCode = null;
         }
       }
       return session;

@@ -3,11 +3,19 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Settings, LogOut, Zap, ChevronRight, History, BarChart3, GraduationCap } from "lucide-react";
+import { useEffect } from "react";
+import { LayoutDashboard, CreditCard, Settings, LogOut, ChevronRight, History, BarChart3, GraduationCap, Briefcase } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
+
+  // Claim referral cookie silently after sign-in
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch("/api/ref/claim", { method: "POST" }).catch(() => {});
+    }
+  }, [session?.user?.id]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-blue-200 selection:text-blue-900">
@@ -59,10 +67,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {pathname !== '/dashboard/history' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
           
+          {(session?.user?.role === 'broker' || session?.user?.email === 'hello@hitd.ai') && (
+            <Link 
+              href="/dashboard/broker" 
+              className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 border ${pathname === '/dashboard/broker' ? 'bg-emerald-700 text-white shadow-md border-emerald-800' : 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100'}`}
+            >
+              <div className="flex items-center gap-3 font-semibold">
+                <Briefcase className="w-5 h-5" /> Mi Panel Broker
+              </div>
+              {pathname !== '/dashboard/broker' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+            </Link>
+          )}
+
           {session?.user?.email === 'hello@hitd.ai' && (
             <Link 
               href="/dashboard/admin" 
-              className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 mt-8 border ${pathname === '/dashboard/admin' ? 'bg-slate-900 text-white shadow-md border-slate-800' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100 hover:text-rose-700'}`}
+              className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 border ${pathname === '/dashboard/admin' ? 'bg-slate-900 text-white shadow-md border-slate-800' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100 hover:text-rose-700'}`}
             >
               <div className="flex items-center gap-3 font-semibold">
                 Admin Panel

@@ -1,146 +1,215 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
-import { Users, DollarSign, Briefcase, TrendingUp, ShieldAlert } from "lucide-react";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Users, DollarSign, TrendingUp, ShieldAlert, Briefcase, UserCheck, UserX, Loader2 } from "lucide-react";
 
 const ADMIN_EMAIL = "hello@hitd.ai";
 
-export default async function AdminDashboard() {
-  const session = await getServerSession(authOptions);
+interface UserRow {
+  id: string;
+  name: string | null;
+  email: string | null;
+  plan: string;
+  role: string;
+  brokerCode: string | null;
+  referredById: string | null;
+}
 
-  if (!session?.user || session.user.email !== ADMIN_EMAIL) {
-    redirect("/dashboard");
+const planPrices: Record<string, number> = { growth: 9.99, pro: 49.99, elite: 499 };
+const planLabels: Record<string, string> = { none: "Gratuito", growth: "Growth", pro: "Pro", elite: "Elite" };
+const planColors: Record<string, string> = {
+  none: "bg-slate-100 text-slate-500",
+  growth: "bg-blue-100 text-blue-700",
+  pro: "bg-indigo-100 text-indigo-700",
+  elite: "bg-purple-100 text-purple-700",
+};
+
+export default function AdminDashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [brokerCodeInput, setBrokerCodeInput] = useState<Record<string, string>>({});
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.email !== ADMIN_EMAIL) {
+      router.push("/dashboard");
+    }
+  }, [status, session, router]);
+
+  useEffect(() => {
+    if (session?.user?.email !== ADMIN_EMAIL) return;
+    fetch("/api/admin/users?adminKey=1")
+      .then(r => r.json())
+      .then(data => { setUsers(data.users ?? []); setLoading(false); });
+  }, [session?.user?.email]);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  };
+
+  const promoteToBroker = async (userId: string) => {
+    const code = brokerCodeInput[userId];
+    if (!code) { showToast("Ingresa un código para el broker"); return; }
+    setActionLoading(userId);
+    const res = await fetch("/api/admin/brokers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, brokerCode: code }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: "broker", brokerCode: data.user.brokerCode } : u));
+      showToast(`✅ ${data.user.email} es ahora un Broker con código ${data.user.brokerCode}`);
+    } else {
+      showToast(`❌ ${data.error}`);
+    }
+    setActionLoading(null);
+  };
+
+  const removeBroker = async (userId: string) => {
+    setActionLoading(userId);
+    const res = await fetch("/api/admin/brokers", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+    if (res.ok) {
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: "user", brokerCode: null } : u));
+      showToast("Broker degradado a usuario normal");
+    }
+    setActionLoading(null);
+  };
+
+  if (status === "loading" || loading) {
+    return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-slate-400" /></div>;
   }
 
-  // Fetch all users
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      plan: true,
-    }
-  });
-
   const totalUsers = users.length;
-  
-  // Calculate active paying users
-  const payingUsers = users.filter(u => u.plan === "growth" || u.plan === "pro" || u.plan === "elite").length;
-
-  // Calculate MRR
+  const payingUsers = users.filter(u => planPrices[u.plan] > 0).length;
   let mrr = 0;
-  let growthCount = 0;
-  let proCount = 0;
-  let eliteCount = 0;
-
-  users.forEach(user => {
-    if (user.plan === "growth") {
-      mrr += 9.99;
-      growthCount++;
-    } else if (user.plan === "pro") {
-      mrr += 49.99;
-      proCount++;
-    } else if (user.plan === "elite") {
-      mrr += 499;
-      eliteCount++;
-    }
+  let growthCount = 0, proCount = 0, eliteCount = 0;
+  users.forEach(u => {
+    if (u.plan === "growth") { mrr += 9.99; growthCount++; }
+    else if (u.plan === "pro") { mrr += 49.99; proCount++; }
+    else if (u.plan === "elite") { mrr += 499; eliteCount++; }
   });
-
-  const xovoxShare = mrr * 0.8;
-  const axelShare = mrr * 0.2;
+  const brokerMrr = users.reduce((acc, u) => u.role === "broker" ? acc + (planPrices[u.plan] ?? 0) * 0.15 : acc, 0);
+  const axelShare = (mrr - brokerMrr) * 0.20;
+  const xovoxShare = mrr - brokerMrr - axelShare;
 
   return (
-    <div className="max-w-6xl mx-auto py-8">
+    <div className="max-w-6xl mx-auto py-8 relative">
+      {/* Toast */}
+      {toastMsg && (
+        <div className="fixed top-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl text-sm font-medium animate-fade-in">
+          {toastMsg}
+        </div>
+      )}
+
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-md">
           <ShieldAlert className="w-5 h-5" />
         </div>
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Panel de Administración</h1>
-          <p className="text-sm font-medium text-slate-500">Métricas exclusivas de ventas y distribución.</p>
+          <p className="text-sm font-medium text-slate-500">Métricas y gestión de usuarios.</p>
         </div>
       </div>
 
-      {/* Main KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-              <Users className="w-5 h-5" />
-            </div>
-            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Usuarios Totales</h3>
-          </div>
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Users className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Usuarios Totales</span></div>
           <p className="text-4xl font-black text-slate-900">{totalUsers}</p>
-          <p className="text-sm font-medium text-slate-400 mt-1">{payingUsers} con plan activo</p>
+          <p className="text-xs text-slate-400 mt-1">{payingUsers} con plan activo</p>
         </div>
-
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Ingreso Mensual (MRR)</h3>
-          </div>
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><TrendingUp className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">MRR Total</span></div>
           <p className="text-4xl font-black text-emerald-600">${mrr.toFixed(2)}</p>
-          <p className="text-sm font-medium text-slate-400 mt-1">Suscripciones recurrentes activas</p>
+          <p className="text-xs text-slate-400 mt-1">Suscripciones activas</p>
         </div>
-        
-        {/* Split UI */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Briefcase className="w-24 h-24" />
-          </div>
-          <div className="flex items-center gap-3 mb-4 relative z-10">
-            <div className="p-2 bg-slate-800 text-slate-300 rounded-lg">
-              <DollarSign className="w-5 h-5" />
-            </div>
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Xovox (80%)</h3>
-          </div>
-          <p className="text-4xl font-black text-white relative z-10">${xovoxShare.toFixed(2)}</p>
+        <div className="bg-slate-900 rounded-2xl p-6 shadow-lg">
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-slate-800 text-slate-300 rounded-lg"><Briefcase className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Xovox (65%)</span></div>
+          <p className="text-4xl font-black text-white">${xovoxShare.toFixed(2)}</p>
         </div>
-
-        <div className="bg-gradient-to-br from-indigo-600 to-blue-600 border border-indigo-500 rounded-2xl p-6 shadow-lg shadow-indigo-500/20 relative overflow-hidden">
-          <div className="flex items-center gap-3 mb-4 relative z-10">
-            <div className="p-2 bg-white/20 text-white rounded-lg">
-              <DollarSign className="w-5 h-5" />
-            </div>
-            <h3 className="text-sm font-bold text-indigo-100 uppercase tracking-wider">Tu Parte (20%)</h3>
-          </div>
-          <p className="text-4xl font-black text-white relative z-10">${axelShare.toFixed(2)}</p>
-          <p className="text-sm font-medium text-indigo-200 mt-1">Ganancia neta mensual</p>
+        <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl p-6 shadow-lg shadow-indigo-500/20">
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-white/20 text-white rounded-lg"><DollarSign className="w-5 h-5" /></div><span className="text-xs font-bold text-indigo-100 uppercase tracking-wider">Tu Parte (20%)</span></div>
+          <p className="text-4xl font-black text-white">${axelShare.toFixed(2)}</p>
         </div>
       </div>
 
-      {/* Breakdown */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-2xl">
-        <h3 className="text-lg font-bold text-slate-900 mb-6">Desglose de Planes Activos</h3>
-        
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-slate-400"></div>
-              <span className="font-bold text-slate-700">Growth ($9.99)</span>
+      {/* Plan Breakdown */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+        <h3 className="font-bold text-slate-900 mb-4">Desglose de Planes</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {[{label: "Growth ($9.99)", count: growthCount, color: "blue"}, {label: "Pro ($49.99)", count: proCount, color: "indigo"}, {label: "Elite ($499)", count: eliteCount, color: "purple"}].map(p => (
+            <div key={p.label} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="font-bold text-slate-700 text-sm">{p.label}</span>
+              <span className="font-black text-slate-900">{p.count} <span className="text-slate-400 text-xs font-medium">usuarios</span></span>
             </div>
-            <span className="font-black text-slate-900">{growthCount} <span className="text-slate-400 text-sm font-medium">usuarios</span></span>
-          </div>
-          
-          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-              <span className="font-bold text-slate-700">Pro ($49.99)</span>
-            </div>
-            <span className="font-black text-slate-900">{proCount} <span className="text-slate-400 text-sm font-medium">usuarios</span></span>
-          </div>
-
-          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
-              <span className="font-bold text-slate-700">Elite ($499)</span>
-            </div>
-            <span className="font-black text-slate-900">{eliteCount} <span className="text-slate-400 text-sm font-medium">usuarios</span></span>
-          </div>
+          ))}
         </div>
       </div>
 
+      {/* User Management */}
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100">
+          <h3 className="font-bold text-slate-900">Gestión de Usuarios y Brokers</h3>
+          <p className="text-xs text-slate-400 mt-0.5">Asigna un código a un usuario para convertirlo en Broker.</p>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {users.map((user) => (
+            <div key={user.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${user.role === "broker" ? "bg-emerald-500" : "bg-slate-300"}`} />
+                <div className="min-w-0">
+                  <p className="font-semibold text-slate-800 truncate">{user.name ?? "Sin nombre"}</p>
+                  <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap shrink-0">
+                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${planColors[user.plan ?? "none"]}`}>{planLabels[user.plan ?? "none"] ?? user.plan}</span>
+                {user.role === "broker" ? (
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Broker: {user.brokerCode}</span>
+                    <button
+                      onClick={() => removeBroker(user.id)}
+                      disabled={actionLoading === user.id}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
+                    >
+                      {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserX className="w-3 h-3" />} Quitar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Código (ej: ROBERTO15)"
+                      value={brokerCodeInput[user.id] ?? ""}
+                      onChange={e => setBrokerCodeInput(prev => ({ ...prev, [user.id]: e.target.value }))}
+                      className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg w-36 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    <button
+                      onClick={() => promoteToBroker(user.id)}
+                      disabled={actionLoading === user.id}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                    >
+                      {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserCheck className="w-3 h-3" />} Hacer Broker
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
