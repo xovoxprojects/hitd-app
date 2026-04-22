@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CreditCard, Settings, LogOut, Zap, ChevronRight, History, BarChart3 } from "lucide-react";
+import { LayoutDashboard, CreditCard, Settings, LogOut, Zap, ChevronRight, History, BarChart3, GraduationCap } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -30,6 +30,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <LayoutDashboard className="w-5 h-5" /> Herramienta IA
             </div>
             {pathname !== '/dashboard' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+          </Link>
+          <Link 
+            href="/dashboard/courses" 
+            className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${pathname === '/dashboard/courses' ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}
+          >
+            <div className="flex items-center gap-3 font-semibold">
+              <GraduationCap className="w-5 h-5" /> Academia
+            </div>
+            {pathname !== '/dashboard/courses' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
           <Link 
             href="/dashboard/billing" 
