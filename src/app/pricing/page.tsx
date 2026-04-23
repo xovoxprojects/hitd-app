@@ -169,7 +169,7 @@ export default function PricingPage() {
              {loadingPriceId === "price_placeholder_elite" ? "Processing..." : (session ? "Get Elite" : "Login to Subscribe")}
           </button>
           <p className="text-xs font-semibold text-slate-400 text-center mt-6 uppercase tracking-wider">
-            *Subject to fair use policy
+            *Subject to fair use policy (500 credits/mo)
           </p>
         </div>
       </div>

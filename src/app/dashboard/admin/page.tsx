@@ -16,6 +16,7 @@ interface UserRow {
   brokerCode: string | null;
   referredById: string | null;
   credits: number;
+  externalRevenue: number;
 }
 
 const planPrices: Record<string, number> = { growth: 9.99, pro: 49.99, elite: 499 };
@@ -259,14 +260,14 @@ export default function AdminDashboard() {
                         let defaultCredits = 0;
                         if (planName === "growth") defaultCredits = 120; // 6 months of 20
                         if (planName === "pro") defaultCredits = 300; // 6 months of 50
-                        if (planName === "elite") defaultCredits = 9999;
+                        if (planName === "elite") defaultCredits = 500; // Fair use
                         setGrantState(prev => ({ ...prev, [user.id]: { planName, credits: defaultCredits } }));
                       }}
                     >
                       <option value="none">Ninguno</option>
                       <option value="growth">Growth (120 cr)</option>
                       <option value="pro">Pro (300 cr)</option>
-                      <option value="elite">Elite (9999 cr)</option>
+                      <option value="elite">Elite (500 cr)</option>
                     </select>
                     
                     <input
