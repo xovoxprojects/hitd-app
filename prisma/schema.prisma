@@ -16,6 +16,7 @@ model User {
   image         String?
   credits       Float     @default(0)
   plan          String    @default("none") // "starter", "growth", "pro"
+  externalRevenue Float   @default(0)
   stripeCustomerId String? @unique
   stripeSubscriptionId String? @unique
   

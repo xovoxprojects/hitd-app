@@ -12,16 +12,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { userId, planName, credits } = await req.json();
+  const { userId, planName, credits, externalRevenue } = await req.json();
   
   if (!userId || !planName || credits === undefined) {
     return NextResponse.json({ error: "userId, planName, and credits are required" }, { status: 400 });
   }
 
   try {
+    const dataToUpdate: any = { plan: planName, credits: Number(credits) };
+    if (externalRevenue) {
+      dataToUpdate.externalRevenue = { increment: Number(externalRevenue) };
+    }
+
     const updated = await prisma.user.update({
       where: { id: userId },
-      data: { plan: planName, credits: Number(credits) },
+      data: dataToUpdate,
     });
     
     return NextResponse.json({ 
@@ -30,7 +35,8 @@ export async function POST(req: Request) {
         id: updated.id, 
         email: updated.email, 
         plan: updated.plan, 
-        credits: updated.credits 
+        credits: updated.credits,
+        externalRevenue: updated.externalRevenue
       } 
     });
   } catch (e: any) {

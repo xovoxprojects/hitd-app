@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   const [brokerCodeInput, setBrokerCodeInput] = useState<Record<string, string>>({});
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const [grantState, setGrantState] = useState<Record<string, { planName: string; credits: number }>>({});
+  const [grantState, setGrantState] = useState<Record<string, { planName: string; credits: number; externalRevenue?: number }>>({});
   const [showGrantForm, setShowGrantForm] = useState<string | null>(null);
 
   useEffect(() => {
@@ -99,12 +99,12 @@ export default function AdminDashboard() {
     const res = await fetch("/api/admin/grant-plan", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, planName: state.planName, credits: Number(state.credits) }),
+      body: JSON.stringify({ userId, planName: state.planName, credits: Number(state.credits), externalRevenue: Number(state.externalRevenue || 0) }),
     });
     const data = await res.json();
     if (res.ok) {
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, plan: data.user.plan, credits: data.user.credits } : u));
-      showToast(`✅ Plan ${data.user.plan} con ${data.user.credits} créditos asignado`);
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, plan: data.user.plan, credits: data.user.credits, externalRevenue: data.user.externalRevenue } : u));
+      showToast(`✅ Plan ${data.user.plan} asignado y pago registrado`);
       setShowGrantForm(null);
     } else {
       showToast(`❌ ${data.error}`);
@@ -119,15 +119,22 @@ export default function AdminDashboard() {
   const totalUsers = users.length;
   const payingUsers = users.filter(u => planPrices[u.plan] > 0).length;
   let mrr = 0;
+  let totalExternal = 0;
   let growthCount = 0, proCount = 0, eliteCount = 0;
   users.forEach(u => {
     if (u.plan === "growth") { mrr += 9.99; growthCount++; }
     else if (u.plan === "pro") { mrr += 49.99; proCount++; }
     else if (u.plan === "elite") { mrr += 499; eliteCount++; }
+    totalExternal += (u.externalRevenue || 0);
   });
+  
+  const totalRevenue = mrr + totalExternal;
   const brokerMrr = users.reduce((acc, u) => u.role === "broker" ? acc + (planPrices[u.plan] ?? 0) * 0.15 : acc, 0);
-  const axelShare = (mrr - brokerMrr) * 0.20;
-  const xovoxShare = mrr - brokerMrr - axelShare;
+  
+  // Tu parte (20% del MRR neto + 20% de externos)
+  const axelShare = ((mrr - brokerMrr) * 0.20) + (totalExternal * 0.20);
+  // Xovox se queda el resto
+  const xovoxShare = totalRevenue - brokerMrr - axelShare;
 
   return (
     <div className="max-w-6xl mx-auto py-8 relative">
@@ -156,9 +163,9 @@ export default function AdminDashboard() {
           <p className="text-xs text-slate-400 mt-1">{payingUsers} con plan activo</p>
         </div>
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><TrendingUp className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">MRR Total</span></div>
-          <p className="text-4xl font-black text-emerald-600">${mrr.toFixed(2)}</p>
-          <p className="text-xs text-slate-400 mt-1">Suscripciones activas</p>
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><TrendingUp className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Ingresos Totales</span></div>
+          <p className="text-4xl font-black text-emerald-600">${totalRevenue.toFixed(2)}</p>
+          <p className="text-xs text-slate-400 mt-1">${mrr.toFixed(2)} MRR / ${totalExternal.toFixed(2)} Extras</p>
         </div>
         <div className="bg-slate-900 rounded-2xl p-6 shadow-lg">
           <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-slate-800 text-slate-300 rounded-lg"><Briefcase className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Xovox (65%)</span></div>
@@ -268,6 +275,14 @@ export default function AdminDashboard() {
                       className="px-2 py-1.5 text-xs border border-slate-200 rounded-lg w-20 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                       value={grantState[user.id]?.credits ?? 0}
                       onChange={e => setGrantState(prev => ({ ...prev, [user.id]: { ...prev[user.id], credits: parseInt(e.target.value) || 0 } }))}
+                    />
+
+                    <input
+                      type="number"
+                      placeholder="Pago USD"
+                      className="px-2 py-1.5 text-xs border border-slate-200 rounded-lg w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white border-emerald-200"
+                      value={grantState[user.id]?.externalRevenue ?? ""}
+                      onChange={e => setGrantState(prev => ({ ...prev, [user.id]: { ...prev[user.id], externalRevenue: parseFloat(e.target.value) || 0 } }))}
                     />
                     
                     <button
