@@ -5,9 +5,6 @@ import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 import { GoogleGenerativeAI, Part } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
-import { writeFileSync, unlinkSync } from "fs";
-import { join } from "path";
-import os from "os";
 
 const MASTER_PROMPT = `Actúa como un representante oficial de Meta que conoce TODAS las políticas de Meta basadas en el sitio web oficial. Analizarás el contenido, screenshot, texto, copywriting o video enviado para verificar que cumple con las políticas de Meta (Meta-Compliant). Este contenido es específicamente para Instagram y Facebook: contenido orgánico, historias, anuncios y creativos.
 
@@ -95,45 +92,70 @@ export async function POST(req: Request) {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      // 1. Download the video from Supabase into /tmp
+      // 1. Stream the video directly from Supabase → Gemini Files API (no /tmp writes)
       const videoResponse = await fetch(fileUrl);
       if (!videoResponse.ok) throw new Error("Failed to download video from storage");
+
       const videoBuffer = await videoResponse.arrayBuffer();
-      const ext = (fileMimeType as string).split("/")[1] || "mp4";
-      const tmpPath = join(os.tmpdir(), `hitd_${Date.now()}.${ext}`);
-      writeFileSync(tmpPath, Buffer.from(videoBuffer));
+      const mimeType = fileMimeType as string;
+      const displayName = fileName || "ad_creative";
 
-      let uploadedFileUri = "";
-      try {
-        // 2. Upload to Gemini Files API
-        const uploadResult = await executeWithRetry(() => fileManager.uploadFile(tmpPath, {
-          mimeType: fileMimeType as string,
-          displayName: fileName || "ad_creative",
-        }));
-        uploadedFileUri = uploadResult.file.uri;
+      // Build multipart body manually for the Gemini Files REST API
+      const boundary = `hitd_${Date.now()}`;
+      const metadataPart = JSON.stringify({ file: { display_name: displayName } });
+      const metadataBytes = Buffer.from(metadataPart, "utf-8");
+      const videoBytes = Buffer.from(videoBuffer);
 
-        // 3. Wait until file is ACTIVE (processing)
-        let fileInfo = await fileManager.getFile(uploadResult.file.name);
-        while (fileInfo.state === "PROCESSING") {
-          await new Promise((r) => setTimeout(r, 2000));
-          fileInfo = await fileManager.getFile(uploadResult.file.name);
+      const body = Buffer.concat([
+        Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`),
+        metadataBytes,
+        Buffer.from(`\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`),
+        videoBytes,
+        Buffer.from(`\r\n--${boundary}--`),
+      ]);
+
+      const uploadResponse = await fetch(
+        `https://generativelanguage.googleapis.com/upload/v1beta/files?uploadType=multipart&key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": `multipart/related; boundary=${boundary}`,
+            "Content-Length": body.length.toString(),
+          },
+          body,
         }
-        if (fileInfo.state === "FAILED") throw new Error("Gemini file processing failed.");
+      );
 
-        // 4. Analyze
-        const videoPart: Part = { fileData: { mimeType: fileMimeType as string, fileUri: uploadedFileUri } };
-        const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
-        const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]));
-        const rawText = result.response.text();
-        const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-        jsonResult = JSON.parse(cleaned);
-
-        // 5. Delete the uploaded file from Gemini to avoid quota buildup
-        await fileManager.deleteFile(uploadResult.file.name).catch(() => {});
-      } finally {
-        // Always clean up /tmp
-        unlinkSync(tmpPath);
+      if (!uploadResponse.ok) {
+        const errText = await uploadResponse.text();
+        throw new Error(`Gemini upload failed: ${uploadResponse.status} – ${errText}`);
       }
+
+      const uploadJson = await uploadResponse.json();
+      const uploadedFileName: string = uploadJson.file?.name;
+      const uploadedFileUri: string = uploadJson.file?.uri;
+
+      if (!uploadedFileUri) throw new Error("Gemini did not return a file URI");
+
+      let uploadedFileInfo = await fileManager.getFile(uploadedFileName);
+
+      // 2. Wait until the file is ACTIVE
+      while (uploadedFileInfo.state === "PROCESSING") {
+        await new Promise((r) => setTimeout(r, 2000));
+        uploadedFileInfo = await fileManager.getFile(uploadedFileName);
+      }
+      if (uploadedFileInfo.state === "FAILED") throw new Error("Gemini file processing failed.");
+
+      // 3. Analyze
+      const videoPart: Part = { fileData: { mimeType, fileUri: uploadedFileUri } };
+      const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
+      const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]));
+      const rawText = result.response.text();
+      const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      jsonResult = JSON.parse(cleaned);
+
+      // 4. Delete the uploaded file from Gemini to avoid quota buildup
+      await fileManager.deleteFile(uploadedFileName).catch(() => {});
 
     // ── IMAGE / TEXT → GPT-4o ─────────────────────────────────────────────
     } else {
@@ -164,33 +186,40 @@ export async function POST(req: Request) {
       jsonResult = JSON.parse(aiText);
     }
 
-    // Deduct credits
-    const remainingCredits = Math.max(0, user.credits - cost);
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { credits: remainingCredits },
-    });
+    // Deduct credits and save analysis — both in a single try block so a DB
+    // failure here is logged but does NOT hide the result from the user.
+    try {
+      const remainingCredits = Math.max(0, user.credits - cost);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { credits: remainingCredits },
+      });
 
-    // Save Analysis
-    await prisma.analysis.create({
-      data: {
-        userId: user.id,
-        type,
-        contentUrl: fileUrl,
-        textContent: text,
-        score: jsonResult.score,
-        riskLevel: jsonResult.risk_level,
-        violations: jsonResult.violations,
-        warnings: jsonResult.warnings,
-        improvements: jsonResult.improvements,
-        rewrittenCopy: jsonResult.rewritten_copy ?? null,
-        complianceExplanation: jsonResult.compliance_explanation ?? null,
-        alternatives: jsonResult.alternatives ?? null,
-        cost: cost,
-      },
-    });
+      await prisma.analysis.create({
+        data: {
+          userId: user.id,
+          type,
+          contentUrl: fileUrl,
+          textContent: text,
+          score: jsonResult.score,
+          riskLevel: jsonResult.risk_level,
+          violations: jsonResult.violations,
+          warnings: jsonResult.warnings,
+          improvements: jsonResult.improvements,
+          rewrittenCopy: jsonResult.rewritten_copy ?? null,
+          complianceExplanation: jsonResult.compliance_explanation ?? null,
+          alternatives: jsonResult.alternatives ?? null,
+          cost: cost,
+        },
+      });
 
-    return NextResponse.json({ success: true, remainingCredits, analysis: jsonResult });
+      return NextResponse.json({ success: true, remainingCredits, analysis: jsonResult });
+    } catch (dbError) {
+      // DB write failed — log it but still return the analysis result to the user.
+      // A background job or manual fix can reconcile credits later.
+      console.error("DB write after analysis failed:", dbError);
+      return NextResponse.json({ success: true, remainingCredits: user.credits - cost, analysis: jsonResult });
+    }
   } catch (error: unknown) {
     let message = error instanceof Error ? error.message : "Failed to analyze";
     
@@ -199,6 +228,8 @@ export async function POST(req: Request) {
       message = "Los servidores de IA están experimentando una alta demanda temporal. Por favor, intentá de nuevo en unos segundos.";
     } else if (message.includes("429") || message.includes("Resource has been exhausted") || message.includes("Too Many Requests")) {
       message = "Límite de peticiones a la IA alcanzado. Por favor, intentá de nuevo en un minuto.";
+    } else if (message.includes("ENOSPC") || message.includes("no space left on device")) {
+      message = "El servidor no tiene espacio disponible temporalmente. Por favor, intentá de nuevo en unos momentos.";
     }
 
     console.error("Analysis Error:", error);

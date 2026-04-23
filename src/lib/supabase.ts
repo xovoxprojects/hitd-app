@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
+// Client-side instance: uses the public anon key ONLY.
+// NEVER put the SERVICE_ROLE_KEY here — it would be exposed in the browser bundle.
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dummy.supabase.co",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-key"
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );

@@ -57,37 +57,49 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
     setAnalyzing(true);
     setError("");
 
+    let uploadedFilePath: string | null = null;
+
     try {
       let fileUrl = "";
 
       if (file) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${fileName}`;
+        uploadedFilePath = fileName;
 
         const { error: uploadError } = await supabase.storage
           .from('creatives')
-          .upload(filePath, file);
+          .upload(uploadedFilePath, file);
 
         if (uploadError) throw uploadError;
 
         const { data } = supabase.storage
           .from('creatives')
-          .getPublicUrl(filePath);
+          .getPublicUrl(uploadedFilePath);
           
         fileUrl = data.publicUrl;
       }
 
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileUrl,
-          fileMimeType: file?.type,
-          fileName: file?.name,
-          text: textContent
-        }),
-      });
+      // Abort if the analysis takes more than 5 minutes
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+
+      let res: Response;
+      try {
+        res = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            fileUrl,
+            fileMimeType: file?.type,
+            fileName: file?.name,
+            text: textContent
+          }),
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       let responseData;
       const contentType = res.headers.get("content-type");
@@ -103,7 +115,15 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
       setFile(null);
       setTextContent("");
     } catch (err: any) {
-      setError(err.message);
+      // Clean up the uploaded file from Supabase if the analysis failed,
+      // so we don't accumulate orphaned files.
+      if (uploadedFilePath) {
+        supabase.storage.from('creatives').remove([uploadedFilePath]).catch(() => {});
+      }
+      const msg = err?.name === "AbortError"
+        ? "El análisis tardó demasiado. Por favor, intentá de nuevo."
+        : err.message;
+      setError(msg);
     } finally {
       setAnalyzing(false);
     }
