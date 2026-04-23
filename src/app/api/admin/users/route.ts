@@ -17,6 +17,7 @@ export async function GET(req: Request) {
       name: true,
       email: true,
       plan: true,
+      credits: true,
       role: true,
       brokerCode: true,
       referredById: true,

@@ -15,6 +15,7 @@ interface UserRow {
   role: string;
   brokerCode: string | null;
   referredById: string | null;
+  credits: number;
 }
 
 const planPrices: Record<string, number> = { growth: 9.99, pro: 49.99, elite: 499 };
@@ -34,6 +35,8 @@ export default function AdminDashboard() {
   const [brokerCodeInput, setBrokerCodeInput] = useState<Record<string, string>>({});
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [grantState, setGrantState] = useState<Record<string, { planName: string; credits: number }>>({});
+  const [showGrantForm, setShowGrantForm] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "authenticated" && session?.user?.email !== ADMIN_EMAIL) {
@@ -82,6 +85,29 @@ export default function AdminDashboard() {
     if (res.ok) {
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: "user", brokerCode: null } : u));
       showToast("Broker degradado a usuario normal");
+    }
+    setActionLoading(null);
+  };
+
+  const grantPlan = async (userId: string) => {
+    const state = grantState[userId];
+    if (!state || !state.planName || state.credits === undefined) {
+      showToast("Selecciona plan y créditos");
+      return;
+    }
+    setActionLoading(userId + "-grant");
+    const res = await fetch("/api/admin/grant-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, planName: state.planName, credits: Number(state.credits) }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, plan: data.user.plan, credits: data.user.credits } : u));
+      showToast(`✅ Plan ${data.user.plan} con ${data.user.credits} créditos asignado`);
+      setShowGrantForm(null);
+    } else {
+      showToast(`❌ ${data.error}`);
     }
     setActionLoading(null);
   };
@@ -174,34 +200,82 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap shrink-0">
-                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${planColors[user.plan ?? "none"]}`}>{planLabels[user.plan ?? "none"] ?? user.plan}</span>
-                {user.role === "broker" ? (
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Broker: {user.brokerCode}</span>
-                    <button
-                      onClick={() => removeBroker(user.id)}
-                      disabled={actionLoading === user.id}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
+              <div className="flex flex-col items-end gap-2 shrink-0">
+                <div className="flex items-center gap-2 flex-wrap justify-end">
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${planColors[user.plan ?? "none"]}`}>{planLabels[user.plan ?? "none"] ?? user.plan} ({user.credits} cr)</span>
+                  
+                  <button
+                    onClick={() => setShowGrantForm(showGrantForm === user.id ? null : user.id)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                  >
+                    Regalar Plan
+                  </button>
+
+                  {user.role === "broker" ? (
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Broker: {user.brokerCode}</span>
+                      <button
+                        onClick={() => removeBroker(user.id)}
+                        disabled={actionLoading === user.id}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
+                      >
+                        {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserX className="w-3 h-3" />} Quitar
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Código (ej: ROBERTO15)"
+                        value={brokerCodeInput[user.id] ?? ""}
+                        onChange={e => setBrokerCodeInput(prev => ({ ...prev, [user.id]: e.target.value }))}
+                        className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg w-36 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                      <button
+                        onClick={() => promoteToBroker(user.id)}
+                        disabled={actionLoading === user.id}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                      >
+                        {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserCheck className="w-3 h-3" />} Hacer Broker
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {showGrantForm === user.id && (
+                  <div className="flex items-center gap-2 mt-2 bg-slate-50 p-2 rounded-xl border border-slate-200 w-full justify-end animate-fade-in">
+                    <select
+                      className="px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      value={grantState[user.id]?.planName ?? "none"}
+                      onChange={e => {
+                        const planName = e.target.value;
+                        let defaultCredits = 0;
+                        if (planName === "growth") defaultCredits = 120; // 6 months of 20
+                        if (planName === "pro") defaultCredits = 300; // 6 months of 50
+                        if (planName === "elite") defaultCredits = 9999;
+                        setGrantState(prev => ({ ...prev, [user.id]: { planName, credits: defaultCredits } }));
+                      }}
                     >
-                      {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserX className="w-3 h-3" />} Quitar
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
+                      <option value="none">Ninguno</option>
+                      <option value="growth">Growth (120 cr)</option>
+                      <option value="pro">Pro (300 cr)</option>
+                      <option value="elite">Elite (9999 cr)</option>
+                    </select>
+                    
                     <input
-                      type="text"
-                      placeholder="Código (ej: ROBERTO15)"
-                      value={brokerCodeInput[user.id] ?? ""}
-                      onChange={e => setBrokerCodeInput(prev => ({ ...prev, [user.id]: e.target.value }))}
-                      className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg w-36 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      type="number"
+                      placeholder="Créditos"
+                      className="px-2 py-1.5 text-xs border border-slate-200 rounded-lg w-20 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      value={grantState[user.id]?.credits ?? 0}
+                      onChange={e => setGrantState(prev => ({ ...prev, [user.id]: { ...prev[user.id], credits: parseInt(e.target.value) || 0 } }))}
                     />
+                    
                     <button
-                      onClick={() => promoteToBroker(user.id)}
-                      disabled={actionLoading === user.id}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                      onClick={() => grantPlan(user.id)}
+                      disabled={actionLoading === user.id + "-grant"}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
                     >
-                      {actionLoading === user.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserCheck className="w-3 h-3" />} Hacer Broker
+                      {actionLoading === user.id + "-grant" ? <Loader2 className="w-3 h-3 animate-spin" /> : "Guardar"}
                     </button>
                   </div>
                 )}
