@@ -121,21 +121,33 @@ export default function AdminDashboard() {
   const payingUsers = users.filter(u => planPrices[u.plan] > 0).length;
   let mrr = 0;
   let totalExternal = 0;
+  let totalBrokerCut = 0; // Lo que se llevan los brokers (15% de los referidos)
   let growthCount = 0, proCount = 0, eliteCount = 0;
+  
   users.forEach(u => {
-    if (u.plan === "growth") { mrr += 9.99; growthCount++; }
-    else if (u.plan === "pro") { mrr += 49.99; proCount++; }
-    else if (u.plan === "elite") { mrr += 499; eliteCount++; }
-    totalExternal += (u.externalRevenue || 0);
+    let userMrr = 0;
+    if (u.plan === "growth") { userMrr = 9.99; growthCount++; }
+    else if (u.plan === "pro") { userMrr = 49.99; proCount++; }
+    else if (u.plan === "elite") { userMrr = 499; eliteCount++; }
+    
+    mrr += userMrr;
+    
+    const userExt = u.externalRevenue || 0;
+    totalExternal += userExt;
+
+    // Si el usuario fue referido por un broker, el broker se lleva el 15% de lo que pagó
+    if (u.referredById) {
+      totalBrokerCut += (userMrr + userExt) * 0.15;
+    }
   });
   
   const totalRevenue = mrr + totalExternal;
-  const brokerMrr = users.reduce((acc, u) => u.role === "broker" ? acc + (planPrices[u.plan] ?? 0) * 0.15 : acc, 0);
   
-  // Tu parte (20% del MRR neto + 20% de externos)
-  const axelShare = ((mrr - brokerMrr) * 0.20) + (totalExternal * 0.20);
-  // Xovox se queda el resto
-  const xovoxShare = totalRevenue - brokerMrr - axelShare;
+  // Tu parte: SIEMPRE el 20% del total absoluto generado
+  const axelShare = totalRevenue * 0.20;
+  
+  // Xovox se queda el resto: Total menos tu parte (20%) menos la parte de los brokers (15% de referidos)
+  const xovoxShare = totalRevenue - axelShare - totalBrokerCut;
 
   return (
     <div className="max-w-6xl mx-auto py-8 relative">
@@ -169,7 +181,7 @@ export default function AdminDashboard() {
           <p className="text-xs text-slate-400 mt-1">${mrr.toFixed(2)} MRR / ${totalExternal.toFixed(2)} Extras</p>
         </div>
         <div className="bg-slate-900 rounded-2xl p-6 shadow-lg">
-          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-slate-800 text-slate-300 rounded-lg"><Briefcase className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Xovox (65%)</span></div>
+          <div className="flex items-center gap-3 mb-3"><div className="p-2 bg-slate-800 text-slate-300 rounded-lg"><Briefcase className="w-5 h-5" /></div><span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Xovox (Resto)</span></div>
           <p className="text-4xl font-black text-white">${xovoxShare.toFixed(2)}</p>
         </div>
         <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl p-6 shadow-lg shadow-indigo-500/20">
