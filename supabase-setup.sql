@@ -27,3 +27,6 @@ alter table "User" alter column "credits" set default 0;
 alter table "User" add column if not exists "role" text not null default 'user';
 alter table "User" add column if not exists "brokerCode" text unique;
 alter table "User" add column if not exists "referredById" text references "User"(id) on delete set null;
+
+-- 6. Financial Tracking — run this ONCE to add externalRevenue
+alter table "User" add column if not exists "externalRevenue" double precision not null default 0;
