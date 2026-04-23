@@ -1,64 +1,48 @@
 "use client";
-import { MOCK_COURSES } from '@/lib/mockData';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { Lock, Sparkles, Shield, Rocket } from "lucide-react";
 
 export default function CoursesPage() {
-  const { data: session } = useSession();
-  const plan = session?.user?.plan || "none";
-  
-  // Only allow Pro ($49.99) and Elite ($499)
-  const isUnlocked = plan === "pro" || plan === "elite";
-
   return (
-    <div className="animate-in fade-in duration-500 pb-10">
+    <div className="animate-in fade-in duration-700 pb-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Tu Academia</h1>
-        <p className="text-muted">Proteje tus redes de suspensiones e inhabilitaciones permanentes</p>
+        <h1 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">Academia Hitd.ai</h1>
+        <p className="text-lg text-slate-500 font-medium">Entrenamientos avanzados de compliance y contingencia.</p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_COURSES.map((course) => {
-          // If the plan is not unlocked, force locked state. Otherwise respect course.locked.
-          const isCourseLocked = !isUnlocked || course.locked;
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-[2.5rem] p-12 mt-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden flex flex-col items-center text-center">
+        {/* Dynamic Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="w-24 h-24 bg-slate-50 border border-slate-100 shadow-sm rounded-full flex items-center justify-center mb-8 relative z-10 group">
+          <div className="absolute inset-0 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-10 scale-50 group-hover:scale-150 transition-all duration-700" />
+          <Lock className="w-10 h-10 text-indigo-400 group-hover:scale-110 transition-transform duration-500" />
+        </div>
 
-          return (
-            <Card key={course.id} className="flex flex-col h-full bg-surface border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <div className="relative h-48 bg-slate-200">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
-                {isCourseLocked && (
-                  <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white p-4 text-center">
-                    <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    <span className="font-semibold text-lg">Bloqueado</span>
-                    <span className="text-sm text-slate-300">Mejora tu plan para acceder</span>
-                  </div>
-                )}
-              </div>
-              <div className="p-5 flex flex-col flex-1">
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="default" className="text-[10px]">{course.modules} Módulos</Badge>
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-2 leading-tight">{course.title}</h3>
-                <p className="text-muted text-sm mb-6 flex-1">{course.description}</p>
-                
-                <Link href={isCourseLocked ? "/pricing" : "#"} className="w-full block">
-                  <Button 
-                    variant={isCourseLocked ? 'secondary' : 'primary'} 
-                    className="w-full"
-                  >
-                    {isCourseLocked ? 'Desbloquear Curso' : 'Continuar Aprendiendo'}
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          )
-        })}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-6 relative z-10">
+          <Sparkles className="w-4 h-4" /> Próximamente
+        </div>
+
+        <h2 className="text-4xl font-black text-slate-900 mb-6 tracking-tight relative z-10 max-w-2xl">
+          Estamos construyendo la academia definitiva
+        </h2>
+        
+        <p className="text-lg text-slate-500 max-w-2xl leading-relaxed mb-12 relative z-10 font-medium">
+          El equipo de hitd.ai está preparando entrenamientos de alto nivel sobre políticas de Meta, 
+          estrategias de contingencia blindadas y tácticas de escalado seguro para ofertas de alto riesgo.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-6 w-full max-w-3xl relative z-10 text-left">
+          <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 hover:-translate-y-1 transition-transform duration-300">
+            <Shield className="w-8 h-8 text-indigo-500 mb-4" />
+            <h3 className="font-bold text-slate-900 mb-2">Masterclass de Políticas</h3>
+            <p className="text-sm text-slate-500 font-medium">Desglosaremos las reglas no escritas de Meta y cómo sortearlas legalmente.</p>
+          </div>
+          <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 hover:-translate-y-1 transition-transform duration-300">
+            <Rocket className="w-8 h-8 text-blue-500 mb-4" />
+            <h3 className="font-bold text-slate-900 mb-2">Escalado Agresivo</h3>
+            <p className="text-sm text-slate-500 font-medium">Estrategias de contingencia y estructuras de cuentas para escalar sin interrupciones.</p>
+          </div>
+        </div>
       </div>
       
       <div className="mt-16 p-10 bg-slate-900 rounded-[2rem] text-center text-white shadow-xl relative overflow-hidden border border-slate-800">

@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { LayoutDashboard, CreditCard, Settings, LogOut, ChevronRight, History, BarChart3, GraduationCap, Briefcase } from "lucide-react";
+import { LayoutDashboard, CreditCard, Settings, LogOut, ChevronRight, History, BarChart3, GraduationCap, Briefcase, Lock } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -45,6 +45,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           >
             <div className="flex items-center gap-3 font-semibold">
               <GraduationCap className="w-5 h-5" /> Academia
+              <span className="ml-auto flex items-center bg-slate-200/60 text-slate-500 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
+                <Lock className="w-3 h-3 mr-1" /> Bloqueado
+              </span>
             </div>
             {pathname !== '/dashboard/courses' && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
           </Link>
