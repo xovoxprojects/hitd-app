@@ -21,31 +21,47 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
+  // Handle successful checkouts (both subscriptions and one-time payments)
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     
     // Retrieve the metadata set during checkout creation
     const userId = session.metadata?.userId;
-    const planName = session.metadata?.planName; // 'starter', 'growth', 'pro'
+    const type = session.metadata?.type; // 'pack' or 'subscription'
+    const planName = session.metadata?.planName; // 'starter', 'pro', 'elite' OR 'pack_100', etc.
+    const creditsToAddStr = session.metadata?.creditsToAdd;
     
-    if (userId && planName) {
-      let creditsToAdd = 0;
-      if (planName === "growth") creditsToAdd = 20;
-      else if (planName === "pro") creditsToAdd = 50;
-      else if (planName === "elite") creditsToAdd = 150;
+    if (userId) {
+      if (type === "pack" && creditsToAddStr) {
+        // One-time payment for credit pack
+        const creditsToAdd = parseInt(creditsToAddStr, 10);
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            credits: { increment: creditsToAdd }
+          }
+        });
+      } else if (type === "subscription" && planName) {
+        // New Subscription
+        let creditsToAdd = 0;
+        if (planName === "starter") creditsToAdd = 20;
+        else if (planName === "pro") creditsToAdd = 50;
+        else if (planName === "elite") creditsToAdd = 150;
 
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          stripeCustomerId: session.customer as string,
-          stripeSubscriptionId: session.subscription as string,
-          plan: planName,
-          credits: creditsToAdd
-        }
-      });
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            stripeCustomerId: session.customer as string,
+            stripeSubscriptionId: session.subscription as string,
+            plan: planName,
+            credits: creditsToAdd
+          }
+        });
+      }
     }
   }
 
+  // Handle monthly renewals
   if (event.type === "invoice.payment_succeeded") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const invoice = event.data.object as any;
@@ -58,7 +74,7 @@ export async function POST(req: Request) {
       
       if (user) {
         let creditsToReset = 0;
-        if (user.plan === "growth") creditsToReset = 20;
+        if (user.plan === "starter") creditsToReset = 20;
         else if (user.plan === "pro") creditsToReset = 50;
         else if (user.plan === "elite") creditsToReset = 150;
 
@@ -69,6 +85,28 @@ export async function POST(req: Request) {
           }
         });
       }
+    }
+  }
+
+  // Handle subscription cancellations (Retention Tactic)
+  if (event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object as Stripe.Subscription;
+    
+    // Find the user with this subscription ID
+    const user = await prisma.user.findUnique({
+      where: { stripeSubscriptionId: subscription.id }
+    });
+
+    if (user) {
+      // Wipe credits and remove plan
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          plan: "none",
+          credits: 0,
+          stripeSubscriptionId: null // Clear the subscription ID since it's cancelled
+        }
+      });
     }
   }
 

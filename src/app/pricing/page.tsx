@@ -63,9 +63,9 @@ export default function PricingPage() {
       </div>
 
       <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch z-10 perspective-[1000px]">
-        {/* Growth Plan */}
+        {/* Starter Plan */}
         <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2.5rem] p-10 flex flex-col shadow-lg shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 mt-8 md:mt-4">
-          <h3 className="text-2xl font-bold mb-2 text-slate-900">Growth</h3>
+          <h3 className="text-2xl font-bold mb-2 text-slate-900">Starter</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
             <span className="text-5xl font-black text-slate-900">$9.99</span>
             <span className="text-slate-500 font-medium">/mo</span>
@@ -89,7 +89,7 @@ export default function PricingPage() {
             disabled={loadingPriceId !== null}
             className="w-full block text-center py-4 rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 font-bold transition-colors disabled:opacity-50"
           >
-            {loadingPriceId === "price_placeholder_growth" ? "Processing..." : (session ? "Get Growth" : "Login to Subscribe")}
+            {loadingPriceId === "price_placeholder_growth" ? "Processing..." : (session ? "Get Starter" : "Login to Subscribe")}
           </button>
         </div>
 
