@@ -282,16 +282,16 @@ export default function AdminDashboard() {
                       onChange={e => {
                         const planName = e.target.value;
                         let defaultCredits = 0;
-                        if (planName === "starter") defaultCredits = 120; // 6 months of 20
-                        if (planName === "pro") defaultCredits = 300; // 6 months of 50
-                        if (planName === "elite") defaultCredits = 900; // 6 months of 150
+                        if (planName === "starter") defaultCredits = 20; 
+                        if (planName === "pro") defaultCredits = 50; 
+                        if (planName === "elite") defaultCredits = 150; 
                         setGrantState(prev => ({ ...prev, [user.id]: { planName, credits: defaultCredits } }));
                       }}
                     >
                       <option value="none">Ninguno</option>
-                      <option value="starter">Starter (120 cr)</option>
-                      <option value="pro">Pro (300 cr)</option>
-                      <option value="elite">Elite (900 cr)</option>
+                      <option value="starter">Starter (20 cr)</option>
+                      <option value="pro">Pro (50 cr)</option>
+                      <option value="elite">Elite (150 cr)</option>
                     </select>
                     
                     <input
