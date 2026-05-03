@@ -93,77 +93,77 @@ export default function PricingPage() {
           </button>
         </div>
 
-        {/* Pro Plan */}
+        {/* Elite Plan */}
         <div className="relative bg-slate-900 text-white rounded-[2.5rem] p-10 flex flex-col transform md:-translate-y-4 shadow-2xl shadow-indigo-500/20 mt-8 md:mt-0">
           <div className="absolute inset-0 rounded-[2.5rem] border-2 border-indigo-500/50 pointer-events-none" />
           <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg">
             <Sparkles className="w-4 h-4" /> Most Popular
           </div>
           
-          <h3 className="text-2xl font-bold mb-2">Pro</h3>
+          <h3 className="text-2xl font-bold mb-2">Elite</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
-            <span className="text-5xl font-black">$19.99</span>
+            <span className="text-5xl font-black">$49.99</span>
             <span className="text-slate-400 font-medium">/mo</span>
           </div>
           <p className="text-slate-300 mb-8 border-b border-slate-800 pb-8 text-sm font-medium">
-            The full suite for serious media buyers and agencies.
-          </p>
-          <ul className="space-y-4 mb-10 flex-grow">
-            <li className="flex items-center gap-3 text-white font-medium">
-              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> 50 créditos
-            </li>
-            <li className="flex items-center gap-3 text-white font-medium">
-              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Priority processing
-            </li>
-            <li className="flex items-center gap-3 text-white font-medium">
-              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Advanced analysis depth
-            </li>
-            <li className="flex items-center gap-3 text-white font-medium">
-              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Detailed Actionable Insights
-            </li>
-          </ul>
-          <button 
-            onClick={() => handleCheckout("price_placeholder_pro", "pro")}
-            disabled={loadingPriceId !== null}
-            className="relative group overflow-hidden w-full block text-center py-4 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] disabled:opacity-50"
-          >
-            <span className="relative z-10 text-white">
-               {loadingPriceId === "price_placeholder_pro" ? "Processing..." : (session ? "Get Pro" : "Login to Subscribe")}
-            </span>
-            <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:scale-105 transition-transform duration-300"></div>
-          </button>
-        </div>
-
-        {/* Elite Plan */}
-        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2.5rem] p-10 flex flex-col shadow-lg shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 mt-8 md:mt-4">
-          <h3 className="text-2xl font-bold mb-2 text-slate-900">Elite</h3>
-          <div className="flex flex-wrap items-baseline gap-2 mb-6">
-            <span className="text-5xl font-black text-slate-900">$49.99</span>
-            <span className="text-slate-500 font-medium">/mo</span>
-          </div>
-          <p className="text-slate-500 mb-8 border-b border-slate-100 pb-8 text-sm font-medium">
             Volume analysis for scaling multiple ad accounts.
           </p>
           <ul className="space-y-4 mb-10 flex-grow">
-            <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> 150 créditos
+            <li className="flex items-center gap-3 text-white font-medium">
+              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> 150 créditos
             </li>
-            <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Weekly calls with Ads Expert
+            <li className="flex items-center gap-3 text-white font-medium">
+              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Weekly calls with Ads Expert
             </li>
-            <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Manual Content review by Meta Compliant Expert
+            <li className="flex items-center gap-3 text-white font-medium">
+              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Manual Content review by Meta Compliant Expert
             </li>
-            <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Skool Community Access (Ads Protection & Content Creation)
+            <li className="flex items-center gap-3 text-white font-medium">
+              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Skool Community Access (Ads Protection & Content Creation)
             </li>
           </ul>
           <button 
             onClick={() => handleCheckout("price_placeholder_elite", "elite")}
             disabled={loadingPriceId !== null}
+            className="relative group overflow-hidden w-full block text-center py-4 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] disabled:opacity-50"
+          >
+            <span className="relative z-10 text-white">
+               {loadingPriceId === "price_placeholder_elite" ? "Processing..." : (session ? "Get Elite" : "Login to Subscribe")}
+            </span>
+            <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:scale-105 transition-transform duration-300"></div>
+          </button>
+        </div>
+
+        {/* Pro Plan */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2.5rem] p-10 flex flex-col shadow-lg shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 mt-8 md:mt-4 h-full">
+          <h3 className="text-2xl font-bold mb-2 text-slate-900">Pro</h3>
+          <div className="flex flex-wrap items-baseline gap-2 mb-6">
+            <span className="text-5xl font-black text-slate-900">$19.99</span>
+            <span className="text-slate-500 font-medium">/mo</span>
+          </div>
+          <p className="text-slate-500 mb-8 border-b border-slate-100 pb-8 text-sm font-medium">
+            The full suite for serious media buyers and agencies.
+          </p>
+          <ul className="space-y-4 mb-10 flex-grow">
+            <li className="flex items-center gap-3 text-slate-700 font-medium">
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> 50 créditos
+            </li>
+            <li className="flex items-center gap-3 text-slate-700 font-medium">
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Priority processing
+            </li>
+            <li className="flex items-center gap-3 text-slate-700 font-medium">
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Advanced analysis depth
+            </li>
+            <li className="flex items-center gap-3 text-slate-700 font-medium">
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Detailed Actionable Insights
+            </li>
+          </ul>
+          <button 
+            onClick={() => handleCheckout("price_placeholder_pro", "pro")}
+            disabled={loadingPriceId !== null}
             className="w-full block text-center py-4 rounded-full bg-slate-900 text-white hover:bg-slate-800 font-bold transition-colors disabled:opacity-50"
           >
-             {loadingPriceId === "price_placeholder_elite" ? "Processing..." : (session ? "Get Elite" : "Login to Subscribe")}
+             {loadingPriceId === "price_placeholder_pro" ? "Processing..." : (session ? "Get Pro" : "Login to Subscribe")}
           </button>
         </div>
       </div>

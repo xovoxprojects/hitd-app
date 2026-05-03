@@ -292,18 +292,6 @@ const LandingPricing = () => {
       featured: false,
     },
     {
-      nameKey: "plan_pro_name",
-      subKey: "plan_pro_sub",
-      price: "$19.99",
-      originalPrice: "$49.99",
-      discount: "-60%",
-      featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
-      ctaKey: "plan_pro_cta",
-      planId: "pro",
-      dark: true,
-      featured: true,
-    },
-    {
       nameKey: "plan_elite_name",
       subKey: "plan_elite_sub",
       price: "$49.99",
@@ -312,20 +300,32 @@ const LandingPricing = () => {
       featureKeys: ["plan_elite_f1", "plan_elite_f2", "plan_elite_f3", "plan_elite_f4", "plan_elite_f5"],
       ctaKey: "plan_elite_cta",
       planId: "elite",
+      dark: true,
+      featured: true,
+    },
+    {
+      nameKey: "plan_pro_name",
+      subKey: "plan_pro_sub",
+      price: "$19.99",
+      originalPrice: "$49.99",
+      discount: "-60%",
+      featureKeys: ["plan_pro_f1", "plan_pro_f2", "plan_pro_f3", "plan_pro_f4", "plan_pro_f5"],
+      ctaKey: "plan_pro_cta",
+      planId: "pro",
       dark: false,
       featured: false,
     },
   ];
 
   return (
-    <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-end pt-8">
+    <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch pt-8">
       {plans.map((plan) => (
         <div
           key={plan.nameKey}
-          className={`relative rounded-3xl flex flex-col transition-all duration-300 ${
+          className={`relative rounded-3xl flex flex-col h-full transition-all duration-300 ${
             plan.dark
-              ? "bg-[#0f172a] text-white shadow-2xl shadow-blue-900/30 md:-translate-y-6 ring-2 ring-blue-500/30"
-              : "bg-white border border-slate-200 text-slate-900 shadow-md hover:-translate-y-1"
+              ? "bg-[#0f172a] text-white shadow-2xl shadow-blue-900/30 md:-translate-y-4 ring-2 ring-blue-500/30"
+              : "bg-white border border-slate-200 text-slate-900 shadow-md hover:-translate-y-1 md:mt-4"
           }`}
         >
           {plan.featured && (
