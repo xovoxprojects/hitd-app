@@ -141,12 +141,15 @@ export default function AdminDashboard() {
     
     mrr += userMrr;
     
-    const userExt = u.externalRevenue || 0;
-    totalExternal += userExt;
+    // Solo sumar al total y a los brokers si NO es admin
+    if (u.email !== "xovoxclips@gmail.com" && u.email !== "hello@hitd.ai") {
+      const userExt = u.externalRevenue || 0;
+      totalExternal += userExt;
 
-    // Si el usuario fue referido por un broker, el broker se lleva el 15% de lo que pagó
-    if (u.referredById && u.email !== "xovoxclips@gmail.com") {
-      totalBrokerCut += (userMrr + userExt) * 0.15;
+      // Si el usuario fue referido por un broker, el broker se lleva el 15% de lo que pagó
+      if (u.referredById) {
+        totalBrokerCut += (userMrr + userExt) * 0.15;
+      }
     }
   });
   
