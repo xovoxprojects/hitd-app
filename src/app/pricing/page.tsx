@@ -68,7 +68,6 @@ export default function PricingPage() {
           <h3 className="text-2xl font-bold mb-2 text-slate-900">Growth</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
             <span className="text-5xl font-black text-slate-900">$9.99</span>
-            <span className="text-lg text-slate-400 line-through font-bold decoration-slate-300">$29.99</span>
             <span className="text-slate-500 font-medium">/mo</span>
           </div>
           <p className="text-slate-500 mb-8 border-b border-slate-100 pb-8 text-sm font-medium">
@@ -76,7 +75,7 @@ export default function PricingPage() {
           </p>
           <ul className="space-y-4 mb-10 flex-grow">
             <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> 20 credits per month
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> 20 créditos
             </li>
             <li className="flex items-center gap-3 text-slate-700 font-medium">
               <Check className="w-5 h-5 text-blue-500 shrink-0" /> Full support (Image, Text)
@@ -103,8 +102,7 @@ export default function PricingPage() {
           
           <h3 className="text-2xl font-bold mb-2">Pro</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
-            <span className="text-5xl font-black">$49.99</span>
-            <span className="text-lg text-slate-500 line-through font-bold decoration-slate-600">$129.99</span>
+            <span className="text-5xl font-black">$19.99</span>
             <span className="text-slate-400 font-medium">/mo</span>
           </div>
           <p className="text-slate-300 mb-8 border-b border-slate-800 pb-8 text-sm font-medium">
@@ -112,7 +110,7 @@ export default function PricingPage() {
           </p>
           <ul className="space-y-4 mb-10 flex-grow">
             <li className="flex items-center gap-3 text-white font-medium">
-              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> 50 credits per month
+              <Check className="w-5 h-5 text-indigo-400 shrink-0" /> 50 créditos
             </li>
             <li className="flex items-center gap-3 text-white font-medium">
               <Check className="w-5 h-5 text-indigo-400 shrink-0" /> Priority processing
@@ -140,8 +138,7 @@ export default function PricingPage() {
         <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2.5rem] p-10 flex flex-col shadow-lg shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 mt-8 md:mt-4">
           <h3 className="text-2xl font-bold mb-2 text-slate-900">Elite</h3>
           <div className="flex flex-wrap items-baseline gap-2 mb-6">
-            <span className="text-5xl font-black text-slate-900">$499</span>
-            <span className="text-lg text-slate-400 line-through font-bold decoration-slate-300">$999</span>
+            <span className="text-5xl font-black text-slate-900">$49.99</span>
             <span className="text-slate-500 font-medium">/mo</span>
           </div>
           <p className="text-slate-500 mb-8 border-b border-slate-100 pb-8 text-sm font-medium">
@@ -149,7 +146,7 @@ export default function PricingPage() {
           </p>
           <ul className="space-y-4 mb-10 flex-grow">
             <li className="flex items-center gap-3 text-slate-700 font-medium">
-              <Check className="w-5 h-5 text-blue-500 shrink-0" /> Unlimited usage*
+              <Check className="w-5 h-5 text-blue-500 shrink-0" /> 150 créditos
             </li>
             <li className="flex items-center gap-3 text-slate-700 font-medium">
               <Check className="w-5 h-5 text-blue-500 shrink-0" /> Weekly calls with Ads Expert
@@ -168,9 +165,6 @@ export default function PricingPage() {
           >
              {loadingPriceId === "price_placeholder_elite" ? "Processing..." : (session ? "Get Elite" : "Login to Subscribe")}
           </button>
-          <p className="text-xs font-semibold text-slate-400 text-center mt-6 uppercase tracking-wider">
-            *Subject to fair use policy (500 credits/mo)
-          </p>
         </div>
       </div>
     </div>

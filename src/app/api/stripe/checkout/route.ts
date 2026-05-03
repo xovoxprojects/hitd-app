@@ -6,9 +6,9 @@ import { prisma } from "@/lib/prisma";
 
 // ── Real Stripe Price IDs ──────────────────────────────────────────────────
 const PRICE_IDS: Record<string, string> = {
-  growth: "price_1TO0V8FPLfWtW3yTxfohE2Ch",
-  pro:    "price_1TO0XlFPLfWtW3yTWSdP8B06",
-  elite:  "price_1TO0ZGFPLfWtW3yTiF6O8dOU",
+  growth: "price_1TO0V8FPLfWtW3yTxfohE2Ch", // TODO: Update with new Stripe Price ID for Growth ($9.99)
+  pro:    "price_1TSxDEFPLfWtW3yTDqo98lcL",
+  elite:  "price_1TSxDXFPLfWtW3yT8g1qZ5uL",
 };
 
 export async function POST(req: Request) {
