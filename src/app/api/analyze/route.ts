@@ -90,7 +90,7 @@ export async function POST(req: Request) {
     if (type === "video" && fileUrl) {
       const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY!);
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 0.2 } });
 
       // 1. Stream the video directly from Supabase → Gemini Files API (no /tmp writes)
       const videoResponse = await fetch(fileUrl);
@@ -179,6 +179,7 @@ export async function POST(req: Request) {
         model: "gpt-4o",
         messages: [{ role: "user", content: contentArray }],
         response_format: { type: "json_object" },
+        temperature: 0.2,
       }));
 
       const aiText = response.choices[0].message.content;
