@@ -19,11 +19,11 @@ interface UserRow {
   externalRevenue: number;
 }
 
-const planPrices: Record<string, number> = { growth: 9.99, pro: 49.99, elite: 499 };
-const planLabels: Record<string, string> = { none: "Gratuito", growth: "Growth", pro: "Pro", elite: "Elite" };
+const planPrices: Record<string, number> = { starter: 9.99, pro: 19.99, elite: 49.99 };
+const planLabels: Record<string, string> = { none: "Gratuito", starter: "Starter", pro: "Pro", elite: "Elite" };
 const planColors: Record<string, string> = {
   none: "bg-slate-100 text-slate-500",
-  growth: "bg-blue-100 text-blue-700",
+  starter: "bg-blue-100 text-blue-700",
   pro: "bg-indigo-100 text-indigo-700",
   elite: "bg-purple-100 text-purple-700",
 };
@@ -122,13 +122,22 @@ export default function AdminDashboard() {
   let mrr = 0;
   let totalExternal = 0;
   let totalBrokerCut = 0; // Lo que se llevan los brokers (15% de los referidos)
-  let growthCount = 0, proCount = 0, eliteCount = 0;
+  let starterCount = 0, proCount = 0, eliteCount = 0;
   
   users.forEach(u => {
     let userMrr = 0;
-    if (u.plan === "growth") { userMrr = 9.99; growthCount++; }
-    else if (u.plan === "pro") { userMrr = 49.99; proCount++; }
-    else if (u.plan === "elite") { userMrr = 499; eliteCount++; }
+    
+    // Count plans regardless of if they pay
+    if (u.plan === "starter") { starterCount++; }
+    else if (u.plan === "pro") { proCount++; }
+    else if (u.plan === "elite") { eliteCount++; }
+
+    // Calculate MRR (exclude admin accounts)
+    if (u.email !== "xovoxclips@gmail.com" && u.email !== "hello@hitd.ai") {
+      if (u.plan === "starter") { userMrr = 9.99; }
+      else if (u.plan === "pro") { userMrr = 19.99; }
+      else if (u.plan === "elite") { userMrr = 49.99; }
+    }
     
     mrr += userMrr;
     
@@ -136,7 +145,7 @@ export default function AdminDashboard() {
     totalExternal += userExt;
 
     // Si el usuario fue referido por un broker, el broker se lleva el 15% de lo que pagó
-    if (u.referredById) {
+    if (u.referredById && u.email !== "xovoxclips@gmail.com") {
       totalBrokerCut += (userMrr + userExt) * 0.15;
     }
   });
@@ -194,7 +203,7 @@ export default function AdminDashboard() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
         <h3 className="font-bold text-slate-900 mb-4">Desglose de Planes</h3>
         <div className="grid grid-cols-3 gap-4">
-          {[{label: "Growth ($9.99)", count: growthCount, color: "blue"}, {label: "Pro ($49.99)", count: proCount, color: "indigo"}, {label: "Elite ($499)", count: eliteCount, color: "purple"}].map(p => (
+          {[{label: "Starter ($9.99)", count: starterCount, color: "blue"}, {label: "Pro ($19.99)", count: proCount, color: "indigo"}, {label: "Elite ($49.99)", count: eliteCount, color: "purple"}].map(p => (
             <div key={p.label} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
               <span className="font-bold text-slate-700 text-sm">{p.label}</span>
               <span className="font-black text-slate-900">{p.count} <span className="text-slate-400 text-xs font-medium">usuarios</span></span>
@@ -270,16 +279,16 @@ export default function AdminDashboard() {
                       onChange={e => {
                         const planName = e.target.value;
                         let defaultCredits = 0;
-                        if (planName === "growth") defaultCredits = 120; // 6 months of 20
+                        if (planName === "starter") defaultCredits = 120; // 6 months of 20
                         if (planName === "pro") defaultCredits = 300; // 6 months of 50
-                        if (planName === "elite") defaultCredits = 500; // Fair use
+                        if (planName === "elite") defaultCredits = 900; // 6 months of 150
                         setGrantState(prev => ({ ...prev, [user.id]: { planName, credits: defaultCredits } }));
                       }}
                     >
                       <option value="none">Ninguno</option>
-                      <option value="growth">Growth (120 cr)</option>
+                      <option value="starter">Starter (120 cr)</option>
                       <option value="pro">Pro (300 cr)</option>
-                      <option value="elite">Elite (500 cr)</option>
+                      <option value="elite">Elite (900 cr)</option>
                     </select>
                     
                     <input
