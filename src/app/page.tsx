@@ -287,7 +287,7 @@ const LandingPricing = () => {
       discount: "-67%",
       featureKeys: ["plan_growth_f1", "plan_growth_f2", "plan_growth_f3", "plan_growth_f4"],
       ctaKey: "plan_growth_cta",
-      planId: "growth",
+      planId: "starter",
       dark: false,
       featured: false,
     },

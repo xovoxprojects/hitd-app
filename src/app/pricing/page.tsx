@@ -85,11 +85,11 @@ export default function PricingPage() {
             </li>
           </ul>
           <button 
-            onClick={() => handleCheckout("price_placeholder_growth", "growth")}
+            onClick={() => handleCheckout("price_placeholder_starter", "starter")}
             disabled={loadingPriceId !== null}
             className="w-full block text-center py-4 rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 font-bold transition-colors disabled:opacity-50"
           >
-            {loadingPriceId === "price_placeholder_growth" ? "Processing..." : (session ? "Get Starter" : "Login to Subscribe")}
+            {loadingPriceId === "price_placeholder_starter" ? "Processing..." : (session ? "Get Starter" : "Login to Subscribe")}
           </button>
         </div>
 
