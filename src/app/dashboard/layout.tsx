@@ -3,10 +3,11 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import { LayoutDashboard, CreditCard, Settings, LogOut, ChevronRight, History, BarChart3, GraduationCap, Briefcase, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LayoutDashboard, CreditCard, Settings, LogOut, ChevronRight, History, BarChart3, GraduationCap, Briefcase, Lock, Menu, X } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -17,11 +18,41 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [session?.user?.id]);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-blue-200 selection:text-blue-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col md:flex-row font-sans selection:bg-blue-200 selection:text-blue-900">
       
-      {/* Sidebar background styling */}
-      <aside className="w-[280px] border-r border-slate-200/60 flex flex-col fixed inset-y-0 bg-white/80 backdrop-blur-xl z-20">
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-30">
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <img src="/logo.png" alt="hitd.ai logo" className="w-8 h-8 object-contain rounded-xl" />
+          </Link>
+          <Link href="/" className="text-xl font-bold tracking-tight text-slate-900">hitd.ai</Link>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 -mr-2 text-slate-600 hover:text-slate-900">
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        w-[280px] border-r border-slate-200/60 flex flex-col fixed inset-y-0 left-0 bg-white/95 backdrop-blur-xl z-50
+        transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      `}>
         <div className="p-8 flex items-center gap-3">
           <Link href="/">
             <img src="/logo.png" alt="hitd.ai logo" className="w-8 h-8 object-contain rounded-xl" />
@@ -137,7 +168,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Main content Area */}
-      <main className="flex-1 ml-[280px] p-10 relative">
+      <main className="flex-1 md:ml-[280px] p-4 md:p-10 relative w-full overflow-x-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
           {children}
         </div>
