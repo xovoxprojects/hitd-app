@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import UploadArea from "@/components/UploadArea";
 import ResultsPanel from "@/components/ResultsPanel";
+import ChatPanel from "@/components/ChatPanel";
 import { Sparkles } from "lucide-react";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [result, setResult] = useState<any>(null);
+  const [analysisId, setAnalysisId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -54,12 +56,16 @@ export default function Dashboard() {
       )}
 
       <div className={isLocked ? "pointer-events-none opacity-50 select-none grayscale-[0.5]" : ""}>
-        <UploadArea onAnalysisComplete={(data) => setResult(data.analysis)} />
+        <UploadArea onAnalysisComplete={(data) => {
+          setResult(data.analysis);
+          setAnalysisId(data.analysisId || null);
+        }} />
       </div>
       
       {result && !isLocked && (
         <div className="animate-in slide-in-from-bottom-8 duration-700">
            <ResultsPanel result={result} />
+           {analysisId && <ChatPanel analysisId={analysisId} />}
         </div>
       )}
     </div>

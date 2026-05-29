@@ -82,5 +82,6 @@ model Analysis {
   complianceExplanation String?
   alternatives         Json?    // { soft, medium, aggressive }
   cost                 Float    // Credits deducted
+  messages             Json     @default("[]") // [{ role, content, fileUrl?, createdAt }]
   createdAt            DateTime @default(now())
 }

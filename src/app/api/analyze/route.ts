@@ -224,7 +224,7 @@ export async function POST(req: Request) {
         data: { credits: remainingCredits },
       });
 
-      await prisma.analysis.create({
+      const savedAnalysis = await prisma.analysis.create({
         data: {
           userId: user.id,
           type,
@@ -242,12 +242,12 @@ export async function POST(req: Request) {
         },
       });
 
-      return NextResponse.json({ success: true, remainingCredits, analysis: jsonResult });
+      return NextResponse.json({ success: true, remainingCredits, analysis: jsonResult, analysisId: savedAnalysis.id });
     } catch (dbError) {
       // DB write failed — log it but still return the analysis result to the user.
       // A background job or manual fix can reconcile credits later.
       console.error("DB write after analysis failed:", dbError);
-      return NextResponse.json({ success: true, remainingCredits: user.credits - cost, analysis: jsonResult });
+      return NextResponse.json({ success: true, remainingCredits: user.credits - cost, analysis: jsonResult, analysisId: null });
     }
   } catch (error: unknown) {
     let message = error instanceof Error ? error.message : "Failed to analyze";
