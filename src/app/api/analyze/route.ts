@@ -63,7 +63,7 @@ Responde ÚNICAMENTE con un JSON válido en este formato exacto (sin markdown, s
 
 export const maxDuration = 300; // Allow function to run up to 300 seconds
 
-async function executeWithRetry<T>(fn: () => Promise<T>, retries = 15, baseDelayMs = 2000): Promise<T> {
+async function executeWithRetry<T>(fn: () => Promise<T>, retries = 8, delayMs = 3000): Promise<T> {
   for (let i = 0; i < retries; i++) {
     try {
       return await fn();
@@ -74,10 +74,8 @@ async function executeWithRetry<T>(fn: () => Promise<T>, retries = 15, baseDelay
         msg.includes("high demand") || msg.includes("Resource has been exhausted") ||
         msg.includes("Service Unavailable") || msg.includes("overloaded") || msg.includes("UNAVAILABLE");
       if (isRetryable) {
-        // Exponential backoff: 2s, 4s, 8s, 16s… capped at 30s
-        const delay = Math.min(baseDelayMs * Math.pow(2, i), 30000);
-        console.warn(`AI Provider Error (attempt ${i + 1}/${retries}): ${msg}. Retrying in ${delay}ms...`);
-        await new Promise(r => setTimeout(r, delay));
+        console.warn(`AI Provider Error (attempt ${i + 1}/${retries}): ${msg}. Retrying in ${delayMs}ms...`);
+        await new Promise(r => setTimeout(r, delayMs));
       } else {
         throw error;
       }
@@ -185,11 +183,11 @@ export async function POST(req: Request) {
         return uploadedFileUri;
       };
 
-      // Upload with retry (covers 429/503 on the upload itself)
-      const uploadedFileUri = await executeWithRetry(uploadAndWait, 8, 3000);
+      // Upload with retry — max 3 tries, 3s fixed delay
+      const uploadedFileUri = await executeWithRetry(uploadAndWait, 3, 3000);
 
-      // Try primary model, then fallback
-      const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash-001", "gemini-2.0-flash-lite"];
+      // Try primary model, fallback to gemini-2.0-flash-001
+      const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash-001"];
       let lastError: any;
       let parsed = false;
 
@@ -198,7 +196,8 @@ export async function POST(req: Request) {
           const model = genAI.getGenerativeModel({ model: modelName, generationConfig: { temperature: 0.2 } });
           const videoPart: Part = { fileData: { mimeType, fileUri: uploadedFileUri } };
           const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
-          const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]), 10, 3000);
+          // Max 5 retries × 3s = 15s max wait per model before trying next
+          const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]), 5, 3000);
           const rawText = result.response.text();
           const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
           jsonResult = JSON.parse(cleaned);
