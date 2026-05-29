@@ -63,22 +63,27 @@ Responde ÚNICAMENTE con un JSON válido en este formato exacto (sin markdown, s
 
 export const maxDuration = 300; // Allow function to run up to 300 seconds
 
-async function executeWithRetry<T>(fn: () => Promise<T>, retries = 15, delayMs = 2500): Promise<T> {
+async function executeWithRetry<T>(fn: () => Promise<T>, retries = 15, baseDelayMs = 2000): Promise<T> {
   for (let i = 0; i < retries; i++) {
     try {
       return await fn();
     } catch (error: any) {
       if (i === retries - 1) throw error;
       const msg = error.message || "";
-      if (msg.includes("503") || msg.includes("429") || msg.includes("Too Many Requests") || msg.includes("high demand") || msg.includes("Resource has been exhausted") || msg.includes("Service Unavailable")) {
-        console.warn(`AI Provider Error (${msg}). Retrying ${i + 1}/${retries}...`);
-        await new Promise(r => setTimeout(r, delayMs)); // Fixed 2.5s delay
+      const isRetryable = msg.includes("503") || msg.includes("429") || msg.includes("Too Many Requests") ||
+        msg.includes("high demand") || msg.includes("Resource has been exhausted") ||
+        msg.includes("Service Unavailable") || msg.includes("overloaded") || msg.includes("UNAVAILABLE");
+      if (isRetryable) {
+        // Exponential backoff: 2s, 4s, 8s, 16s… capped at 30s
+        const delay = Math.min(baseDelayMs * Math.pow(2, i), 30000);
+        console.warn(`AI Provider Error (attempt ${i + 1}/${retries}): ${msg}. Retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
       } else {
         throw error;
       }
     }
   }
-  throw new Error("Retry failed");
+  throw new Error("Retry failed after all attempts");
 }
 
 export async function POST(req: Request) {
@@ -114,76 +119,102 @@ export async function POST(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let jsonResult: any;
 
-    // ── VIDEO → Gemini Files API + gemini-2.5-flash ───────────────────────
+    // ── VIDEO → Gemini Files API (gemini-2.5-flash, fallback gemini-1.5-flash) ──
     if (type === "video" && fileUrl) {
       const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY!);
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 0.2 } });
 
-      // 1. Stream the video directly from Supabase → Gemini Files API (no /tmp writes)
+      // Download video from Supabase once
       const videoResponse = await fetch(fileUrl);
       if (!videoResponse.ok) throw new Error("Failed to download video from storage");
-
       const videoBuffer = await videoResponse.arrayBuffer();
       const mimeType = fileMimeType as string;
       const displayName = fileName || "ad_creative";
 
-      // Build multipart body manually for the Gemini Files REST API
-      const boundary = `hitd_${Date.now()}`;
-      const metadataPart = JSON.stringify({ file: { display_name: displayName } });
-      const metadataBytes = Buffer.from(metadataPart, "utf-8");
-      const videoBytes = Buffer.from(videoBuffer);
+      // Helper: upload video to Gemini Files API and wait until ACTIVE
+      const uploadAndWait = async (): Promise<string> => {
+        const boundary = `hitd_${Date.now()}`;
+        const metadataBytes = Buffer.from(JSON.stringify({ file: { display_name: displayName } }), "utf-8");
+        const videoBytes = Buffer.from(videoBuffer);
+        const body = Buffer.concat([
+          Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`),
+          metadataBytes,
+          Buffer.from(`\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`),
+          videoBytes,
+          Buffer.from(`\r\n--${boundary}--`),
+        ]);
 
-      const body = Buffer.concat([
-        Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`),
-        metadataBytes,
-        Buffer.from(`\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`),
-        videoBytes,
-        Buffer.from(`\r\n--${boundary}--`),
-      ]);
+        const uploadResponse = await fetch(
+          `https://generativelanguage.googleapis.com/upload/v1beta/files?uploadType=multipart&key=${process.env.GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": `multipart/related; boundary=${boundary}`,
+              "Content-Length": body.length.toString(),
+            },
+            body,
+          }
+        );
 
-      const uploadResponse = await fetch(
-        `https://generativelanguage.googleapis.com/upload/v1beta/files?uploadType=multipart&key=${process.env.GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": `multipart/related; boundary=${boundary}`,
-            "Content-Length": body.length.toString(),
-          },
-          body,
+        if (!uploadResponse.ok) {
+          const errText = await uploadResponse.text();
+          // Treat upload 429/503 as retryable
+          if (uploadResponse.status === 429 || uploadResponse.status === 503) {
+            throw new Error(`503 Gemini upload overloaded: ${errText}`);
+          }
+          throw new Error(`Gemini upload failed: ${uploadResponse.status} – ${errText}`);
         }
-      );
 
-      if (!uploadResponse.ok) {
-        const errText = await uploadResponse.text();
-        throw new Error(`Gemini upload failed: ${uploadResponse.status} – ${errText}`);
+        const uploadJson = await uploadResponse.json();
+        const uploadedFileName: string = uploadJson.file?.name;
+        const uploadedFileUri: string = uploadJson.file?.uri;
+        if (!uploadedFileUri) throw new Error("Gemini did not return a file URI");
+
+        // Wait until ACTIVE
+        let fileInfo = await fileManager.getFile(uploadedFileName);
+        let waitMs = 2000;
+        while (fileInfo.state === "PROCESSING") {
+          await new Promise(r => setTimeout(r, waitMs));
+          waitMs = Math.min(waitMs * 1.5, 10000); // progressive wait
+          fileInfo = await fileManager.getFile(uploadedFileName);
+        }
+        if (fileInfo.state === "FAILED") {
+          throw new Error("Gemini file processing failed.");
+        }
+
+        return uploadedFileUri;
+      };
+
+      // Upload with retry (covers 429/503 on the upload itself)
+      const uploadedFileUri = await executeWithRetry(uploadAndWait, 8, 3000);
+
+      // Try primary model, then fallback
+      const modelsToTry = ["gemini-2.5-flash", "gemini-1.5-flash"];
+      let lastError: any;
+      let parsed = false;
+
+      for (const modelName of modelsToTry) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName, generationConfig: { temperature: 0.2 } });
+          const videoPart: Part = { fileData: { mimeType, fileUri: uploadedFileUri } };
+          const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
+          const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]), 10, 3000);
+          const rawText = result.response.text();
+          const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+          jsonResult = JSON.parse(cleaned);
+          parsed = true;
+          break;
+        } catch (err: any) {
+          lastError = err;
+          console.warn(`Model ${modelName} failed: ${err.message}. ${modelsToTry.indexOf(modelName) < modelsToTry.length - 1 ? 'Trying fallback...' : 'No more fallbacks.'}`);
+        }
       }
 
-      const uploadJson = await uploadResponse.json();
-      const uploadedFileName: string = uploadJson.file?.name;
-      const uploadedFileUri: string = uploadJson.file?.uri;
+      if (!parsed) throw lastError;
 
-      if (!uploadedFileUri) throw new Error("Gemini did not return a file URI");
-
-      let uploadedFileInfo = await fileManager.getFile(uploadedFileName);
-
-      // 2. Wait until the file is ACTIVE
-      while (uploadedFileInfo.state === "PROCESSING") {
-        await new Promise((r) => setTimeout(r, 2000));
-        uploadedFileInfo = await fileManager.getFile(uploadedFileName);
-      }
-      if (uploadedFileInfo.state === "FAILED") throw new Error("Gemini file processing failed.");
-
-      // 3. Analyze
-      const videoPart: Part = { fileData: { mimeType, fileUri: uploadedFileUri } };
-      const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
-      const result = await executeWithRetry(() => model.generateContent([textPart, videoPart]));
-      const rawText = result.response.text();
-      const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      jsonResult = JSON.parse(cleaned);
-
-      // 4. Delete the uploaded file from Gemini to avoid quota buildup
-      await fileManager.deleteFile(uploadedFileName).catch(() => {});
+      // Cleanup Gemini file (best effort)
+      const uploadedFileName = uploadedFileUri.split("/").pop()!;
+      await fileManager.deleteFile(`files/${uploadedFileName}`).catch(() => {});
 
     // ── IMAGE / TEXT → GPT-4o ─────────────────────────────────────────────
     } else {
