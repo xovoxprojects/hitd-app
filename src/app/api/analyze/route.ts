@@ -189,7 +189,7 @@ export async function POST(req: Request) {
       const uploadedFileUri = await executeWithRetry(uploadAndWait, 8, 3000);
 
       // Try primary model, then fallback
-      const modelsToTry = ["gemini-2.5-flash", "gemini-1.5-flash"];
+      const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash"];
       let lastError: any;
       let parsed = false;
 
