@@ -10,11 +10,17 @@ import { Check, X, Menu, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MetaLogo = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12.03 12c-.52 0-1.02-.13-1.5-.38-.47-.26-.88-.63-1.2-1.07l-3.3-4.5c-.75-1.03-1.89-1.65-3.13-1.65-2.18 0-3.95 1.77-3.95 3.95s1.77 3.95 3.95 3.95c1.17 0 2.26-.51 3-1.4l1.65-1.95.84.84-2.14 2.5c-1.07 1.25-2.65 1.96-4.35 1.96-3.23 0-5.85-2.62-5.85-5.85s2.62-5.85 5.85-5.85c1.78 0 3.42.84 4.48 2.28l3.32 4.5c.34.46.77.82 1.26 1.06.49.25 1.02.38 1.55.38.52 0 1.02-.13 1.5-.38.47-.26.88-.63 1.2-1.07l3.3-4.5c.75-1.03 1.89-1.65 3.13-1.65 2.18 0 3.95 1.77 3.95 3.95s-1.77 3.95-3.95 3.95c-1.17 0-2.26-.51-3-1.4l-1.65-1.95-.84-.84 2.14-2.5c1.07-1.25 2.65-1.96 4.35-1.96 3.23 0 5.85 2.62 5.85 5.85s-2.62 5.85-5.85 5.85c-1.78 0-3.42-.84-4.48-2.28l-3.32-4.5c-.34-.46-.77-.82-1.26-1.06-.49-.25-1.02-.38-1.55-.38z"/></svg>
+  <svg viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+    <path fill="#0668E1" d="M968.18 514c0 148-120.08 268.08-268.08 268.08-96.11 0-184.28-50.56-231.85-132.84-47.56 82.28-135.74 132.84-231.84 132.84-148 0-268.08-120.08-268.08-268.08s120.08-268.08 268.08-268.08c96.11 0 184.28 50.55 231.85 132.83 47.56-82.28 135.74-132.83 231.84-132.83 148 0 268.08 120.08 268.08 268.08zm-474.31-64.84c-35.06-96.53-127.35-163.5-235.12-163.5-139.73 0-252.99 113.25-252.99 252.99s113.26 252.99 252.99 252.99c118.06 0 216.5-80.99 245.54-191.06 9.87-37.45 15.08-76.35 15.08-115.65 0-12.18-.32-24.31-.95-36.33-6.52 38.31-18.06 75.32-34.1 110.15-28.74 62.42-76.4 113.91-137 148-52.66 29.62-111.45 44.5-171.6 42.75-102.26-2.98-185.03-85.73-188-188-1.75-60.15 13.13-118.94 42.75-171.6 34.09-60.6 85.58-108.26 148-137 34.83-16.04 71.84-27.58 110.15-34.1-12.02-.63-24.15-.95-36.33-.95-39.3 0-78.2 5.21-115.65 15.08-110.07 29.04-191.06 127.48-191.06 245.54 0 139.74 113.26 252.99 252.99 252.99 107.77 0 200.06-66.97 235.12-163.5 13.92-38.32 21.36-79.16 21.73-121.21.37 42.05 7.81 82.89 21.73 121.21 35.06 96.53 127.35 163.5 235.12 163.5 139.73 0 252.99-113.25 252.99-252.99s-113.26-252.99-252.99-252.99c-107.77 0-200.06 66.97-235.12 163.5z"/>
+  </svg>
 );
 
 const TikTokLogo = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.68a6.34 6.34 0 0 0 6.26 6.32 6.33 6.33 0 0 0 6.31-6.24v-5.92a8.08 8.08 0 0 0 4.22 1.4V8a4.93 4.93 0 0 1-2.2-.31z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2859 3333" width="22" height="22">
+    <path d="M2081 0c55 473 319 755 778 785v532c-266 26-499-61-770-225v995c0 1264-1378 1659-1932 753C-237 2154 296 1146 1176 1307v540c-438-66-881 306-613 779 261 462 979 292 979-281V0h539z" fill="#000000"/>
+    <path d="M2081 43c55 473 319 755 778 785v532c-266 26-499-61-770-225v995c0 1264-1378 1659-1932 753C-237 2197 296 1189 1176 1350v540c-438-66-881 306-613 779 261 462 979 292 979-281V43h539z" fill="#00f2fe" style={{ mixBlendMode: 'screen' }}/>
+    <path d="M2081-43c55 473 319 755 778 785v532c-266 26-499-61-770-225v995c0 1264-1378 1659-1932 753C-237 2111 296 1103 1176 1264v540c-438-66-881 306-613 779 261 462 979 292 979-281V-43h539z" fill="#fe0050" style={{ mixBlendMode: 'multiply' }}/>
+  </svg>
 );
 
 const GlobalLandingCSS = () => (
@@ -598,9 +604,7 @@ export default function Home() {
       {/* NAVBAR */}
       <nav className="navbar-new px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-[34px] h-[34px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] rounded-[9px] flex items-center justify-center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
+          <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
           <span className="font-['Space_Grotesk'] font-[800] text-[19px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-[14px] font-[500] text-[#64748b]">
@@ -686,21 +690,21 @@ export default function Home() {
               </h2>
             </Reveal>
             <Reveal delay={0.2}>
-              <p className="text-[#64748b] text-[18px] max-w-[540px] mx-auto leading-[1.7]">
+              <p className="text-[#94a3b8] text-[18px] max-w-[540px] mx-auto leading-[1.7]">
                 Las plataformas suspenden cuentas sin aviso. Sin apelación clara. Sin plazos. Y mientras tanto, tu negocio sangra.
               </p>
             </Reveal>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Reveal><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Perdés tu audiencia</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Años de construcción. Miles de seguidores. Todo desaparece en segundos sin posibilidad de recuperación automática.</p></div></Reveal>
-            <Reveal delay={0.1}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tu ingreso se corta</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Brand deals, ventas, afiliados, monetización. Todo depende de que tu cuenta esté activa. Sin cuenta, sin ingresos.</p></div></Reveal>
-            <Reveal delay={0.2}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tus campañas se pausan</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Una restricción en tu ad account puede pausar todas tus campañas activas. Cada día sin publicar es dinero que no vuelve.</p></div></Reveal>
-            <Reveal delay={0.3}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">La recuperación tarda semanas</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">El soporte de Meta tarda. Las apelaciones se pierden. Nadie te explica qué salió mal ni qué hacer exactamente.</p></div></Reveal>
+            <Reveal><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Perdés tu audiencia</h3><p className="text-[#94a3b8] text-[14px] leading-[1.7]">Años de construcción. Miles de seguidores. Todo desaparece en segundos sin posibilidad de recuperación automática.</p></div></Reveal>
+            <Reveal delay={0.1}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tu ingreso se corta</h3><p className="text-[#94a3b8] text-[14px] leading-[1.7]">Brand deals, ventas, afiliados, monetización. Todo depende de que tu cuenta esté activa. Sin cuenta, sin ingresos.</p></div></Reveal>
+            <Reveal delay={0.2}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tus campañas se pausan</h3><p className="text-[#94a3b8] text-[14px] leading-[1.7]">Una restricción en tu ad account puede pausar todas tus campañas activas. Cada día sin publicar es dinero que no vuelve.</p></div></Reveal>
+            <Reveal delay={0.3}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">La recuperación tarda semanas</h3><p className="text-[#94a3b8] text-[14px] leading-[1.7]">El soporte de Meta tarda. Las apelaciones se pierden. Nadie te explica qué salió mal ni qué hacer exactamente.</p></div></Reveal>
           </div>
           <Reveal delay={0.4}>
             <div className="mt-[60px] text-center p-10 bg-white/5 border border-white/10 rounded-[20px]">
               <p className="font-['Space_Grotesk'] text-[20px] font-[700] text-[#f1f5f9] mb-2">El problema no es <em>si</em> va a pasar.</p>
-              <p className="text-[#64748b] text-[16px] max-w-[480px] mx-auto leading-[1.7]">Es que cuando pasa, ya es tarde. La protección tiene que estar <strong className="text-[#e2e8f0]">antes</strong> del problema.</p>
+              <p className="text-[#94a3b8] text-[16px] max-w-[480px] mx-auto leading-[1.7]">Es que cuando pasa, ya es tarde. La protección tiene que estar <strong className="text-[#e2e8f0]">antes</strong> del problema.</p>
             </div>
           </Reveal>
         </div>
@@ -730,22 +734,22 @@ export default function Home() {
           <div className="text-center mb-[64px]">
             <Reveal><div className="chip-new mb-5">Lo que analizamos</div></Reveal>
             <Reveal delay={0.1}><h2 className="text-[clamp(30px,3.5vw,46px)] font-[800] mb-3.5 text-[#0f172a]">Todo lo que necesitás para<br/><span className="g-text">publicar con confianza.</span></h2></Reveal>
-            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Subís tu anuncio, bio o copy — en segundos sabés exactamente qué cambiar.</p></Reveal>
+            <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Subís tu anuncio, bio o copy — en segundos sabés exactamente qué cambiar.</p></Reveal>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Reveal>
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#eff6ff] border border-blue-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#2563eb]"><MetaLogo /></div>
-                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador Meta Ads</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Detectamos violaciones de política antes de publicar. Evitá rechazos, restricciones y pérdida de presupuesto.</p>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador Meta</h3>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Detectamos violaciones de política antes de publicar. Evitá rechazos, restricciones y pérdida de presupuesto.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#2563eb] text-[13px] font-[600]">Compliance + performance score →</div>
               </FeatureCard>
             </Reveal>
             <Reveal delay={0.1}>
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#eef2ff] border border-indigo-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#4f46e5]"><TikTokLogo /></div>
-                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador TikTok Ads</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Revisamos tus creativos para TikTok contra sus políticas específicas. Hook, copy, visual y compliance en una sola revisión.</p>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador TikTok</h3>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Revisamos tus creativos para TikTok contra sus políticas específicas. Hook, copy, visual y compliance en una sola revisión.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#4f46e5] text-[13px] font-[600]">Optimizado para TikTok →</div>
               </FeatureCard>
             </Reveal>
@@ -753,7 +757,7 @@ export default function Home() {
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#fffbeb] border border-amber-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#d97706]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                 <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador de Bios</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Tu bio es tu primera impresión. Analizamos si cumple las políticas y si está optimizada para convertir.</p>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Tu bio es tu primera impresión. Analizamos si cumple las políticas y si está optimizada para convertir.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#d97706] text-[13px] font-[600]">Instagram, TikTok, YouTube →</div>
               </FeatureCard>
             </Reveal>
@@ -761,7 +765,7 @@ export default function Home() {
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#fdf2f8] border border-pink-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#db2777]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
                 <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Copy Analyzer</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Hook, CTA, lenguaje persuasivo y estructura. Reescritura automática con IA incluida en todos los planes.</p>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Hook, CTA, lenguaje persuasivo y estructura. Reescritura automática con IA incluida en todos los planes.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#db2777] text-[13px] font-[600]">Reescritura automática con IA →</div>
               </FeatureCard>
             </Reveal>
@@ -769,7 +773,7 @@ export default function Home() {
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#f0fdf4] border border-green-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#16a34a]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
                 <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analytics</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Dashboard con datos claros de tu historial. Tendencias, patrones de rechazo y métricas para mejores decisiones.</p>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Dashboard con datos claros de tu historial. Tendencias, patrones de rechazo y métricas para mejores decisiones.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#16a34a] text-[13px] font-[600]">Visión completa de tu historial →</div>
               </FeatureCard>
             </Reveal>
@@ -777,7 +781,7 @@ export default function Home() {
               <FeatureCard className="h-full flex flex-col">
                 <div className="w-[48px] h-[48px] bg-[#fdf4ff] border border-purple-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#9333ea]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
                 <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Chat personalizado</h3>
-                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Historial completo de tus análisis en formato chat. Consultá y revisá cualquier análisis anterior en segundos.</p>
+                <p className="text-[#94a3b8] text-[14px] leading-[1.7] flex-1">Historial completo de tus análisis en formato chat. Consultá y revisá cualquier análisis anterior en segundos.</p>
                 <div className="mt-4 pt-4 border-t border-black/5 text-[#9333ea] text-[13px] font-[600]">Historial siempre disponible →</div>
               </FeatureCard>
             </Reveal>
@@ -798,7 +802,7 @@ export default function Home() {
                 <div className="flex flex-col items-center"><div className="step-num">1</div><div className="w-[2px] flex-1 min-h-[44px] mt-2 bg-gradient-to-b from-blue-600/30 to-indigo-600/10"></div></div>
                 <div className="card-new flex-1 p-6 mb-2">
                   <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Subís tu anuncio</h3>
-                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Imagen, video, copy o screenshot de tu creativo de Meta o TikTok. Cualquier formato, en segundos.</p>
+                  <p className="text-[#94a3b8] text-[14px] leading-[1.7]">Imagen, video, copy o screenshot de tu creativo de Meta o TikTok. Cualquier formato, en segundos.</p>
                 </div>
               </div>
             </Reveal>
@@ -807,7 +811,7 @@ export default function Home() {
                 <div className="flex flex-col items-center"><div className="step-num">2</div><div className="w-[2px] flex-1 min-h-[44px] mt-2 bg-gradient-to-b from-indigo-600/30 to-blue-600/10"></div></div>
                 <div className="card-new flex-1 p-6 mb-2">
                   <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Lo analizamos al instante</h3>
-                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Revisamos compliance con las políticas, calidad del copy, visual y estructura. Todo en segundos, antes de publicar.</p>
+                  <p className="text-[#94a3b8] text-[14px] leading-[1.7]">Revisamos compliance con las políticas, calidad del copy, visual y estructura. Todo en segundos, antes de publicar.</p>
                 </div>
               </div>
             </Reveal>
@@ -816,7 +820,7 @@ export default function Home() {
                 <div className="flex flex-col items-center"><div className="step-num">3</div></div>
                 <div className="flex-1 p-6 rounded-[20px] border border-blue-600/15 bg-gradient-to-br from-[#eff6ff] to-[#eef2ff]">
                   <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Recibís el reporte y corregís</h3>
-                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Score 0–100, violaciones detectadas, sugerencias concretas y versiones mejoradas del copy generadas con IA. Publicás con confianza.</p>
+                  <p className="text-[#94a3b8] text-[14px] leading-[1.7]">Score 0–100, violaciones detectadas, sugerencias concretas y versiones mejoradas del copy generadas con IA. Publicás con confianza.</p>
                 </div>
               </div>
             </Reveal>
@@ -830,7 +834,7 @@ export default function Home() {
           <div className="text-center mb-[52px]">
             <Reveal><div className="chip-new bg-[#f0fdf4] border-green-500/20 text-[#16a34a] mb-5">Por qué confiar en hitd.ai</div></Reveal>
             <Reveal delay={0.1}><h2 className="text-[clamp(28px,3.5vw,44px)] font-[800] mb-3.5 text-[#0f172a]">Construido a partir de<br/><span className="g-text">miles de casos reales.</span></h2></Reveal>
-            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[500px] mx-auto leading-[1.7]">Cada función fue construida analizando miles de casos reales: suspensiones, restricciones, rechazos y recuperaciones.</p></Reveal>
+            <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[500px] mx-auto leading-[1.7]">Cada función fue construida analizando miles de casos reales: suspensiones, restricciones, rechazos y recuperaciones.</p></Reveal>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-11">
             <Reveal><div className="card-new p-6.5 text-center py-6"><div className="font-['Space_Grotesk'] text-[40px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1.5">+8.000</div><div className="text-[#64748b] text-[13px] leading-[1.5]">Casos analizados</div></div></Reveal>
@@ -858,7 +862,7 @@ export default function Home() {
           <div className="text-center mb-[64px]">
             <Reveal><div className="chip-new mb-5">Planes y Precios</div></Reveal>
             <Reveal delay={0.1}><h2 className="text-[clamp(30px,4vw,48px)] font-[800] mb-3.5 text-[#0f172a] leading-tight">Protección al alcance<br/><span className="g-text">de tu negocio.</span></h2></Reveal>
-            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Elegí el plan que mejor se adapte a tu volumen de análisis.</p></Reveal>
+            <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Elegí el plan que mejor se adapte a tu volumen de análisis.</p></Reveal>
           </div>
           <Reveal delay={0.3}><LandingPricing /></Reveal>
           <Reveal delay={0.4}>
@@ -878,7 +882,7 @@ export default function Home() {
         <div className="max-w-[680px] mx-auto text-center relative z-10">
           <Reveal><div className="chip-new bg-white/5 border-white/10 text-[#94a3b8] mb-6">Empezá hoy</div></Reveal>
           <Reveal delay={0.1}><h2 className="text-[clamp(30px,4.5vw,52px)] font-[800] mb-4 leading-[1.1] text-[#f8fafc]">Tus cuentas son tu negocio.<br/><span className="g-text">No esperes a perderlas.</span></h2></Reveal>
-          <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] mb-10 max-w-[440px] mx-auto leading-[1.7]">Más de 12.000 creadores, marcas y agencias ya protegen sus cuentas con hitd.ai.</p></Reveal>
+          <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] mb-10 max-w-[440px] mx-auto leading-[1.7]">Más de 12.000 creadores, marcas y agencias ya protegen sus cuentas con hitd.ai.</p></Reveal>
           <Reveal delay={0.3}><Link href="#pricing" className="btn-primary-new px-12 py-5 rounded-2xl text-[17px]">Proteger mis cuentas →</Link></Reveal>
         </div>
       </section>
@@ -887,9 +891,7 @@ export default function Home() {
       <footer className="py-9 px-6 border-t border-black/5 bg-white relative z-10">
         <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-[30px] h-[30px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] rounded-lg flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
+            <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain opacity-80 grayscale" onError={(e) => e.currentTarget.style.display = 'none'} />
             <span className="font-['Space_Grotesk'] font-[800] text-[17px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
           </div>
           <div className="text-[#94a3b8] text-[13px]">Protección para cuentas digitales</div>
