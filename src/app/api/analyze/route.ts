@@ -6,7 +6,9 @@ import OpenAI from "openai";
 import { GoogleGenerativeAI, Part } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 
-const MASTER_PROMPT = `Eres un auditor experto de compliance para Meta Ads con acceso completo a las Meta Advertising Policies, Business Help Center, y conocimiento profundo de cómo el sistema de enforcement de Meta funciona EN LA PRÁCTICA (no solo en teoría). Analizarás imágenes, videos, screenshots o copy de anuncios para Instagram y Facebook.
+const MASTER_PROMPT = `IDIOMA OBLIGATORIO: Responde EXCLUSIVAMENTE en español. Nunca uses inglés bajo ninguna circunstancia, independientemente del idioma del anuncio analizado.
+
+Eres un auditor experto de compliance para Meta Ads con acceso completo a las Meta Advertising Policies, Business Help Center, y conocimiento profundo de cómo el sistema de enforcement de Meta funciona EN LA PRÁCTICA (no solo en teoría). Analizarás imágenes, videos, screenshots o copy de anuncios para Instagram y Facebook.
 
 DISTINCIÓN CRÍTICA — POLÍTICA LITERAL vs. ENFORCEMENT REAL:
 Meta tiene dos capas de riesgo que DEBES evaluar por separado:
@@ -47,6 +49,12 @@ REGLAS DE ANÁLISIS:
 4. NO marques como violación el marketing direct-response agresivo (urgencia, hooks emocionales, CTAs fuertes, escasez, prueba social) si no hay income claims o patrones de alto riesgo.
 5. Proporciona SIEMPRE 3 alternativas Meta-Compliant que eliminen el riesgo real.
 6. Si el riesgo_level es "high", explica ESPECÍFICAMENTE qué patrón detecta el sistema de Meta.
+
+MODO BIOGRAFÍA DE PERFIL (cuando el input empieza con "[ANÁLISIS DE BIOGRAFÍA DE PERFIL]"):
+- Evaluá el texto como la bio/descripción de un perfil o página de Instagram/Facebook.
+- El objetivo es detectar si la bio puede afectar la aprobación de anuncios, limitar el alcance de la cuenta, o generar restricciones.
+- Las "alternatives" deben ser versiones reescritas de la bio completa, no de un anuncio.
+- El campo "compliance_explanation" debe explicar específicamente cómo la bio impacta en la capacidad publicitaria de la cuenta.
 
 Responde ÚNICAMENTE con un JSON válido en este formato exacto (sin markdown, sin nada fuera del JSON):
 {
@@ -286,12 +294,12 @@ export async function POST(req: Request) {
     let message = error instanceof Error ? error.message : "Failed to analyze";
     
     // Translate common provider errors to friendly Spanish messages
-    if (message.includes("503") || message.includes("high demand") || message.includes("Service Unavailable")) {
-      message = "Los servidores de IA están experimentando una alta demanda temporal. Por favor, intentá de nuevo en unos segundos.";
+    if (message.includes("503") || message.includes("high demand") || message.includes("Service Unavailable") || message.includes("overloaded") || message.includes("UNAVAILABLE")) {
+      message = "El análisis no pudo completarse en este momento debido a la alta demanda de los modelos de IA. Esto es temporal — por favor intentá de nuevo en unos segundos. Si el problema persiste, probá en unos minutos.";
     } else if (message.includes("429") || message.includes("Resource has been exhausted") || message.includes("Too Many Requests")) {
-      message = "Límite de peticiones a la IA alcanzado. Por favor, intentá de nuevo en un minuto.";
+      message = "Se alcanzó el límite de capacidad de los modelos de IA. Por favor esperá un momento e intentá de nuevo — el sistema se recupera automáticamente en menos de un minuto.";
     } else if (message.includes("ENOSPC") || message.includes("no space left on device")) {
-      message = "El servidor no tiene espacio disponible temporalmente. Por favor, intentá de nuevo en unos momentos.";
+      message = "Espacio de procesamiento temporalmente ocupado. Por favor intentá de nuevo en unos instantes.";
     }
 
     console.error("Analysis Error:", error);

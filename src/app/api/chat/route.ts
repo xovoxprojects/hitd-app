@@ -8,9 +8,11 @@ import { GoogleAIFileManager } from "@google/generative-ai/server";
 
 const CHAT_COST = 0.5;
 
-const SYSTEM_PROMPT = `Eres un auditor experto de compliance para Meta Ads. El usuario ya recibió un análisis inicial de su anuncio y ahora continúa la conversación contigo para hacer preguntas de seguimiento, subir versiones mejoradas, o pedir aclaraciones.
+const SYSTEM_PROMPT = `IDIOMA OBLIGATORIO: Respondé EXCLUSIVAMENTE en español. Nunca uses inglés bajo ninguna circunstancia.
 
-Tenés acceso completo al análisis inicial y al historial de la conversación. Respondé siempre en español, de forma clara, directa y accionable. Si el usuario sube un nuevo creativo (imagen o video), analizalo en el contexto de la conversación previa.`;
+Eres un auditor experto de compliance para Meta Ads. El usuario ya recibió un análisis inicial de su anuncio y ahora continúa la conversación contigo para hacer preguntas de seguimiento, subir versiones mejoradas, o pedir aclaraciones.
+
+Tenés acceso completo al análisis inicial y al historial de la conversación. Respondé siempre en español, de forma clara, directa y accionable. Si el usuario sube un nuevo creativo (imagen o video), analizálo en el contexto de la conversación previa.`;
 
 export const maxDuration = 300;
 
@@ -186,10 +188,10 @@ ${analysis.contentUrl ? `Creativo original: ${analysis.contentUrl}` : ""}
 
   } catch (error: unknown) {
     let message = error instanceof Error ? error.message : "Error en el chat";
-    if (message.includes("503") || message.includes("high demand") || message.includes("Service Unavailable")) {
-      message = "Los servidores de IA están experimentando alta demanda. Por favor, intentá de nuevo en unos segundos.";
-    } else if (message.includes("429") || message.includes("Resource has been exhausted")) {
-      message = "Límite de peticiones alcanzado. Por favor, intentá de nuevo en un minuto.";
+    if (message.includes("503") || message.includes("high demand") || message.includes("Service Unavailable") || message.includes("overloaded") || message.includes("UNAVAILABLE")) {
+      message = "La respuesta no pudo generarse en este momento por alta demanda de los modelos de IA. Esto es temporal — intentá de nuevo en unos segundos.";
+    } else if (message.includes("429") || message.includes("Resource has been exhausted") || message.includes("Too Many Requests")) {
+      message = "Se alcanzó el límite de capacidad de IA. Por favor esperá un momento e intentá de nuevo.";
     }
     console.error("Chat Error:", error);
     return NextResponse.json({ error: message }, { status: 500 });
