@@ -889,9 +889,9 @@ export default function Home() {
           </div>
           <div className="text-[#94a3b8] text-[13px]">Protección para cuentas digitales</div>
           <div className="flex gap-6">
-            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Términos</Link>
-            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Privacidad</Link>
-            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Contacto</Link>
+            <Link href="/terms" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Términos</Link>
+            <Link href="/privacy" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Privacidad</Link>
+            <Link href="mailto:support@hitd.ai" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Contacto</Link>
           </div>
           <div className="text-[#e2e8f0] text-[13px]">© 2026 hitd.ai.</div>
         </div>
