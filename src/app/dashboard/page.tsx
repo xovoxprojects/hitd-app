@@ -64,8 +64,8 @@ export default function Dashboard() {
       
       {result && !isLocked && (
         <div className="animate-in slide-in-from-bottom-8 duration-700">
-           <ResultsPanel result={result} />
            {analysisId && <ChatPanel analysisId={analysisId} />}
+           <ResultsPanel result={result} />
         </div>
       )}
     </div>
