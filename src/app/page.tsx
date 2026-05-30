@@ -10,8 +10,8 @@ import { Check, X, Menu, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MetaLogo = () => (
-  <svg viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
-    <path fill="#0668E1" d="M968.18 514c0 148-120.08 268.08-268.08 268.08-96.11 0-184.28-50.56-231.85-132.84-47.56 82.28-135.74 132.84-231.84 132.84-148 0-268.08-120.08-268.08-268.08s120.08-268.08 268.08-268.08c96.11 0 184.28 50.55 231.85 132.83 47.56-82.28 135.74-132.83 231.84-132.83 148 0 268.08 120.08 268.08 268.08zm-474.31-64.84c-35.06-96.53-127.35-163.5-235.12-163.5-139.73 0-252.99 113.25-252.99 252.99s113.26 252.99 252.99 252.99c118.06 0 216.5-80.99 245.54-191.06 9.87-37.45 15.08-76.35 15.08-115.65 0-12.18-.32-24.31-.95-36.33-6.52 38.31-18.06 75.32-34.1 110.15-28.74 62.42-76.4 113.91-137 148-52.66 29.62-111.45 44.5-171.6 42.75-102.26-2.98-185.03-85.73-188-188-1.75-60.15 13.13-118.94 42.75-171.6 34.09-60.6 85.58-108.26 148-137 34.83-16.04 71.84-27.58 110.15-34.1-12.02-.63-24.15-.95-36.33-.95-39.3 0-78.2 5.21-115.65 15.08-110.07 29.04-191.06 127.48-191.06 245.54 0 139.74 113.26 252.99 252.99 252.99 107.77 0 200.06-66.97 235.12-163.5 13.92-38.32 21.36-79.16 21.73-121.21.37 42.05 7.81 82.89 21.73 121.21 35.06 96.53 127.35 163.5 235.12 163.5 139.73 0 252.99-113.25 252.99-252.99s-113.26-252.99-252.99-252.99c-107.77 0-200.06 66.97-235.12 163.5z"/>
+  <svg viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+    <path d="M968.18 514c0 148-120.08 268.08-268.08 268.08-96.11 0-184.28-50.56-231.85-132.84-47.56 82.28-135.74 132.84-231.84 132.84-148 0-268.08-120.08-268.08-268.08s120.08-268.08 268.08-268.08c96.11 0 184.28 50.55 231.85 132.83 47.56-82.28 135.74-132.83 231.84-132.83 148 0 268.08 120.08 268.08 268.08zm-474.31-64.84c-35.06-96.53-127.35-163.5-235.12-163.5-139.73 0-252.99 113.25-252.99 252.99s113.26 252.99 252.99 252.99c118.06 0 216.5-80.99 245.54-191.06 9.87-37.45 15.08-76.35 15.08-115.65 0-12.18-.32-24.31-.95-36.33-6.52 38.31-18.06 75.32-34.1 110.15-28.74 62.42-76.4 113.91-137 148-52.66 29.62-111.45 44.5-171.6 42.75-102.26-2.98-185.03-85.73-188-188-1.75-60.15 13.13-118.94 42.75-171.6 34.09-60.6 85.58-108.26 148-137 34.83-16.04 71.84-27.58 110.15-34.1-12.02-.63-24.15-.95-36.33-.95-39.3 0-78.2 5.21-115.65 15.08-110.07 29.04-191.06 127.48-191.06 245.54 0 139.74 113.26 252.99 252.99 252.99 107.77 0 200.06-66.97 235.12-163.5 13.92-38.32 21.36-79.16 21.73-121.21.37 42.05 7.81 82.89 21.73 121.21 35.06 96.53 127.35 163.5 235.12 163.5 139.73 0 252.99-113.25 252.99-252.99s-113.26-252.99-252.99-252.99c-107.77 0-200.06 66.97-235.12 163.5z" />
   </svg>
 );
 
@@ -28,7 +28,7 @@ const GlobalLandingCSS = () => (
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
     .landing-page { font-family: 'Inter', sans-serif; background: #ffffff; color: #0f172a; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-    .landing-page h1, .landing-page h2, .landing-page h3, .landing-page h4 { font-family: 'Space Grotesk', sans-serif; color: #0f172a; }
+    .landing-page h1, .landing-page h2, .landing-page h3, .landing-page h4 { font-family: 'Space Grotesk', sans-serif; }
     .bg-noise { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px); background-size: 64px 64px; }
     .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; will-change: transform; }
     .orb-1 { width: 800px; height: 800px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 65%); top: -300px; left: -200px; }
@@ -57,7 +57,7 @@ const GlobalLandingCSS = () => (
     .card-new:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.2); }
     .feature-card-new { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; padding: 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: box-shadow 0.2s, border-color 0.2s; transform-style: preserve-3d; will-change: transform; }
     .feature-card-new:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.18); }
-    .audience-card-new { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.25s, border-color 0.25s; }
+    .audience-card-new {  background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.25s, border-color 0.25s; ; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 140px; }
     .audience-card-new:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.18); }
     .section-dark { background: #0f172a; position: relative; overflow: hidden; }
     .dark-card-new { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 24px; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
@@ -114,8 +114,8 @@ function Hero3DMockup() {
   };
 
   return (
-    <div className="relative h-[480px] flex items-center justify-center w-full max-w-[400px] mx-auto md:mx-0" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-      <div ref={cardRef} className="hero-main-card absolute left-0 md:left-4 top-[40px] w-[340px] p-[24px] bg-white z-10" style={{ transform, boxShadow, transition: 'transform 0.08s ease, box-shadow 0.08s ease' }}>
+    <div className="relative h-[480px] flex items-center justify-center w-full max-w-[500px] mx-auto lg:mr-0 lg:ml-auto" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+      <div ref={cardRef} className="hero-main-card absolute left-0 md:left-8 top-[40px] w-[340px] p-[24px] bg-white z-10" style={{ transform, boxShadow, transition: 'transform 0.08s ease, box-shadow 0.08s ease' }}>
         <div className="flex items-center justify-between mb-5">
           <div className="font-['Space_Grotesk'] font-bold text-[14px] text-[#0f172a]">Estado de tus cuentas</div>
           <span className="bg-[#f0fdf4] text-[#16a34a] text-[11px] font-bold px-2.5 py-1 rounded-full border border-green-500/20">PROTEGIDO</span>
@@ -164,7 +164,7 @@ function Hero3DMockup() {
           </div>
         </div>
       </div>
-      <div className="hero-mini-card float-a absolute right-[-10px] md:right-[-20px] top-[50px] w-[200px] p-3.5 z-0">
+      <div className="hero-mini-card float-a absolute right-0 md:right-0 lg:-right-4 top-[30px] w-[210px] p-3.5 z-0">
         <div className="flex items-center gap-[7px] mb-2">
           <div className="w-[7px] h-[7px] rounded-full bg-[#f59e0b]"></div>
           <span className="text-[10px] text-[#94a3b8] font-semibold uppercase tracking-wider">Alerta</span>
@@ -172,7 +172,7 @@ function Hero3DMockup() {
         <p className="text-[12px] text-[#92400e] font-semibold leading-relaxed mb-1.5">Tu anuncio puede violar la política de contenido.</p>
         <p className="text-[11px] text-[#94a3b8] leading-relaxed">Detectado antes de la suspensión.</p>
       </div>
-      <div className="hero-mini-card float-b absolute right-[10px] md:right-[20px] bottom-[60px] w-[170px] p-[13px] z-20">
+      <div className="hero-mini-card float-b absolute right-[10px] md:right-[20px] bottom-[30px] w-[180px] p-[13px] z-20">
         <div className="text-[10px] text-[#94a3b8] mb-2 font-semibold uppercase tracking-wider">Última revisión</div>
         <div className="flex items-center gap-2">
           <div className="w-[30px] h-[30px] bg-[#f0fdf4] border border-green-500/20 rounded-lg flex items-center justify-center">
@@ -605,7 +605,7 @@ export default function Home() {
       <nav className="navbar-new px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
-          <span className="font-['Space_Grotesk'] font-[800] text-[19px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
+          <span className="font-['Space_Grotesk'] font-[800] text-[20px] text-slate-900 tracking-tight">hitd.ai</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-[14px] font-[500] text-[#64748b]">
           <Link href="#problem" className="hover:text-[#2563eb] transition-colors">Protección</Link>
@@ -865,14 +865,7 @@ export default function Home() {
             <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Elegí el plan que mejor se adapte a tu volumen de análisis.</p></Reveal>
           </div>
           <Reveal delay={0.3}><LandingPricing /></Reveal>
-          <Reveal delay={0.4}>
-            <div className="text-center mt-10">
-              <div className="inline-flex items-center gap-2 bg-[#f0fdf4] border border-green-500/20 rounded-full px-5 py-2.5 text-[#16a34a] text-[14px] font-[600]">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                Garantía de 7 días — si no estás conforme, te devolvemos el dinero.
-              </div>
-            </div>
-          </Reveal>
+          
         </div>
       </section>
 
@@ -892,7 +885,7 @@ export default function Home() {
         <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain opacity-80 grayscale" onError={(e) => e.currentTarget.style.display = 'none'} />
-            <span className="font-['Space_Grotesk'] font-[800] text-[17px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
+            <span className="font-['Space_Grotesk'] font-[800] text-[20px] text-slate-900 tracking-tight">hitd.ai</span>
           </div>
           <div className="text-[#94a3b8] text-[13px]">Protección para cuentas digitales</div>
           <div className="flex gap-6">
