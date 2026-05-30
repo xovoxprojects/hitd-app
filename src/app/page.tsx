@@ -1,15 +1,188 @@
+// Generated Landing Page
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap, Activity, TrendingUp, Check, X, ChevronDown, Video, FileText, BarChart, Globe, Menu } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import i18n from "i18next";
 import { useTranslation, initReactI18next } from "react-i18next";
 import { useSession } from "next-auth/react";
-import { Footer } from "@/components/layout/Footer";
+import { Check, X, Menu, Globe } from "lucide-react";
+import { motion } from "framer-motion";
 
-// i18n Configuration
+const MetaLogo = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12.03 12c-.52 0-1.02-.13-1.5-.38-.47-.26-.88-.63-1.2-1.07l-3.3-4.5c-.75-1.03-1.89-1.65-3.13-1.65-2.18 0-3.95 1.77-3.95 3.95s1.77 3.95 3.95 3.95c1.17 0 2.26-.51 3-1.4l1.65-1.95.84.84-2.14 2.5c-1.07 1.25-2.65 1.96-4.35 1.96-3.23 0-5.85-2.62-5.85-5.85s2.62-5.85 5.85-5.85c1.78 0 3.42.84 4.48 2.28l3.32 4.5c.34.46.77.82 1.26 1.06.49.25 1.02.38 1.55.38.52 0 1.02-.13 1.5-.38.47-.26.88-.63 1.2-1.07l3.3-4.5c.75-1.03 1.89-1.65 3.13-1.65 2.18 0 3.95 1.77 3.95 3.95s-1.77 3.95-3.95 3.95c-1.17 0-2.26-.51-3-1.4l-1.65-1.95-.84-.84 2.14-2.5c1.07-1.25 2.65-1.96 4.35-1.96 3.23 0 5.85 2.62 5.85 5.85s-2.62 5.85-5.85 5.85c-1.78 0-3.42-.84-4.48-2.28l-3.32-4.5c-.34-.46-.77-.82-1.26-1.06-.49-.25-1.02-.38-1.55-.38z"/></svg>
+);
+
+const TikTokLogo = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.68a6.34 6.34 0 0 0 6.26 6.32 6.33 6.33 0 0 0 6.31-6.24v-5.92a8.08 8.08 0 0 0 4.22 1.4V8a4.93 4.93 0 0 1-2.2-.31z"/></svg>
+);
+
+const GlobalLandingCSS = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+    .landing-page { font-family: 'Inter', sans-serif; background: #ffffff; color: #0f172a; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    .landing-page h1, .landing-page h2, .landing-page h3, .landing-page h4 { font-family: 'Space Grotesk', sans-serif; color: #0f172a; }
+    .bg-noise { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px); background-size: 64px 64px; }
+    .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; will-change: transform; }
+    .orb-1 { width: 800px; height: 800px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 65%); top: -300px; left: -200px; }
+    .orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 65%); top: 35%; right: -200px; }
+    .orb-3 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%); bottom: 5%; left: 10%; }
+    .g-text { background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .g-text-amber { background: linear-gradient(135deg, #d97706, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .navbar-new { position: fixed; top: 14px; left: 14px; right: 14px; z-index: 200; background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.07); border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .chip-new { display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; padding: 5px 14px; border-radius: 999px; }
+    .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: #2563eb; flex-shrink: 0; }
+    .btn-primary-new { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2563eb, #4f46e5); color: white; font-family: 'Space Grotesk', sans-serif; font-weight: 700; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-primary-new:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(37,99,235,0.32); }
+    .btn-ghost-new { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #475569; font-family: 'Space Grotesk', sans-serif; font-weight: 600; border: 1px solid rgba(0,0,0,0.10); cursor: pointer; transition: all 0.2s; }
+    .btn-ghost-new:hover { background: #f8fafc; color: #0f172a; }
+    .hero-main-card { background: #ffffff; border: 1px solid rgba(0,0,0,0.09); border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06); will-change: transform; transform-style: preserve-3d; }
+    .hero-mini-card { background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); will-change: transform; }
+    @keyframes float-a { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes float-b { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-7px); } }
+    .float-a { animation: float-a 5s ease-in-out infinite; }
+    .float-b { animation: float-b 4.5s ease-in-out infinite; animation-delay: 0.8s; }
+    .stat-strip { display: flex; gap: 0; background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); }
+    @media (max-width: 768px) { .stat-strip { flex-direction: column; } .stat-item { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.07); } }
+    .stat-item { flex: 1; padding: 28px 24px; text-align: center; border-right: 1px solid rgba(0,0,0,0.07); }
+    .stat-item:last-child { border-right: none; border-bottom: none; }
+    .card-new { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s cubic-bezier(0.25,0.46,0.45,0.94), border-color 0.3s; }
+    .card-new:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.2); }
+    .feature-card-new { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; padding: 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: box-shadow 0.2s, border-color 0.2s; transform-style: preserve-3d; will-change: transform; }
+    .feature-card-new:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.18); }
+    .audience-card-new { background: #ffffff; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.25s, border-color 0.25s; }
+    .audience-card-new:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06); border-color: rgba(37,99,235,0.18); }
+    .section-dark { background: #0f172a; position: relative; overflow: hidden; }
+    .dark-card-new { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 24px; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
+    .dark-card-new:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); transform: translateY(-4px); }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #4f46e5); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 18px; color: white; flex-shrink: 0; box-shadow: 0 8px 24px rgba(37,99,235,0.30); }
+  ` }} />
+);
+
+const Reveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.85, ease: [0.25, 0.46, 0.45, 0.94], delay }} className={className}>{children}</motion.div>
+);
+
+const FeatureCard = ({ children, className }: any) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState('');
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTransform(`perspective(700px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) translateY(-6px)`);
+  };
+  const handleMouseLeave = () => setTransform('');
+  return (
+    <div ref={cardRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className={`feature-card-new ${className || ''}`} style={{ transform: transform !== '' ? transform : undefined, transition: transform !== '' ? 'transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s' : 'transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s, border-color 0.3s' }}>
+      {children}
+    </div>
+  );
+};
+
+function Hero3DMockup() {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+  const [boxShadow, setBoxShadow] = useState('0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)');
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    const rotY = dx * 14;
+    const rotX = -dy * 10;
+    const shadowX = -dx * 20;
+    const shadowY = dy * 12 + 20;
+    setTransform(`perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(12px)`);
+    setBoxShadow(`${shadowX}px ${shadowY}px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)`);
+  };
+
+  const handleMouseLeave = () => {
+    setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+    setBoxShadow('0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)');
+  };
+
+  return (
+    <div className="relative h-[480px] flex items-center justify-center w-full max-w-[400px] mx-auto md:mx-0" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+      <div ref={cardRef} className="hero-main-card absolute left-0 md:left-4 top-[40px] w-[340px] p-[24px] bg-white z-10" style={{ transform, boxShadow, transition: 'transform 0.08s ease, box-shadow 0.08s ease' }}>
+        <div className="flex items-center justify-between mb-5">
+          <div className="font-['Space_Grotesk'] font-bold text-[14px] text-[#0f172a]">Estado de tus cuentas</div>
+          <span className="bg-[#f0fdf4] text-[#16a34a] text-[11px] font-bold px-2.5 py-1 rounded-full border border-green-500/20">PROTEGIDO</span>
+        </div>
+        <div className="bg-[#f0f9ff] border border-blue-600/10 rounded-[14px] p-4 mb-3 flex items-center gap-3.5">
+          <div className="relative w-[60px] h-[60px] shrink-0">
+            <svg viewBox="0 0 60 60" className="-rotate-90 w-[60px] h-[60px]">
+              <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="5"/>
+              <circle cx="30" cy="30" r="24" fill="none" stroke="url(#sg)" strokeWidth="5" strokeDasharray="150.8" strokeDashoffset="15" strokeLinecap="round"/>
+              <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#2563eb"/><stop offset="100%" stopColor="#10b981"/></linearGradient></defs>
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center font-['Space_Grotesk'] font-[800] text-[15px] text-[#2563eb]">94</div>
+          </div>
+          <div>
+            <div className="font-bold text-[13px] mb-0.5 text-[#0f172a]">Salud de cuenta</div>
+            <div className="text-[#16a34a] text-[12px] font-semibold">Excelente — Sin riesgos</div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between p-2.5 bg-[#f0fdf4] border border-green-500/10 rounded-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-[22px] h-[22px] bg-[#dcfce7] rounded-md flex items-center justify-center">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <span className="text-[13px] text-[#374151]">Meta Business</span>
+            </div>
+            <span className="text-[10px] text-[#16a34a] font-bold tracking-wide">ACTIVO</span>
+          </div>
+          <div className="flex items-center justify-between p-2.5 bg-[#f0fdf4] border border-green-500/10 rounded-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-[22px] h-[22px] bg-[#dcfce7] rounded-md flex items-center justify-center">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+              </div>
+              <span className="text-[13px] text-[#374151]">Instagram</span>
+            </div>
+            <span className="text-[10px] text-[#16a34a] font-bold tracking-wide">ACTIVO</span>
+          </div>
+          <div className="flex items-center justify-between p-2.5 bg-[#fffbeb] border border-amber-500/20 rounded-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-[22px] h-[22px] bg-[#fef3c7] rounded-md flex items-center justify-center">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <span className="text-[13px] text-[#374151]">Cuenta de Anuncios</span>
+            </div>
+            <span className="text-[10px] text-[#d97706] font-bold tracking-wide">1 ALERTA</span>
+          </div>
+        </div>
+      </div>
+      <div className="hero-mini-card float-a absolute right-[-10px] md:right-[-20px] top-[50px] w-[200px] p-3.5 z-0">
+        <div className="flex items-center gap-[7px] mb-2">
+          <div className="w-[7px] h-[7px] rounded-full bg-[#f59e0b]"></div>
+          <span className="text-[10px] text-[#94a3b8] font-semibold uppercase tracking-wider">Alerta</span>
+        </div>
+        <p className="text-[12px] text-[#92400e] font-semibold leading-relaxed mb-1.5">Tu anuncio puede violar la política de contenido.</p>
+        <p className="text-[11px] text-[#94a3b8] leading-relaxed">Detectado antes de la suspensión.</p>
+      </div>
+      <div className="hero-mini-card float-b absolute right-[10px] md:right-[20px] bottom-[60px] w-[170px] p-[13px] z-20">
+        <div className="text-[10px] text-[#94a3b8] mb-2 font-semibold uppercase tracking-wider">Última revisión</div>
+        <div className="flex items-center gap-2">
+          <div className="w-[30px] h-[30px] bg-[#f0fdf4] border border-green-500/20 rounded-lg flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div className="text-[13px] font-bold text-[#16a34a]">Hace 2 min</div>
+            <div className="text-[10px] text-[#94a3b8]">Sin riesgos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 const resources = {
   en: {
     translation: {
@@ -383,493 +556,351 @@ const LandingPricing = () => {
   );
 };
 
-// ── Hero Dashboard Mockup ──────────────────────────────────────────────────
-function useCountUp(target: number, duration = 1200, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setCount(Math.floor(progress * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [start, target, duration]);
-  return count;
-}
 
-function HeroMockup({ t }: { t: (key: string) => string }) {
-  const [started, setStarted] = useState(false);
-  const score = useCountUp(92, 1400, started);
-
-  const circumference = 2 * Math.PI * 45; // ~282.7
-  const offset = circumference - (score / 100) * circumference;
-
-  const bars = [
-    { label: "Hook strength", value: 88, color: "#3b82f6" },
-    { label: "Compliance",    value: 100, color: "#22c55e" },
-    { label: "CTA clarity",   value: 74,  color: "#f97316" },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, duration: 0.8 }}
-      onAnimationComplete={() => setStarted(true)}
-      className="mt-12 md:mt-16 w-full max-w-3xl"
-    >
-      {/* Browser chrome */}
-      <div className="bg-white rounded-[20px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.10)] border border-slate-200 overflow-hidden">
-        {/* Top bar */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-            <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-            <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
-          </div>
-          <div className="flex-1 flex justify-center">
-            <div className="px-4 py-1 bg-white border border-slate-200 rounded-md text-[10px] text-slate-400 font-mono tracking-wide shadow-sm">
-              hitd.ai/dashboard/analyze
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-5 flex flex-col sm:flex-row gap-4 bg-slate-50/60">
-
-          {/* Left panel — Score */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col items-center sm:w-[200px] shrink-0">
-            {/* Circle */}
-            <div className="relative w-28 h-28 flex items-center justify-center mb-1">
-              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" strokeWidth="7" />
-                <circle
-                  cx="50" cy="50" r="45" fill="none"
-                  stroke="#3b82f6" strokeWidth="7"
-                  strokeLinecap="round"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={offset}
-                  style={{ transition: "stroke-dashoffset 0.05s linear" }}
-                />
-              </svg>
-              <div className="flex flex-col items-center leading-none">
-                <span className="text-[2rem] font-[900] text-blue-700 leading-none">{score}</span>
-                <span className="text-[10px] text-slate-400 font-semibold">/100</span>
-              </div>
-            </div>
-            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">
-              Performance Score
-            </div>
-
-            {/* Bars */}
-            <div className="w-full space-y-2.5">
-              {bars.map((bar) => (
-                <div key={bar.label}>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] text-slate-500 font-medium">{bar.label}</span>
-                    <span className="text-[10px] font-bold" style={{ color: bar.color }}>{started ? bar.value : 0}</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: bar.color }}
-                      initial={{ width: 0 }}
-                      animate={{ width: started ? `${bar.value}%` : 0 }}
-                      transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right panel — Cards */}
-          <div className="flex flex-col gap-3 flex-1">
-            {/* Card 1 — violations */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-[800] text-slate-800 leading-tight">{t('score_0_viol')}</p>
-                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">{t('score_0_viol_sub')}</p>
-                <span className="inline-flex mt-2 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-bold tracking-widest uppercase border border-emerald-200">
-                  Compliant
-                </span>
-              </div>
-            </div>
-
-            {/* Card 2 — improvement */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
-                <span className="text-amber-600 font-black text-sm leading-none">!</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-[800] text-slate-800 leading-tight">{t('score_insight')}</p>
-                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">{t('score_insight_sub')}</p>
-                <span className="inline-flex mt-2 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[9px] font-bold tracking-widest uppercase border border-amber-200">
-                  Quick Fix
-                </span>
-              </div>
-            </div>
-
-            {/* Suggested improvements */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">Suggested Improvements</p>
-              <ul className="space-y-1.5">
-                {[
-                  { color: "#3b82f6", text: "Strengthen opening hook. First 3 seconds are critical" },
-                  { color: "#f97316", text: "Increase CTA button contrast ratio" },
-                  { color: "#94a3b8", text: "Add social proof element near CTA" },
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[11px] text-slate-600 font-medium leading-snug">
-                    <div className="w-2 h-2 rounded-full shrink-0 mt-0.5" style={{ backgroundColor: item.color }} />
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </motion.div>
-  );
-}
 
 export default function Home() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const { data: session, status } = useSession();
   const isLoggedIn = status === 'authenticated';
 
-  const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en');
-  };
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
-  const faqs = [
-    { q: t('faq_1_q'), a: t('faq_1_a') },
-    { q: t('faq_2_q'), a: t('faq_2_a') },
-    { q: t('faq_3_q'), a: t('faq_3_a') },
-    { q: t('faq_4_q'), a: t('faq_4_a') },
-    { q: t('faq_5_q'), a: t('faq_5_a') }
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      const orb1 = document.getElementById('orb1');
+      const orb2 = document.getElementById('orb2');
+      if (orb1) orb1.style.transform = `translateY(${y * 0.18}px)`;
+      if (orb2) orb2.style.transform = `translateY(${-y * 0.12}px)`;
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 16;
+      const y = (e.clientY / window.innerHeight - 0.5) * 16;
+      const orb1 = document.getElementById('orb1');
+      const orb2 = document.getElementById('orb2');
+      if (orb1) orb1.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+      if (orb2) orb2.style.transform = `translate(${-x * 0.35}px, ${-y * 0.35}px)`;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   return (
-    <div className="bg-slate-50 text-slate-900 font-sans selection:bg-blue-200 selection:text-blue-900 min-h-screen">
-      
-      {/* Navbar */}
-      <nav className="flex flex-wrap items-center justify-between px-6 lg:px-12 py-4 w-full sticky top-0 z-50 bg-slate-50/90 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="hitd.ai Logo" className="w-8 h-8 object-contain" onError={(e) => e.currentTarget.style.display = 'none'} />
-          <span className="text-xl font-black tracking-tight text-slate-900 ml-1">hitd.ai</span>
-        </div>
-        
-        {/* Mobile menu button */}
-        <div className="md:hidden flex items-center">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-600 hover:text-slate-900">
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+    <div className="landing-page relative min-h-screen">
+      <GlobalLandingCSS />
+      <div className="bg-noise"></div>
+      <div className="bg-orb orb-1" id="orb1"></div>
+      <div className="bg-orb orb-2" id="orb2"></div>
+      <div className="bg-orb orb-3"></div>
 
-        {/* Desktop and Mobile Menu Items */}
-        <div className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row items-start md:items-center gap-6 w-full md:w-auto mt-4 md:mt-0`}>
-          <button onClick={toggleLang} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer w-full md:w-auto text-left py-2 md:py-0">
+      {/* NAVBAR */}
+      <nav className="navbar-new px-6 py-3.5 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="w-[34px] h-[34px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] rounded-[9px] flex items-center justify-center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <span className="font-['Space_Grotesk'] font-[800] text-[19px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
+        </div>
+        <div className="hidden md:flex items-center gap-8 text-[14px] font-[500] text-[#64748b]">
+          <Link href="#problem" className="hover:text-[#2563eb] transition-colors">Protección</Link>
+          <Link href="#features" className="hover:text-[#2563eb] transition-colors">Herramientas</Link>
+          <Link href="#pricing" className="hover:text-[#2563eb] transition-colors">Precios</Link>
+        </div>
+        <div className="flex items-center gap-4">
+          <button onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')} className="hidden md:flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer">
             <Globe className="w-4 h-4" /> {i18n.language}
           </button>
-          <Link href="/#pricing" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 md:py-0 w-full md:w-auto block">{t('nav_pricing')}</Link>
-          
           {isLoggedIn ? (
-            <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm w-full md:w-auto text-center mt-2 md:mt-0">
-              Dashboard
-            </Link>
+            <Link href="/dashboard" className="btn-primary-new px-5 py-2.5 rounded-xl text-sm">Dashboard</Link>
           ) : status === 'loading' ? (
-            <div className="w-24 h-9 rounded-full bg-slate-200 animate-pulse mt-2 md:mt-0" />
+            <div className="w-24 h-9 rounded-xl bg-slate-200 animate-pulse" />
           ) : (
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
-              <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors w-full md:w-auto block py-2 md:py-0">{t('nav_login')}</Link>
-              <Link href="/dashboard" className="px-6 py-2.5 text-sm font-bold text-white rounded-full bg-[#1b1f2e] hover:bg-slate-900 transition-colors shadow-sm w-full md:w-auto text-center">
-                {t('nav_get_started')}
-              </Link>
-            </div>
+            <>
+              <Link href="/login" className="hidden md:flex text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">{t('nav_login')}</Link>
+              <Link href="/login" className="btn-primary-new px-5 py-2.5 rounded-xl text-sm">Proteger mis cuentas →</Link>
+            </>
           )}
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-12 md:pt-24 pb-12 md:pb-20 px-6 text-center max-w-5xl mx-auto flex flex-col items-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 bg-white border border-slate-200 shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">{t('hero_badge')}</span>
-        </motion.div>
-
-        <motion.h1 
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="text-[2.25rem] md:text-[2.75rem] lg:text-6xl font-[800] tracking-tight text-slate-900 mb-6 leading-[1.1]"
-        >
-          {t('hero_h1_1')} <span className="text-[#3b82f6]">{t('hero_h1_2')}</span>
-        </motion.h1>
-
-        <motion.p 
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto mb-10 font-medium"
-        >
-          {t('hero_sub')}
-        </motion.p>
-
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <Link href="/dashboard" className="inline-flex px-8 py-3.5 bg-[#1b1f2e] text-white rounded-full font-bold text-sm items-center gap-2 shadow-sm transition-transform hover:scale-105">
-             {t('btn_start')} <ArrowRight className="w-4 h-4 text-slate-400" />
-          </Link>
-          <p className="text-[11px] text-slate-400 mt-4 font-semibold">{t('hero_sub2')}</p>
-        </motion.div>
-
-        <HeroMockup t={t} />
-      </section>
-
-      {/* Problem Section */}
-      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-8 md:mb-12">
-            <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('prob_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-[#0f172a] tracking-tight leading-tight">{t('prob_h2')}</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
-            <div className="space-y-4">
-              {[t('prob_err1'), t('prob_err2'), t('prob_err3'), t('prob_err4')].map((text, i) => (
-                <div key={i} className="flex items-center gap-4 py-3.5 px-6 bg-[#fffbfb] border border-[#ffebeb] rounded-lg">
-                  <X className="w-4 h-4 text-[#ef4444] shrink-0" />
-                  <span className="text-[13px] font-medium text-slate-700">{text}</span>
+      {/* HERO */}
+      <section className="min-h-screen flex flex-col justify-center pt-[130px] pb-[60px] px-6 relative z-10">
+        <div className="max-w-[1180px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center mb-20">
+            <div>
+              <Reveal><div className="chip-new mb-6"><span className="chip-dot"></span>Protección de cuentas digitales</div></Reveal>
+              <Reveal delay={0.1}>
+                <h1 className="text-[clamp(30px,3.2vw,48px)] font-[700] leading-[1.12] mb-[22px] tracking-[-0.5px] text-[#0f172a]">
+                  ¿Qué pasa si mañana<br/><span className="g-text">pierdes tu cuenta?</span>
+                </h1>
+              </Reveal>
+              <Reveal delay={0.2}>
+                <p className="text-[#64748b] text-[18px] leading-[1.75] mb-[36px] max-w-[460px]">
+                  Tu Instagram, tu Business Manager, tu cuenta de anuncios — son activos reales.
+                  <strong className="text-[#0f172a] font-[600]"> hitd.ai los protege</strong> antes de que sea tarde.
+                </p>
+              </Reveal>
+              <Reveal delay={0.3}>
+                <div className="flex gap-3 flex-wrap">
+                  <Link href="#pricing" className="btn-primary-new px-8 py-4 rounded-2xl text-[16px]">Proteger mis cuentas →</Link>
                 </div>
-              ))}
+              </Reveal>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8">
-               <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">{t('prob_alg_sees')}</h5>
-               <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-[#fffbfb] border border-[#ffebeb] rounded-lg">
-                    <ShieldCheck className="w-4 h-4 text-[#ef4444] shrink-0" />
-                    <span className="text-xs font-semibold text-[#b91c1c]">{t('prob_alg1')}</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-[#fffbf0] border border-[#ffebb8] rounded-lg">
-                    <Activity className="w-4 h-4 text-[#eab308] shrink-0" />
-                    <span className="text-xs font-semibold text-[#a16207]">{t('prob_alg2')}</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-[#fffbf0] border border-[#ffebb8] rounded-lg">
-                    <Activity className="w-4 h-4 text-[#eab308] shrink-0" />
-                    <span className="text-xs font-semibold text-[#a16207]">{t('prob_alg3')}</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-[#fffbf0] border border-[#ffebb8] rounded-lg">
-                    <Activity className="w-4 h-4 text-[#eab308] shrink-0" />
-                    <span className="text-xs font-semibold text-[#a16207]">{t('prob_alg4')}</span>
-                  </div>
-               </div>
-               <p className="text-[10px] text-slate-400 mt-6 italic">{t('prob_alg_foot')}</p>
-            </div>
+            <Hero3DMockup />
           </div>
+
+          <Reveal>
+            <div className="stat-strip">
+              <div className="stat-item">
+                <div className="font-['Space_Grotesk'] text-[38px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1">+12K</div>
+                <div className="text-[#94a3b8] text-[13px]">Cuentas protegidas</div>
+              </div>
+              <div className="stat-item">
+                <div className="font-['Space_Grotesk'] text-[38px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1">94%</div>
+                <div className="text-[#94a3b8] text-[13px]">Problemas detectados antes</div>
+              </div>
+              <div className="stat-item">
+                <div className="font-['Space_Grotesk'] text-[38px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1">3×</div>
+                <div className="text-[#94a3b8] text-[13px]">Más rápida la recuperación</div>
+              </div>
+              <div className="stat-item">
+                <div className="font-['Space_Grotesk'] text-[38px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1">+8K</div>
+                <div className="text-[#94a3b8] text-[13px]">Casos analizados</div>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-10 md:mb-14">
-            <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('sol_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-4 tracking-tight leading-tight">{t('sol_h2')}</h2>
-            <p className="text-slate-500 text-sm md:text-base max-w-2xl font-medium leading-relaxed">{t('sol_sub')}</p>
+      {/* PROBLEM (DARK) */}
+      <section id="problem" className="section-dark py-[120px] px-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse,rgba(37,99,235,0.08)_0%,transparent_65%)] pointer-events-none"></div>
+        <div className="max-w-[1100px] mx-auto relative z-10">
+          <div className="text-center mb-[72px]">
+            <Reveal><div className="chip-new bg-white/5 border-white/10 text-[#94a3b8] mb-5">La realidad que nadie quiere pensar</div></Reveal>
+            <Reveal delay={0.1}>
+              <h2 className="text-[clamp(32px,4vw,52px)] font-[800] mb-5 leading-[1.1] text-[#f8fafc]">
+                Perder tu cuenta no es un inconveniente.<br/><span className="g-text-amber">Es perder tu negocio.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <p className="text-[#64748b] text-[18px] max-w-[540px] mx-auto leading-[1.7]">
+                Las plataformas suspenden cuentas sin aviso. Sin apelación clara. Sin plazos. Y mientras tanto, tu negocio sangra.
+              </p>
+            </Reveal>
           </div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { num: "01", title: t('sol_1_t'), desc: t('sol_1_d') },
-              { num: "02", title: t('sol_2_t'), desc: t('sol_2_d') },
-              { num: "03", title: t('sol_3_t'), desc: t('sol_3_d') },
-              { num: "04", title: t('sol_4_t'), desc: t('sol_4_d') }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm"
-              >
-                <div className="text-[2rem] font-[800] text-[#dbeafe] mb-4 tracking-tighter leading-none">{item.num}</div>
-                <h3 className="text-[14px] font-[800] text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-[12px] text-slate-500 font-medium leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
+            <Reveal><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Perdés tu audiencia</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Años de construcción. Miles de seguidores. Todo desaparece en segundos sin posibilidad de recuperación automática.</p></div></Reveal>
+            <Reveal delay={0.1}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tu ingreso se corta</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Brand deals, ventas, afiliados, monetización. Todo depende de que tu cuenta esté activa. Sin cuenta, sin ingresos.</p></div></Reveal>
+            <Reveal delay={0.2}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">Tus campañas se pausan</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">Una restricción en tu ad account puede pausar todas tus campañas activas. Cada día sin publicar es dinero que no vuelve.</p></div></Reveal>
+            <Reveal delay={0.3}><div className="dark-card-new h-full"><div className="w-[42px] h-[42px] bg-white/5 rounded-xl flex items-center justify-center mb-4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3 className="text-[16px] font-[700] mb-2 text-[#f1f5f9]">La recuperación tarda semanas</h3><p className="text-[#64748b] text-[14px] leading-[1.7]">El soporte de Meta tarda. Las apelaciones se pierden. Nadie te explica qué salió mal ni qué hacer exactamente.</p></div></Reveal>
+          </div>
+          <Reveal delay={0.4}>
+            <div className="mt-[60px] text-center p-10 bg-white/5 border border-white/10 rounded-[20px]">
+              <p className="font-['Space_Grotesk'] text-[20px] font-[700] text-[#f1f5f9] mb-2">El problema no es <em>si</em> va a pasar.</p>
+              <p className="text-[#64748b] text-[16px] max-w-[480px] mx-auto leading-[1.7]">Es que cuando pasa, ya es tarde. La protección tiene que estar <strong className="text-[#e2e8f0]">antes</strong> del problema.</p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* WHO IT'S FOR */}
+      <section className="py-[100px] px-6 bg-white">
+        <div className="max-w-[980px] mx-auto">
+          <div className="text-center mb-[48px]">
+            <Reveal><h2 className="text-[clamp(26px,3vw,40px)] font-[800] mb-2.5 text-[#0f172a]">Hecho para quienes viven<br/><span className="g-text">de sus cuentas digitales.</span></h2></Reveal>
+            <Reveal delay={0.1}><p className="text-[#64748b] text-[17px]">Si tu negocio depende de Meta, Instagram, TikTok o YouTube — esto es para vos.</p></Reveal>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <Reveal><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#eff6ff] border border-blue-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Influencers</div></div></Reveal>
+            <Reveal delay={0.1}><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#eef2ff] border border-indigo-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.9L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Creadores</div></div></Reveal>
+            <Reveal delay={0.2}><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#fdf4ff] border border-purple-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Marcas</div></div></Reveal>
+            <Reveal delay={0.3}><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#fffbeb] border border-amber-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Ecommerce</div></div></Reveal>
+            <Reveal delay={0.4}><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#f0fdf4] border border-green-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Agencias</div></div></Reveal>
+            <Reveal delay={0.5}><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#fdf2f8] border border-pink-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#db2777" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Figuras públicas</div></div></Reveal>
           </div>
         </div>
       </section>
 
-      {/* Features Detail */}
-      <section className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 md:mb-16">
-            <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('feat_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-4 tracking-tight leading-tight max-w-xl mx-auto">{t('feat_h2')}</h2>
-            <p className="text-slate-500 font-medium text-sm max-w-md mx-auto">{t('feat_sub')}</p>
+      {/* FEATURES */}
+      <section id="features" className="py-[100px] px-6 bg-[#f8fafc]">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-center mb-[64px]">
+            <Reveal><div className="chip-new mb-5">Lo que analizamos</div></Reveal>
+            <Reveal delay={0.1}><h2 className="text-[clamp(30px,3.5vw,46px)] font-[800] mb-3.5 text-[#0f172a]">Todo lo que necesitás para<br/><span className="g-text">publicar con confianza.</span></h2></Reveal>
+            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Subís tu anuncio, bio o copy — en segundos sabés exactamente qué cambiar.</p></Reveal>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
-               <ShieldCheck className="w-8 h-8 text-[#3b82f6] mb-4" />
-               <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_1_t')}</h3>
-               <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_1_s')}</p>
-               <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_1_d')}</p>
-            </div>
-            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
-               <FileText className="w-8 h-8 text-[#f59e0b] mb-4" />
-               <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_2_t')}</h3>
-               <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_2_s')}</p>
-               <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_2_d')}</p>
-            </div>
-            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
-               <BarChart className="w-8 h-8 text-[#8b5cf6] mb-4" />
-               <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_3_t')}</h3>
-               <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_3_s')}</p>
-               <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_3_d')}</p>
-            </div>
-            <div className="p-6 md:p-8 border border-slate-100 shadow-sm bg-white rounded-3xl">
-               <Video className="w-8 h-8 text-[#f43f5e] mb-4" />
-               <h3 className="text-[1.15rem] font-[800] text-slate-900 mb-1">{t('feat_4_t')}</h3>
-               <p className="text-[12px] font-bold text-slate-400 mb-4 tracking-tight">{t('feat_4_s')}</p>
-               <p className="text-slate-500 text-[13px] font-medium leading-relaxed">{t('feat_4_d')}</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Reveal>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#eff6ff] border border-blue-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#2563eb]"><MetaLogo /></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador Meta Ads</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Detectamos violaciones de política antes de publicar. Evitá rechazos, restricciones y pérdida de presupuesto.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#2563eb] text-[13px] font-[600]">Compliance + performance score →</div>
+              </FeatureCard>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#eef2ff] border border-indigo-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#4f46e5]"><TikTokLogo /></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador TikTok Ads</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Revisamos tus creativos para TikTok contra sus políticas específicas. Hook, copy, visual y compliance en una sola revisión.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#4f46e5] text-[13px] font-[600]">Optimizado para TikTok →</div>
+              </FeatureCard>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#fffbeb] border border-amber-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#d97706]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analizador de Bios</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Tu bio es tu primera impresión. Analizamos si cumple las políticas y si está optimizada para convertir.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#d97706] text-[13px] font-[600]">Instagram, TikTok, YouTube →</div>
+              </FeatureCard>
+            </Reveal>
+            <Reveal delay={0.0}>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#fdf2f8] border border-pink-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#db2777]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Copy Analyzer</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Hook, CTA, lenguaje persuasivo y estructura. Reescritura automática con IA incluida en todos los planes.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#db2777] text-[13px] font-[600]">Reescritura automática con IA →</div>
+              </FeatureCard>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#f0fdf4] border border-green-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#16a34a]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Analytics</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Dashboard con datos claros de tu historial. Tendencias, patrones de rechazo y métricas para mejores decisiones.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#16a34a] text-[13px] font-[600]">Visión completa de tu historial →</div>
+              </FeatureCard>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <FeatureCard className="h-full flex flex-col">
+                <div className="w-[48px] h-[48px] bg-[#fdf4ff] border border-purple-600/15 rounded-[13px] flex items-center justify-center mb-4 text-[#9333ea]"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Chat personalizado</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.7] flex-1">Historial completo de tus análisis en formato chat. Consultá y revisá cualquier análisis anterior en segundos.</p>
+                <div className="mt-4 pt-4 border-t border-black/5 text-[#9333ea] text-[13px] font-[600]">Historial siempre disponible →</div>
+              </FeatureCard>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* How It Works Steps */}
-      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-5xl mx-auto text-center">
-          <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('hw_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-12 md:mb-20 tracking-tight leading-tight">{t('hw_h2')}</h2>
-          
-          <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-10 md:gap-4 px-4">
-            <div className="hidden md:block absolute top-[18px] left-[10%] w-[80%] h-[1px] bg-slate-200 z-0"></div>
-            
-            {[
-              { title: t('hw_1_t'), desc: t('hw_1_d') },
-              { title: t('hw_2_t'), desc: t('hw_2_d') },
-              { title: t('hw_3_t'), desc: t('hw_3_d') },
-              { title: t('hw_4_t'), desc: t('hw_4_d') }
-            ].map((step, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="relative z-10 flex flex-col items-center flex-1 mx-auto max-w-[200px]"
-              >
-                <div className="w-9 h-9 rounded-full bg-blue-600 text-white font-[800] flex items-center justify-center text-sm mb-4 shadow-sm">
-                  {i + 1}
+      {/* HOW IT WORKS */}
+      <section className="py-[100px] px-6 bg-white">
+        <div className="max-w-[720px] mx-auto">
+          <div className="text-center mb-[64px]">
+            <Reveal><div className="chip-new mb-5">Así funciona</div></Reveal>
+            <Reveal delay={0.1}><h2 className="text-[clamp(28px,3.5vw,44px)] font-[800] leading-[1.1] text-[#0f172a]">Protección en<br/><span className="g-text">3 pasos simples.</span></h2></Reveal>
+          </div>
+          <div className="flex flex-col gap-0">
+            <Reveal>
+              <div className="flex gap-6 items-start pb-6">
+                <div className="flex flex-col items-center"><div className="step-num">1</div><div className="w-[2px] flex-1 min-h-[44px] mt-2 bg-gradient-to-b from-blue-600/30 to-indigo-600/10"></div></div>
+                <div className="card-new flex-1 p-6 mb-2">
+                  <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Subís tu anuncio</h3>
+                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Imagen, video, copy o screenshot de tu creativo de Meta o TikTok. Cualquier formato, en segundos.</p>
                 </div>
-                <h3 className="text-[13px] font-[800] text-slate-900 mb-1">{step.title}</h3>
-                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stop Guessing CTA */}
-      <section className="bg-white py-16 md:py-32 px-6 border-t border-slate-100 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('cta_badge')}</h4>
-          <h2 className="text-[2rem] md:text-5xl font-[800] text-slate-900 mb-6 tracking-tight leading-tight whitespace-pre-line">{t('cta_h2')}</h2>
-          <p className="text-[14px] text-slate-500 font-medium mb-10 leading-relaxed px-4">{t('cta_sub')}</p>
-          <Link href="/dashboard" className="inline-flex px-8 py-3.5 bg-[#1b1f2e] text-white rounded-full font-bold text-sm items-center gap-2 hover:bg-slate-900 transition-colors shadow-md">
-            {t('btn_start')} <ArrowRight className="w-4 h-4 text-slate-400" />
-          </Link>
-        </div>
-      </section>
-
-      {/* Why Ads Fail Content */}
-      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-3xl mx-auto text-center md:text-left">
-          <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('why_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-8 tracking-tight leading-tight">{t('why_h2')}</h2>
-          <div className="space-y-4 text-slate-500 text-[14px] font-medium leading-relaxed max-w-2xl">
-            <p>{t('why_p1')}</p>
-            <p>{t('why_p2')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="bg-white py-12 md:py-24 px-6 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-10">
-            <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3">{t('price_badge')}</h4>
-            <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 tracking-tight">{t('price_h2')}</h2>
-          </div>
-          <LandingPricing />
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="bg-slate-50 py-12 md:py-24 px-6 border-t border-slate-100">
-         <div className="max-w-3xl mx-auto">
-          <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3 text-center">{t('faq_badge')}</h4>
-          <h2 className="text-[2rem] md:text-4xl font-[800] text-slate-900 mb-8 md:mb-12 text-center tracking-tight leading-tight">{t('faq_h2')}</h2>
-          
-          <div className="space-y-3">
-             {faqs.map((faq, index) => (
-                <div key={index} className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-                   <button 
-                     onClick={() => toggleFaq(index)}
-                     className="w-full text-left px-5 md:px-6 py-4 md:py-5 font-[800] text-[13px] md:text-[14px] text-slate-900 flex justify-between items-center hover:bg-slate-50 transition-colors"
-                   >
-                      {faq.q}
-                      <ChevronDown className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
-                   </button>
-                   <AnimatePresence>
-                      {openFaq === index && (
-                         <motion.div 
-                           initial={{ height: 0, opacity: 0 }}
-                           animate={{ height: 'auto', opacity: 1 }}
-                           exit={{ height: 0, opacity: 0 }}
-                           transition={{ duration: 0.2 }}
-                           className="overflow-hidden bg-white"
-                         >
-                            <div className="px-5 md:px-6 pb-4 md:pb-5 pt-0 text-[13px] text-slate-500 font-medium leading-relaxed">
-                               {faq.a}
-                            </div>
-                         </motion.div>
-                      )}
-                   </AnimatePresence>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="flex gap-6 items-start pb-6">
+                <div className="flex flex-col items-center"><div className="step-num">2</div><div className="w-[2px] flex-1 min-h-[44px] mt-2 bg-gradient-to-b from-indigo-600/30 to-blue-600/10"></div></div>
+                <div className="card-new flex-1 p-6 mb-2">
+                  <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Lo analizamos al instante</h3>
+                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Revisamos compliance con las políticas, calidad del copy, visual y estructura. Todo en segundos, antes de publicar.</p>
                 </div>
-             ))}
+              </div>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div className="flex gap-6 items-start">
+                <div className="flex flex-col items-center"><div className="step-num">3</div></div>
+                <div className="flex-1 p-6 rounded-[20px] border border-blue-600/15 bg-gradient-to-br from-[#eff6ff] to-[#eef2ff]">
+                  <h3 className="text-[17px] font-[700] mb-1.5 text-[#0f172a]">Recibís el reporte y corregís</h3>
+                  <p className="text-[#64748b] text-[14px] leading-[1.7]">Score 0–100, violaciones detectadas, sugerencias concretas y versiones mejoradas del copy generadas con IA. Publicás con confianza.</p>
+                </div>
+              </div>
+            </Reveal>
           </div>
-         </div>
+        </div>
       </section>
 
-      {/* Final Footer CTA */}
-      <section className="bg-white py-16 md:py-24 px-6 text-center pb-20 md:pb-32">
-        <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-4">{t('foot_badge')}</h4>
-        <h2 className="text-[2.25rem] md:text-5xl font-[800] text-slate-900 mb-6 tracking-tight leading-tight whitespace-pre-line">{t('foot_h2')}</h2>
-        <p className="text-[14px] text-slate-500 mb-10 font-medium px-4">{t('foot_sub')}</p>
-        <Link href="/dashboard" className="inline-flex px-8 py-3.5 bg-[#1b1f2e] text-white rounded-full font-bold text-sm items-center gap-2 hover:bg-slate-900 transition-colors shadow-md">
-          {t('btn_start')} <ArrowRight className="w-4 h-4 text-slate-400" />
-        </Link>
+      {/* TRUST */}
+      <section className="py-[100px] px-6 bg-[#f8fafc]">
+        <div className="max-w-[960px] mx-auto">
+          <div className="text-center mb-[52px]">
+            <Reveal><div className="chip-new bg-[#f0fdf4] border-green-500/20 text-[#16a34a] mb-5">Por qué confiar en hitd.ai</div></Reveal>
+            <Reveal delay={0.1}><h2 className="text-[clamp(28px,3.5vw,44px)] font-[800] mb-3.5 text-[#0f172a]">Construido a partir de<br/><span className="g-text">miles de casos reales.</span></h2></Reveal>
+            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[500px] mx-auto leading-[1.7]">Cada función fue construida analizando miles de casos reales: suspensiones, restricciones, rechazos y recuperaciones.</p></Reveal>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-11">
+            <Reveal><div className="card-new p-6.5 text-center py-6"><div className="font-['Space_Grotesk'] text-[40px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1.5">+8.000</div><div className="text-[#64748b] text-[13px] leading-[1.5]">Casos analizados</div></div></Reveal>
+            <Reveal delay={0.1}><div className="card-new p-6.5 text-center py-6"><div className="font-['Space_Grotesk'] text-[40px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1.5">+3.200</div><div className="text-[#64748b] text-[13px] leading-[1.5]">Políticas cubiertas</div></div></Reveal>
+            <Reveal delay={0.2}><div className="card-new p-6.5 text-center py-6"><div className="font-['Space_Grotesk'] text-[40px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1.5">+12K</div><div className="text-[#64748b] text-[13px] leading-[1.5]">Anuncios protegidos</div></div></Reveal>
+            <Reveal delay={0.3}><div className="card-new p-6.5 text-center py-6"><div className="font-['Space_Grotesk'] text-[40px] font-[800] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text mb-1.5">3×</div><div className="text-[#64748b] text-[13px] leading-[1.5]">Más velocidad</div></div></Reveal>
+          </div>
+          <Reveal>
+            <div className="bg-gradient-to-br from-[#eff6ff] to-[#eef2ff] border border-blue-600/10 rounded-[20px] p-9 flex gap-5 items-start flex-col sm:flex-row">
+              <div className="w-[48px] h-[48px] bg-[#dbeafe] border border-blue-600/20 rounded-xl flex items-center justify-center shrink-0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-[17px] font-[700] mb-2 text-[#0f172a]">Sin promesas irreales. Solo protección honesta.</h3>
+                <p className="text-[#64748b] text-[14px] leading-[1.75]">No te prometemos que tus anuncios van a ser aprobados al 100% ni que nunca tendrás un ban. Las plataformas son impredecibles. Lo que sí te prometemos es que tendrás la herramienta más avanzada para <strong>minimizar drásticamente ese riesgo</strong>, detectar problemas ocultos y proteger tu activo más importante.</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </section>
-      
-      <Footer />
+
+      {/* PRICING */}
+      <section id="pricing" className="py-[120px] px-6 bg-white">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-center mb-[64px]">
+            <Reveal><div className="chip-new mb-5">Planes y Precios</div></Reveal>
+            <Reveal delay={0.1}><h2 className="text-[clamp(30px,4vw,48px)] font-[800] mb-3.5 text-[#0f172a] leading-tight">Protección al alcance<br/><span className="g-text">de tu negocio.</span></h2></Reveal>
+            <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Elegí el plan que mejor se adapte a tu volumen de análisis.</p></Reveal>
+          </div>
+          <Reveal delay={0.3}><LandingPricing /></Reveal>
+          <Reveal delay={0.4}>
+            <div className="text-center mt-10">
+              <div className="inline-flex items-center gap-2 bg-[#f0fdf4] border border-green-500/20 rounded-full px-5 py-2.5 text-[#16a34a] text-[14px] font-[600]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Garantía de 7 días — si no estás conforme, te devolvemos el dinero.
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="section-dark py-[120px] px-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[radial-gradient(ellipse,rgba(37,99,235,0.12)_0%,transparent_65%)] pointer-events-none"></div>
+        <div className="max-w-[680px] mx-auto text-center relative z-10">
+          <Reveal><div className="chip-new bg-white/5 border-white/10 text-[#94a3b8] mb-6">Empezá hoy</div></Reveal>
+          <Reveal delay={0.1}><h2 className="text-[clamp(30px,4.5vw,52px)] font-[800] mb-4 leading-[1.1] text-[#f8fafc]">Tus cuentas son tu negocio.<br/><span className="g-text">No esperes a perderlas.</span></h2></Reveal>
+          <Reveal delay={0.2}><p className="text-[#64748b] text-[17px] mb-10 max-w-[440px] mx-auto leading-[1.7]">Más de 12.000 creadores, marcas y agencias ya protegen sus cuentas con hitd.ai.</p></Reveal>
+          <Reveal delay={0.3}><Link href="#pricing" className="btn-primary-new px-12 py-5 rounded-2xl text-[17px]">Proteger mis cuentas →</Link></Reveal>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="py-9 px-6 border-t border-black/5 bg-white relative z-10">
+        <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-[30px] h-[30px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] rounded-lg flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span className="font-['Space_Grotesk'] font-[800] text-[17px] bg-gradient-to-br from-[#2563eb] to-[#4f46e5] text-transparent bg-clip-text">hitd.ai</span>
+          </div>
+          <div className="text-[#94a3b8] text-[13px]">Protección para cuentas digitales</div>
+          <div className="flex gap-6">
+            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Términos</Link>
+            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Privacidad</Link>
+            <Link href="#" className="text-[#94a3b8] text-[14px] hover:text-[#2563eb] transition-colors">Contacto</Link>
+          </div>
+          <div className="text-[#e2e8f0] text-[13px]">© 2026 hitd.ai.</div>
+        </div>
+      </footer>
     </div>
   );
 }
