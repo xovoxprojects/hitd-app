@@ -252,7 +252,7 @@ export default function UploadArea({ onAnalysisComplete }: { onAnalysisComplete:
               <textarea
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
-                placeholder={`Ejemplo:\n"Coach de negocios digitales 🚀 | Te enseño a ganar $5.000/mes desde casa | Más de 2.000 alumnos transformados | Link en bio 👇"`}
+                placeholder={`Ejemplo:\n"Consultora de marketing digital para pequeñas y medianas empresas 📊 | Estrategia, contenido y publicidad paga | +8 años de experiencia | Trabajé con más de 150 marcas en LATAM | Agendá tu sesión de diagnóstico gratuita 👇"`}
                 className="relative w-full h-48 bg-white border border-slate-200 rounded-[2rem] p-8 text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none transition-colors shadow-inner"
               />
             </div>

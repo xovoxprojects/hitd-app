@@ -27,6 +27,8 @@ export default function HistoryPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null); // id of item awaiting confirmation
+  const [deleteInput, setDeleteInput] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -51,10 +53,22 @@ export default function HistoryPage() {
     fetchPage(1);
   }, [fetchPage]);
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  const openDeleteConfirm = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (!confirm("¿Eliminás este análisis? Esta acción no se puede deshacer.")) return;
+    setDeleteConfirm(id);
+    setDeleteInput("");
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm(null);
+    setDeleteInput("");
+  };
+
+  const handleDelete = async (id: string) => {
+    if (deleteInput.trim().toLowerCase() !== "eliminar") return;
     setDeleting(id);
+    setDeleteConfirm(null);
+    setDeleteInput("");
     try {
       const res = await fetch("/api/analyses", {
         method: "DELETE",
@@ -62,16 +76,12 @@ export default function HistoryPage() {
         body: JSON.stringify({ id }),
       });
       if (!res.ok) throw new Error("Error al eliminar");
-      // Remove from local state and adjust pagination
       setAnalyses(prev => prev.filter(a => a.id !== id));
       setTotal(prev => prev - 1);
       if (expanded === id) setExpanded(null);
-      // If page is now empty and not first page, go back
-      if (analyses.length === 1 && page > 1) {
-        fetchPage(page - 1);
-      }
+      if (analyses.length === 1 && page > 1) fetchPage(page - 1);
     } catch {
-      alert("No se pudo eliminar el análisis. Intentá de nuevo.");
+      // silent fail — item stays in list
     } finally {
       setDeleting(null);
     }
@@ -150,7 +160,7 @@ export default function HistoryPage() {
                     {expanded === a.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
                     {/* Delete button */}
                     <button
-                      onClick={(e) => handleDelete(e, a.id)}
+                      onClick={(e) => openDeleteConfirm(e, a.id)}
                       disabled={deleting === a.id}
                       className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all disabled:opacity-50 flex-shrink-0"
                       title="Eliminar análisis"
@@ -162,6 +172,41 @@ export default function HistoryPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Inline delete confirmation */}
+                {deleteConfirm === a.id && (
+                  <div
+                    className="mx-4 mb-4 p-5 bg-red-50 border border-red-200 rounded-2xl animate-in slide-in-from-top-2 duration-200"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <p className="text-sm font-bold text-red-700 mb-1">¿Eliminar este análisis?</p>
+                    <p className="text-xs text-red-500 mb-3">Esta acción es permanente y no se puede deshacer. Escribí <strong>eliminar</strong> para confirmar.</p>
+                    <div className="flex items-center gap-3">
+                      <input
+                        autoFocus
+                        type="text"
+                        value={deleteInput}
+                        onChange={(e) => setDeleteInput(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleDelete(a.id); if (e.key === "Escape") cancelDelete(); }}
+                        placeholder='Escribí "eliminar"'
+                        className="flex-1 px-4 py-2 text-sm border border-red-200 rounded-xl bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-300"
+                      />
+                      <button
+                        onClick={() => handleDelete(a.id)}
+                        disabled={deleteInput.trim().toLowerCase() !== "eliminar"}
+                        className="px-4 py-2 text-sm font-bold rounded-xl bg-red-600 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-red-700 transition-all"
+                      >
+                        Eliminar
+                      </button>
+                      <button
+                        onClick={cancelDelete}
+                        className="px-4 py-2 text-sm font-semibold rounded-xl text-slate-500 hover:bg-slate-100 transition-all"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Expanded panel */}
                 {expanded === a.id && (
