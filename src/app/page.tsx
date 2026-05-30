@@ -164,7 +164,7 @@ function Hero3DMockup() {
           </div>
         </div>
       </div>
-      <div className="hero-mini-card float-a absolute right-0 md:right-0 lg:-right-4 top-[30px] w-[210px] p-3.5 z-0">
+      <div className="hero-mini-card float-a absolute right-0 md:right-0 lg:-right-8 top-[30px] w-[210px] p-3.5 z-20">
         <div className="flex items-center gap-[7px] mb-2">
           <div className="w-[7px] h-[7px] rounded-full bg-[#f59e0b]"></div>
           <span className="text-[10px] text-[#94a3b8] font-semibold uppercase tracking-wider">Alerta</span>
