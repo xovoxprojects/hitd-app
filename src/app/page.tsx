@@ -131,7 +131,7 @@ function Hero3DMockup() {
           </div>
           <div>
             <div className="font-bold text-[13px] mb-0.5 text-[#0f172a]">Salud de cuenta</div>
-            <div className="text-[#16a34a] text-[12px] font-semibold">Excelente — Sin riesgos</div>
+            <div className="text-[#16a34a] text-[12px] font-semibold">Excelente, Sin riesgos</div>
           </div>
         </div>
         <div className="flex flex-col gap-2">
@@ -642,7 +642,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-[#64748b] text-[18px] leading-[1.75] mb-[36px] max-w-[460px]">
-                  Tu Instagram, tu Business Manager, tu cuenta de anuncios — son activos reales.
+                  Tu Instagram, tu Business Manager, tu cuenta de anuncios, son activos reales.
                   <strong className="text-[#0f172a] font-[600]"> hitd.ai los protege</strong> antes de que sea tarde.
                 </p>
               </Reveal>
@@ -715,7 +715,7 @@ export default function Home() {
         <div className="max-w-[980px] mx-auto">
           <div className="text-center mb-[48px]">
             <Reveal><h2 className="text-[clamp(26px,3vw,40px)] font-[800] mb-2.5 text-[#0f172a]">Hecho para quienes viven<br/><span className="g-text">de sus cuentas digitales.</span></h2></Reveal>
-            <Reveal delay={0.1}><p className="text-[#64748b] text-[17px]">Si tu negocio depende de Meta, Instagram, TikTok o YouTube — esto es para vos.</p></Reveal>
+            <Reveal delay={0.1}><p className="text-[#64748b] text-[17px]">Si tu negocio depende de Meta, Instagram, TikTok o YouTube, esto es para vos.</p></Reveal>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <Reveal><div className="audience-card-new"><div className="w-[44px] h-[44px] bg-[#eff6ff] border border-blue-600/15 rounded-xl flex items-center justify-center mx-auto mb-2.5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div className="text-[14px] font-[700] text-[#374151]">Influencers</div></div></Reveal>
@@ -734,7 +734,7 @@ export default function Home() {
           <div className="text-center mb-[64px]">
             <Reveal><div className="chip-new mb-5">Lo que analizamos</div></Reveal>
             <Reveal delay={0.1}><h2 className="text-[clamp(30px,3.5vw,46px)] font-[800] mb-3.5 text-[#0f172a]">Todo lo que necesitás para<br/><span className="g-text">publicar con confianza.</span></h2></Reveal>
-            <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Subís tu anuncio, bio o copy — en segundos sabés exactamente qué cambiar.</p></Reveal>
+            <Reveal delay={0.2}><p className="text-[#94a3b8] text-[17px] max-w-[480px] mx-auto leading-[1.7]">Subís tu anuncio, bio o copy, en segundos sabés exactamente qué cambiar.</p></Reveal>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Reveal>
