@@ -38,6 +38,8 @@ CALIBRACIÓN DE SCORE (sé preciso, no excesivamente generoso):
 
 Un anuncio con income claims específicos sin disclaimers en nicho de coaching NO puede tener score >65, independientemente de qué tan bueno sea el copy.
 
+REGLA DE REDONDEO OBLIGATORIA: El score DEBE ser un múltiplo de 5 (ej: 55, 60, 65, 70, 75). Nunca uses valores como 63, 71, 78. Esto es mandatorio.
+
 REGLAS DE ANÁLISIS:
 1. Analiza TANTO violaciones literales COMO riesgos de enforcement real.
 2. El campo "violations" es SOLO para violaciones literales de política escrita.
@@ -193,7 +195,7 @@ export async function POST(req: Request) {
 
       for (const modelName of modelsToTry) {
         try {
-          const model = genAI.getGenerativeModel({ model: modelName, generationConfig: { temperature: 0.2 } });
+          const model = genAI.getGenerativeModel({ model: modelName, generationConfig: { temperature: 0 } });
           const videoPart: Part = { fileData: { mimeType, fileUri: uploadedFileUri } };
           const textPart: Part = { text: MASTER_PROMPT + (text ? `\n\nAdditional ad copy:\n${text}` : "") };
           // Max 5 retries × 3s = 15s max wait per model before trying next
@@ -237,7 +239,8 @@ export async function POST(req: Request) {
         model: "gpt-4o",
         messages: [{ role: "user", content: contentArray }],
         response_format: { type: "json_object" },
-        temperature: 0.2,
+        temperature: 0,
+        seed: 42,
       }));
 
       const aiText = response.choices[0].message.content;

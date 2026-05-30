@@ -32,6 +32,7 @@ export default function ResultsPanel({ result }: { result: any }) {
             {result.score}<span className="text-4xl text-slate-300">/100</span>
           </div>
           <span className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Puntuación de Conversión</span>
+          <span className="text-[10px] text-slate-300 mt-1 font-normal">Estimación orientativa · los valores pueden variar ±5 pts</span>
         </div>
       </div>
 
